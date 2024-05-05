@@ -107,7 +107,7 @@ const loginUser = async (req, res) => {
                 return res.status(500).json({ error: 'Internal Server Error' });
             }
             res.cookie('token', token);
-            res.json({ success: 'Successfully Login', user: userDoc }); // Send user data along with success message
+            res.json({ success: 'Successfully Login', user: userDoc });
         });
     } catch (error) {
         console.error('Error in loginUser: ', error);

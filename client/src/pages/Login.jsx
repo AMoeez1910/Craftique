@@ -29,7 +29,7 @@ export default function Login() {
       if (response.data.error) {
         toast.error(response.data.error);
       } else {
-        setUser(response.data);
+        setUser(response.data.user);
         toast.success("Welcome Back");
         navigate('/')
       }

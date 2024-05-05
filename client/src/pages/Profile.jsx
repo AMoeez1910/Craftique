@@ -18,7 +18,7 @@ const Profile = () => {
     address: {},
     orders: {}
   });
-  const {  user } = useContext(UserContext);
+  const {  user,ready } = useContext(UserContext);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -55,8 +55,11 @@ const Profile = () => {
     }
   }, [user]); 
 
-  if (!user) {
-    return <div>Loading...</div>;
+  if(!ready){
+    return 'Loading.....'
+  }
+  if (ready && !user) {
+    return <Navigate to={'/login'}/>
   }
 
   return (
@@ -69,6 +72,7 @@ const Profile = () => {
         LastName={data.LastName} 
         email={data.email}
         googleID={data.googleID}
+        id = {user._id}
         />}
         {render === 'Orders' && <Orders 
           orderData ={data.orders}

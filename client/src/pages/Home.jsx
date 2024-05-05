@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
 import { useEffect,useState } from 'react';
 import Navbar from '../components/Navbar'
+import { UserContext } from '../context/userContext';
 const Home = () => {  
-  
+  const {user} = useContext(UserContext)
   return (
     <>
         <Navbar
