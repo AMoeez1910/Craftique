@@ -36,7 +36,7 @@ const sendVerifyEmail = async (name, email, id) => {
 const verifyMail = async (req, res) => {
     const { id, expirationTimestamp } = req.params;
     const currentTimestamp = Math.floor(new Date().getTime() / 1000);
-    const expirationTime = 120; // 60 seconds
+    const expirationTime = 60; // 60 seconds
     try {
         if ((parseInt(currentTimestamp) - parseInt(expirationTimestamp) <= parseInt(expirationTime))) {
             const data  = await User.updateOne({_id:id},{verified:true});
@@ -83,7 +83,6 @@ const loginUser = async (req, res) => {
         }
 
         const passOk = await bcrypt.compare(password, userDoc.password);
-
         if (!passOk) {
             return res.json({ error: 'Incorrect Email or Password' });
         }
@@ -223,4 +222,45 @@ const getUserProfileData = async (req,res)=>{
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData}
+const updateUserProfile = async (req, res) => {
+    const { id } = req.params;
+    const { data } = req.body;
+    const { FirstName, LastName, newPassword, confirmPassword } = data;
+    
+    try {
+        if (!!newPassword) {
+            if (newPassword === confirmPassword && newPassword.length >= 6) {
+                console.log(confirmPassword)
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(newPassword, salt);
+                await User.updateMany({ "_id": id }, { "$set": { "FirstName": FirstName, "LastName": LastName, "password": hashedPassword } });
+                return res.json({ success: "Changes updated along with password" });
+            } else {
+                return res.json({ error: "Password doesn't match or must be at least 6 characters long!" });
+            }
+        } else {
+            await User.updateMany({ "_id": id }, { "$set": { "FirstName": FirstName, "LastName": LastName } });
+            return res.json({ success: "Changes updated First Name and Last Name" });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+const updateUserAddress = async (req,res)=>{
+    const {id} = req.params
+    const {data} = req.body
+    const {shippingAddress,shippingCity,shippingCountry,billingAddress,billingCity,billingCountry} = data
+    try {
+        await User.updateMany({"_id":id},{"$set":{
+            "address.shippingAddress.address":shippingAddress,"address.shippingAddress.city":shippingCity,"address.shippingAddress.country":shippingCountry,
+            "address.billingAddress.address":billingAddress,"address.billingAddress.city":billingCity,"address.billingAddress.country":billingCountry
+        }})
+        return res.json({ success: "Changes updated" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress}

@@ -1,6 +1,56 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Address = (props) => {
+  const navigate = useNavigate();
+  const [data, setData] = useState({
+    shippingAddress:'',
+    shippingCity:'',
+    shippingCountry:'',
+    billingAddress:'',
+    billingCity:'',
+    billingCountry:'',
+  });
+
+  useEffect(() => {
+    setData(
+      {
+    shippingAddress:props.addressData.shippingAddress.address,
+    shippingCity:props.addressData.shippingAddress.city,
+    shippingCountry:props.addressData.shippingAddress.country,
+    billingAddress:props.addressData.billingAddress.address,
+    billingCity:props.addressData.billingAddress.city,
+    billingCountry:props.addressData.billingAddress.country
+  });
+}, [props]);
+
+
+  const handleSubmit = async (e) => {
+    // backend logic implement
+    
+    e.preventDefault();
+    try {
+        const response = await axios.patch(`/update-user-address/${props.id}`,{data})
+        if(response.data.success)
+          {
+            toast.success(response.data.success);
+            window.location.reload();
+          }
+          else{
+            toast.error(response.data.error);
+          }
+        console.log(data)
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setData(prevVal => ({ ...prevVal, [name]: value }));
+  };
 
   return (
     <div className="d-flex flex-column" id="content-wrapper">
@@ -26,7 +76,9 @@ const Address = (props) => {
                         type="text"
                         id="address"
                         placeholder={props.addressData.shippingAddress.address}
-                        name="address"
+                        name="shippingAddress"
+                        value={data.shippingAddress}
+                        onChange={handleChange}
                       />
                     </div>
                     <div className="row">
@@ -40,7 +92,9 @@ const Address = (props) => {
                             type="text"
                             id="city"
                             placeholder={props.addressData.shippingAddress.city}
-                            name="city"
+                            name="shippingCity"
+                            value={data.shippingCity}
+                            onChange={handleChange}
                           />
                         </div>
                       </div>
@@ -54,7 +108,9 @@ const Address = (props) => {
                             type="text"
                             id="country"
                             placeholder={props.addressData.shippingAddress.country}
-                            name="country"
+                            name="shippingCountry"
+                            value={data.shippingCountry}
+                            onChange={handleChange}
                           />
                         </div>
                       </div>
@@ -80,7 +136,9 @@ const Address = (props) => {
                         type="text"
                         id="address-1"
                         placeholder={props.addressData.billingAddress.address}
-                        name="address"
+                        name="billingAddress"
+                        value={data.billingAddress}
+                        onChange={handleChange}
                       />
                     </div>
                     <div className="row">
@@ -94,7 +152,9 @@ const Address = (props) => {
                             type="text"
                             id="city-1"
                             placeholder={props.addressData.billingAddress.city}
-                            name="city"
+                            name="billingCity"
+                            value={data.billingCity}
+                            onChange={handleChange}
                           />
                         </div>
                       </div>
@@ -108,7 +168,9 @@ const Address = (props) => {
                             type="text"
                             id="country-1"
                             placeholder={props.addressData.billingAddress.country}
-                            name="country"
+                            name="billingCountry"
+                            value={data.billingCountry}
+                            onChange={handleChange}
                           />
                         </div>
                       </div>
@@ -120,7 +182,7 @@ const Address = (props) => {
               </div>
             </div>
             <div className="mb-3 mt-3">
-                      <button className="btn btn-primary btn-sm" type="submit">
+                      <button className="btn btn-primary btn-sm" type="submit" onClick={handleSubmit}>
                         Save&nbsp;Settings
                       </button>
                     </div>

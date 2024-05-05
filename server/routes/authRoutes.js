@@ -4,7 +4,7 @@ const cors = require('cors')
 const passport = require("passport")
 const User = require('../models/db')
 const OAuth2Strategy = require("passport-google-oauth20").Strategy
-const {registerUser,getProfile,loginUser,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData} = require('../controllers/authControllers')
+const {registerUser,getProfile,loginUser,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress} = require('../controllers/authControllers')
 router.use(
     cors({
         credentials:true,
@@ -44,10 +44,15 @@ passport.serializeUser((user, cb)=>{
 passport.deserializeUser((user, cb)=>{
     cb(null,user)
   }); 
+//   post
 router.post('/register',registerUser)
 router.post("/login",loginUser)
 router.post('/ResetPassword', PasswordReset)
+// patch 
 router.patch('/ForgotPassword/:id/:token', NewPassword)
+router.patch('/update-user-profile/:id',updateUserProfile)
+router.patch('/update-user-address/:id',updateUserAddress)
+// get 
 router.get("/profile",getProfile);
 router.get('/logout',logOut)
 router.get('/user-profile/:id',getUserProfileData)

@@ -1,8 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfile = (props) => {
+  const navigate = useNavigate();
   const [data, setData] = useState({
     FirstName: '',
     LastName: '',
@@ -11,27 +13,28 @@ const UserProfile = (props) => {
   });
 
   useEffect(() => {
-    setData({ FirstName: props.FirstName, LastName: props.LastName,newPassword:'',confirmPassword:'' });
-  }, [props]);
+    setData((prevVal) => ({
+        ...prevVal, 
+        FirstName: props.FirstName, 
+        LastName: props.LastName
+    }));
+}, [props]);
+
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
     // backend logic implement
+    
+    e.preventDefault();
     try {
-      if(!!data.newPassword && !!data.confirmPassword){
-      if (data.newPassword === data.confirmPassword && data.newPassword.length > 6) {
-        //const response = await axios.patch(`/update-user-profile/${props.id}`,{data})
-        console.log(data)
-        toast.success("Changes Updated");
-      } else {
-        toast.error("Password don't match or length is less than 6 characters");
-      }
-    }
-    else{
-      //const response = await axios.patch(`/update-user-profile/${props.id}`,{data})
-      console.log(data)
-      toast.success("Changes Updated new");
-    }
+        const response = await axios.patch(`/update-user-profile/${props.id}`,{data})
+        if(response.data.success)
+          {
+            toast.success(response.data.success);
+            window.location.reload();
+          }
+          else{
+            toast.error(response.data.error);
+          }
     } catch (error) {
       toast.error(error);
     }

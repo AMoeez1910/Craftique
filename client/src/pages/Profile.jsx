@@ -79,6 +79,7 @@ const Profile = () => {
         />}
         {render === 'Address' && <Address 
           addressData={data.address}
+          id={user._id}
         />}
       </div>
     </div>
