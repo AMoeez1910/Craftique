@@ -1,5 +1,5 @@
 import "./App.css";
-import "./bootstrap.js";
+// import "./bootstrap.js";
 import {Routes,Route} from 'react-router-dom'
 import axios from 'axios'
 import Register from "./pages/Register.jsx";

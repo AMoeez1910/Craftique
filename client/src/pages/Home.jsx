@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import { useEffect,useState } from 'react';
 import Navbar from '../components/Navbar'
 import { UserContext } from '../context/userContext';
 const Home = () => {  
@@ -13,7 +12,8 @@ const Home = () => {
           { href: "#past", name: "Past Campaigns" },
           { href: "#volunteer", name: "Volunteer" },
           { href: "#start", name: "Start a fundraiser" },
-          {button: true, path: "/login", btn_name: "Login"}
+          {button: true, path: "/Login", btn_name: "Login"},
+          {button: true, path: "/Register", btn_name: "Register"}
         ]} 
       />
     </>
