@@ -1,9 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { useNavigate, Link } from "react-router-dom";
-import Navbar from '../components/Navbar'
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 import forgot from "../assets/forgot.png";
+import { Form, FormItem } from "../components/ui/form";
+import { Input } from "../components/ui/input";
+import { Label } from "@radix-ui/react-label";
+import { Button } from "../components/ui/button";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -19,57 +23,101 @@ export default function ResetPassword() {
       });
       if (data.error) {
         toast.error(data.error);
-      } 
-      else {
+      } else {
         toast.success(data.success);
-        navigate('/login')
+        navigate("/login");
       }
-    } catch (error) {}
-    //
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
-      <Navbar
-        links={[{ button: true, path: "/login", btn_name: "Login" }]}
-      />
-      <section className="py-4 py-md-5 mt-5">
-        <div className="container py-md-5">
-          <div className="row d-flex align-items-center">
-            <div className="col-md-6 text-center">
-              <img className="img-fluid w-100" src={forgot} />
-            </div>
-            <div className="col-md-5 col-xl-4 text-center text-md-start">
-              <h2 className="display-6 fw-bold mb-4">
-                Forgot your <span className="underline">password</span>?
-              </h2>
-              <p className="text-muted">
-                Enter the email associated with your account and we'll send you
-                a reset link.
-              </p>
+      <Navbar links={[{ button: true, path: "/login", btn_name: "Login" }]} />
+      {/* Large Screens start */}
+      <div className="hidden lg:block">
+        <div className="py-5 flex justify-center items-center">
+          <div className="w-1/2">
+            <img className="w-full" src={forgot} />
+          </div>
+          <div className="w-1/2 mb-10">
+            <div className="w-1/2">
               <form method="post" onSubmit={ResetPasswordUser}>
-                <div className="mb-3">
-                  <input
-                    className="shadow form-control"
+                <Form>
+                  <h3 className="mb-5">Reset Password</h3>
+                  <FormItem>
+                    <div className="w-full">
+                      <Label htmlFor="eail">
+                        Enter the email associated with your account and we'll
+                        send you a reset link.
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        className="border-1 rounded-sm h-10"
+                        value={data.email}
+                        onChange={(e) =>
+                          setData({ ...data, email: e.target.value })
+                        }
+                      />
+                    </div>
+                  </FormItem>
+                  <FormItem>
+                    <div className="my-3">
+                      <Button
+                        className="w-full bg-black rounded-sm h-10"
+                        type="submit"
+                      >
+                        Reset Password
+                      </Button>
+                    </div>
+                  </FormItem>
+                </Form>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Large Screens end */}
+      {/* Mobile Screens start */}
+      <div className="lg:hidden">
+        <div className="flex flex-col justify-center items-center h-screen w-screen pb-24">
+          <form method="post" onSubmit={ResetPasswordUser} className="w-80">
+            <Form>
+              <h3 className="mb-5">Reset Password</h3>
+              <FormItem>
+                <div className="w-full">
+                  <Label htmlFor="eail">
+                    Enter the email associated with your account and we'll send
+                    you a reset link.
+                  </Label>
+                  <Input
+                    id="email"
                     type="email"
-                    name="email"
-                    placeholder="Email"
+                    className="border-1 rounded-sm h-10"
                     value={data.email}
                     onChange={(e) =>
                       setData({ ...data, email: e.target.value })
                     }
                   />
                 </div>
-                <div className="mb-5">
-                  <button className="btn btn-primary shadow" type="submit">
-                    Reset password
-                  </button>
+              </FormItem>
+              <FormItem>
+                <div className="my-3">
+                  <Button
+                    className="w-full bg-black rounded-sm h-10"
+                    type="submit"
+                  >
+                    Reset Password
+                  </Button>
                 </div>
-              </form>
-            </div>
-          </div>
+              </FormItem>
+            </Form>
+          </form>
         </div>
-      </section>
+      </div>
+      {/* Mobile Screens end */}
     </>
   );
 }
-
+document.body.className = "overflow-y-hidden";

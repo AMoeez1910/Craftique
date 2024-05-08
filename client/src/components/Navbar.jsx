@@ -31,7 +31,7 @@ export default function NavBar({ links }) {
       <nav className="px-3 sm:px-6 lg:px-8 z-10 text-gray-700">
         {/* Mobile Device Start*/}
         <div>
-          <div className="pt-3 flex justify-between items-center select-none h-14 md:hidden">
+          <div className="pt-3 flex justify-between items-center select-none lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost">
@@ -40,40 +40,47 @@ export default function NavBar({ links }) {
               </SheetTrigger>
               <SheetContent side="bottom">
                 <div className="py-3">
-                  {links.map((link, index) => (
-                    <div className="p-2" key={index}>
-                      <a href={link.href}>{link.name}</a>
-                      {/* Add icons with text */}
-                    </div>
-                  ))}
+                  {links.map((link, index) => {
+                    if (!link.button) {
+                      return (
+                        <div className="p-2" key={index}>
+                          <Link to={link.href}>{link.name}</Link>
+                          {/* Add icons with text */}
+                        </div>
+                      );
+                    }
+                  })}
                 </div>
-                <hr className="border-gray-800 border-1" />
+                <hr className="border-gray-800 border-1 my-4" />
                 <SheetFooter>
                   {user ? (
-                    <div className="mb-20">
-                      <button
-                        className="h-9 w-20 text-white rounded-md bg-black"
-                        onClick={logout}
-                      >
-                        Logout
-                      </button>
+                    <div>
+                      <p className="text-black" onClick={logout}>
+                        <b>Log Out</b>
+                      </p>
                     </div>
                   ) : (
-                    <div className="mb-20">
-                      <div className="flex justify-center items-center py-2">
+                    <div className="mb-5">
+                      <div className="py-2">
                         {links.map((link, index) => {
                           if (link.button) {
-                            const evenIteration = index % 2 === 0;
                             return (
-                              <div>
+                              <div className="">
                                 <Link to={link.path} key={index}>
-                                  <button
-                                    className={`h-9 w-20 rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:text-gray-900 ${
-                                      evenIteration ? "bg-black text-white" : ""
-                                    }`}
-                                  >
-                                    {link.btn_name}
-                                  </button>
+                                  <p className="h-9">
+                                    {link.btn_name === "Login" ? (
+                                      <p className="text-black">
+                                        <b>Create a new account</b>
+                                      </p>
+                                    ) : (
+                                      <p>
+                                        Existing User?{" "}
+                                        <p className="text-black inline">
+                                          <b>Click here to register</b>
+                                        </p>
+                                      </p>
+                                    )}
+                                  </p>
                                 </Link>
                               </div>
                             );
@@ -92,7 +99,7 @@ export default function NavBar({ links }) {
         </div>
         {/* Mobile Device End */}
         {/* Other Devices Start */}
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <div className="flex items-center p-4 select-none justify-around">
             <img src={logo} alt="logo" className="h-7" />
             <div>
