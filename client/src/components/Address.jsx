@@ -36,7 +36,9 @@ const Address = (props) => {
         if(response.data.success)
           {
             toast.success(response.data.success);
-            window.location.reload();
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
           }
           else{
             toast.error(response.data.error);
