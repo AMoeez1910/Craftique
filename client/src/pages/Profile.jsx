@@ -1,3 +1,4 @@
+
 import React, { useContext, useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
@@ -9,15 +10,16 @@ import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { Separator } from "../components/ui/separator";
 
+
 const Profile = () => {
-  const [render, setRender] = useState('Profile');
+  const [render, setRender] = useState("Profile");
   const [data, setData] = useState({
-    email: '',
-    FirstName: '',
-    LastName: '',
-    googleID: '',
+    email: "",
+    FirstName: "",
+    LastName: "",
+    googleID: "",
     address: {},
-    orders: {}
+    orders: {},
   });
   const {  user,ready } = useContext(UserContext);
   const sidebarNavItems = [
@@ -33,47 +35,46 @@ const Profile = () => {
     
   ];
   
-  
+ 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`/user-profile/${user._id}`)
-        const {FirstName,LastName,email,orders,googleID,address} = response.data
-        if(googleID)
-        setData({
-          email: email,
-          FirstName: FirstName,
-          LastName: LastName,
-          googleID: googleID,
-          address: address,
-          orders: orders
-        }
-        )
-        else 
-        setData({
-          email: email,
-          FirstName: FirstName,
-          LastName: LastName,
-          address: address,
-          googleID:null,
-          orders: orders
-        }
-        )
+        const response = await axios.get(`/user-profile/${user._id}`);
+        const { FirstName, LastName, email, orders, googleID, address } =
+          response.data;
+        if (googleID)
+          setData({
+            email: email,
+            FirstName: FirstName,
+            LastName: LastName,
+            googleID: googleID,
+            address: address,
+            orders: orders,
+          });
+        else
+          setData({
+            email: email,
+            FirstName: FirstName,
+            LastName: LastName,
+            address: address,
+            googleID: null,
+            orders: orders,
+          });
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
 
-    if (user) { 
+    if (user) {
       fetchUserData();
     }
-  }, [user]); 
+  }, [user]);
 
-  if(!ready){
-    return 'Loading.....'
+  if (!ready) {
+    return "Loading.....";
   }
   if (ready && !user) {
-    return <Navigate to={'/login'}/>
+    return <Navigate to={"/login"} />;
   }
 
   return (
@@ -108,6 +109,7 @@ const Profile = () => {
         />}
           </div>
         </div>
+     
       </div>
         
     </div>
