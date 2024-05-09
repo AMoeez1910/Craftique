@@ -8,7 +8,6 @@ import UserProfile from '../components/UserProfile';
 import { UserContext } from '../context/userContext';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
-import { Separator } from "../components/ui/separator";
 
 
 const Profile = () => {
@@ -32,7 +31,7 @@ const Profile = () => {
     {
       title: "Address"
     },
-    
+
   ];
   
  
@@ -80,24 +79,31 @@ const Profile = () => {
   return (
     <div>
       <Navbar links={[{ button: true, path: "/", btn_name: "Logout" }]} />
-      <div id="wrapper">
-        <Sidebar setRender={setRender} />
-        {render === 'Profile' && <UserProfile 
+      <div className="space-y-6 p-10 pb-16 md:block mx-auto max-w-4xl">
+        <div className="space-y-0.5">
+          <h2 className="text-2xl font-bold tracking-tight">Account</h2>
+          <p className="text-muted-foreground">
+            Manage your user account.
+          </p>
+        </div>
+        <Separator className="my-6" />
+        <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+          <aside className="-mx-4 lg:w-1/5">
+        <Sidebar setRender={setRender} render={render} items={sidebarNavItems}/>
+          </aside>
+          <div className="flex-1 lg:max-w-2xl">
+          {render === 'Profile' && <UserProfile 
         FirstName={data.FirstName} 
         LastName={data.LastName} 
         email={data.email}
-        googleID={data.googleID}
-        id = {user._id}
-        />}
-        {render === 'Orders' && <Orders 
-          orderData ={data.orders}
-        />}
-        {render === 'Address' && <Address 
-          addressData={data.address}
+        addressData={data.address}
           id={user._id}
         />}
           </div>
         </div>
+      </div>
+        
+    </div>
   );
 };
 
