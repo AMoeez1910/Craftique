@@ -115,7 +115,7 @@ export default function NavBar({ links }) {
             </div>
             {user ? (
               <a className="flex justify-center items-center" href="/profile">
-                <p className="m-auto pr-2">Muhammad Umer Ali</p>{" "}
+                <p className="m-auto pr-2">{user.FirstName}</p>{" "}
                 {/* user.name bla bla */}
                 <FontAwesomeIcon
                   icon={faUser}

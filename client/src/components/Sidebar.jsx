@@ -29,4 +29,4 @@ function Sidebar({ items, setRender, render }) {
   );
 }
 
-export default Sidebar
+export default Sidebar;
