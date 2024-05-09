@@ -30,7 +30,9 @@ const UserProfile = (props) => {
         if(response.data.success)
           {
             toast.success(response.data.success);
-            window.location.reload();
+            setTimeout(() => {
+              window.location.reload();
+            }, 1500);
           }
           else{
             toast.error(response.data.error);
