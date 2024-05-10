@@ -1,236 +1,169 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { Form, FormItem } from "../components/ui/form";
+import { Input } from "../components/ui/input";
+import { Label } from "@radix-ui/react-label";
+import { Button } from "../components/ui/button";
+import pfp from "../assets/user_pfp.png";
 
-const UserProfile = (props) => {
+export default function UserProfile(props) {
   const navigate = useNavigate();
   const [data, setData] = useState({
-    FirstName: '',
-    LastName: '',
-    newPassword: '',
-    confirmPassword: '',
+    FirstName: "",
+    LastName: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   useEffect(() => {
     setData((prevVal) => ({
-        ...prevVal, 
-        FirstName: props.FirstName, 
-        LastName: props.LastName
+      ...prevVal,
+      FirstName: props.FirstName,
+      LastName: props.LastName,
     }));
-}, [props]);
-
+  }, [props]);
 
   const handleSubmit = async (e) => {
-    // backend logic implement
-    
     e.preventDefault();
     try {
-        const response = await axios.patch(`/update-user-profile/${props.id}`,{data})
-        if(response.data.success)
-          {
-            toast.success(response.data.success);
-            setTimeout(() => {
-              window.location.reload();
-            }, 1500);
-          }
-          else{
-            toast.error(response.data.error);
-          }
+      const response = await axios.patch(`/update-user-profile/${props.id}`, {
+        data,
+      });
+      if (response.data.success) {
+        toast.success(response.data.success);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      } else {
+        toast.error(response.data.error);
+      }
     } catch (error) {
       toast.error(error);
     }
   };
+  const fullName = `${props.FirstName} ${props.LastName}`;
+  const previewImage = (event) => {
+    const input = event.target;
+    const preview = document.getElementById("preview");
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setData(prevVal => ({ ...prevVal, [name]: value }));
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.classList.remove("hidden");
+      };
+
+      reader.readAsDataURL(input.files[0]);
+    }
   };
-
   return (
-    <div className="d-flex flex-column " id="content-wrapper">
-      <div id="content">
-        <div className="container-fluid">
-          <h3 className="text-dark mb-4">Profile</h3>
-          <div className="row mb-3">
-            <div className="col-lg-4">
-              <div className="card mb-3">
-                <div className="card-body text-center shadow">
-                  <img
-                    className="rounded-circle mb-3 mt-4"
-                    src="assets/img/dogs/image2.jpeg"
-                    width={160}
-                    height={160}
-                  />
-                  <div className="mb-3">
-                    <button className="btn btn-primary btn-sm" type="button">
-                      Change Photo
-                    </button>
-                  </div>
-                </div>
+    <div className="">
+      <h3 className="text-dark mb-4" name="heading">
+        Profile
+      </h3>
+      <div className="flex justify-between">
+        <div className="w-2/3">
+          <Form>
+            <FormItem>
+              <div className="w-4/5">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  className="border-1 rounded-sm h-10"
+                  placeholder={props.email}
+                  disabled
+                />
               </div>
-              <div className="card shadow mb-4" />
-            </div>
-            <div className="col-lg-8">
-              <div className="row">
-                <div className="col">
-                  <div className="card shadow mb-3">
-                    <div className="card-header py-3">
-                      <p className="text-primary m-0 fw-bold">User Settings</p>
-                    </div>
-                    <div className="card-body">
-                      <form>
-                        {!!props.googleID ? (
-                          <>
-                            <div className="row">
-                              <div className="col">
-                                <div className="mb-3">
-                                  <label className="form-label" htmlFor="email">
-                                    <strong>Email Address</strong>
-                                  </label>
-                                  <input
-                                    className="form-control"
-                                    type="email"
-                                    id="email"
-                                    placeholder={props.email}
-                                    name="email"
-                                    disabled
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="row">
-                              <div className="col">
-                                <div className="mb-3">
-                                  <label className="form-label" htmlFor="first_name">
-                                    <strong>First Name</strong>
-                                  </label>
-                                  <input
-                                    className="form-control"
-                                    type="text"
-                                    id="first_name"
-                                    placeholder={props.FirstName}
-                                    name="first_name"
-                                    disabled
-                                  />
-                                </div>
-                                <div className="mb-3">
-                                  <label className="form-label" htmlFor="first_name">
-                                    <strong>New Password</strong>
-                                  </label>
-                                  <input className="form-control" type="password"
-                                    disabled />
-                                </div>
-                              </div>
-                              <div className="col">
-                                <div className="mb-3">
-                                  <label className="form-label" htmlFor="last_name">
-                                    <strong>Last Name</strong>
-                                  </label>
-                                  <input
-                                    className="form-control"
-                                    type="text"
-                                    id="last_name"
-                                    placeholder={props.LastName}
-                                    name="last_name"
-                                    disabled
-                                  />
-                                </div>
-                                <div className="mb-3">
-                                  <label className="form-label" htmlFor="last_name">
-                                    <strong>Confirm Password</strong>
-                                  </label>
-                                  <input className="form-control" type="password"
-                                    disabled />
-                                </div>
-                              </div>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="row">
-                              <div className="col">
-                                <div className="mb-3">
-                                  <label className="form-label" htmlFor="email">
-                                    <strong>Email Address</strong>
-                                  </label>
-                                  <input
-                                    className="form-control"
-                                    type="email"
-                                    id="email"
-                                    placeholder={props.email}
-                                    name="email"
-                                    disabled={!props.googleID}
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <div className="row">
-                              <div className="col">
-                                <div className="mb-3">
-                                  <label className="form-label" htmlFor="first_name">
-                                    <strong>First Name</strong>
-                                  </label>
-                                  <input
-                                    className="form-control"
-                                    type="text"
-                                    id="first_name"
-                                    placeholder={props.FirstName}
-                                    name="FirstName"
-                                    value={data.FirstName}
-                                    onChange={handleChange}
-                                  />
-                                </div>
-                                <div className="mb-3">
-                                  <label className="form-label" htmlFor="first_name">
-                                    <strong>New Password</strong>
-                                  </label>
-                                  <input className="form-control" type="password" name='newPassword' value={data.newPassword}
-                                    onChange={handleChange} />
-                                </div>
-                              </div>
-                              <div className="col">
-                                <div className="mb-3">
-                                  <label className="form-label" htmlFor="last_name">
-                                    <strong>Last Name</strong>
-                                  </label>
-                                  <input
-                                    className="form-control"
-                                    type="text"
-                                    id="last_name"
-                                    placeholder={props.LastName}
-                                    name="LastName"
-                                    value={data.LastName}
-                                    onChange={handleChange}
-                                  />
-                                </div>
-                                <div className="mb-3">
-                                  <label className="form-label" htmlFor="last_name">
-                                    <strong>Confirm Password</strong>
-                                  </label>
-                                  <input className="form-control" type="password" name='confirmPassword' value={data.confirmPassword}
-                                    onChange={handleChange} />
-                                </div>
-                              </div>
-                            </div>
-                          </>
-                        )}
-                        <div className="mb-3">
-                          <button className="btn btn-primary btn-sm" type="submit" onClick={handleSubmit}>
-                            Save Settings
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
+            </FormItem>
+            <FormItem>
+              <div className="w-4/5 pt-8">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  type="name"
+                  className="border-1 rounded-sm h-10"
+                  placeholder={fullName}
+                  disabled
+                />
               </div>
-            </div>
-          </div>
+            </FormItem>
+          </Form>
         </div>
+        <div className="w-1/3 flex flex-col justify-center items-center">
+          <Label>Profile Photo</Label>
+          <Label htmlFor="picture" className="block cursor-pointer">
+            <img
+              id="preview"
+              className="h-24 w-24"
+              src={pfp}
+              alt="Selected Image"
+            />
+          </Label>
+          <Input
+            id="picture"
+            type="file"
+            onChange={previewImage}
+            className="border-1 rounded-sm border-gray-100 cursor-pointer h-10 m-0 mt-1 p-2"
+            accept="image/*"
+          />
+        </div>
+      </div>
+      <div className="pt-8">
+        <h5>Change Password</h5>
+        <div className="pt-4">
+          <form>
+            <Form>
+              <div className="flex">
+                <div className="w-1/2">
+                  <FormItem>
+                    <div className="w-4/5">
+                      <Label htmlFor="newPass">New Password</Label>
+                      <Input
+                        id="newPass"
+                        type="password"
+                        className="border-1 rounded-sm h-10"
+                        value={data.newPassword}
+                        onChange={(e) =>
+                          setData({ ...data, newPassword: e.target.value })
+                        }
+                      />
+                    </div>
+                  </FormItem>
+                </div>
+                <div className="w-1/2">
+                  <FormItem>
+                    <div className="w-4/5">
+                      <Label htmlFor="conPass">Confirm Password</Label>
+                      <Input
+                        id="conPass"
+                        type="password"
+                        className="border-1 rounded-sm h-10"
+                        value={data.confirmPassword}
+                        onChange={(e) =>
+                          setData({ ...data, confirmPassword: e.target.value })
+                        }
+                      />
+                    </div>
+                  </FormItem>
+                </div>
+              </div>
+            </Form>
+          </form>
+        </div>
+      </div>
+      <div className="pt-8 flex justify-center">
+        <Button
+          className="w-full bg-black rounded-sm h-10"
+          onClick={handleSubmit}
+        >
+          Save Changes
+        </Button>
       </div>
     </div>
   );
-};
-
-export default UserProfile;
+}
+document.body.className = "overflow-y-hidden";

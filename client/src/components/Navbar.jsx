@@ -10,6 +10,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 export default function NavBar({ links }) {
   const navigate = useNavigate();
@@ -114,14 +115,28 @@ export default function NavBar({ links }) {
               </ul>
             </div>
             {user ? (
-              <a className="flex justify-center items-center" href="/profile">
-                <p className="m-auto pr-2">Muhammad Umer Ali</p>{" "}
-                {/* user.name bla bla */}
-                <FontAwesomeIcon
-                  icon={faUser}
-                  className="h-4 border-1 p-2 rounded-full border-gray-500"
-                />
-              </a>
+              <div className="flex justify-center items-center cursor-pointer">
+                <Popover>
+                  <PopoverTrigger>
+                    <Button variant="ghost">
+                      <p className="m-auto pr-2">{user.FirstName}</p>
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        className="h-4 border-1 p-2 rounded-full border-gray-500"
+                      />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-40 border-1 rounded-sm py-3 pb-0">
+                    <Link to="/profile">
+                      <p className="cursor-pointer">Profile</p>
+                    </Link>
+                    <hr className="border-gray-800 border-1 my-2" />
+                    <p className="cursor-pointer pt-1" onClick={logout}>
+                      <b>Log Out</b>
+                    </p>
+                  </PopoverContent>
+                </Popover>
+              </div>
             ) : (
               <div className="flex">
                 {links.map((link, index) => {
