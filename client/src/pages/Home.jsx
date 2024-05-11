@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import Navbar from '../components/Navbar'
 import { UserContext } from '../context/userContext';
+import { Products } from './Products';
 const Home = () => {  
   const {user} = useContext(UserContext)
   return (
@@ -16,6 +17,7 @@ const Home = () => {
           {button: true, path: "/Register", btn_name: "Register"}
         ]} 
       />
+      <Products />
     </>
   )
 }

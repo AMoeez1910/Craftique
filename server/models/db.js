@@ -20,6 +20,12 @@ const user = new Schema({
         required: [true, 'User email required']
       },
     password:String,
+
+    phoneNo: {
+      type: String,
+      unique: true,
+      default: null
+  },
     googleID: { type: String, default: "" },
     address: {
       shippingAddress: {

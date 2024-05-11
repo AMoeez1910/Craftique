@@ -2,22 +2,36 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { Button } from "./ui/button"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form"
+import { Input } from "./ui/input"
+import { PhoneInput } from './PhoneInput';
 
 const UserProfile = (props) => {
   const navigate = useNavigate();
+  const [phoneNo, setPhoneNum] = useState("");
   const [data, setData] = useState({
     FirstName: '',
     LastName: '',
     newPassword: '',
-    confirmPassword: '',
+    confirmPassword: ''
   });
 
   useEffect(() => {
     setData((prevVal) => ({
         ...prevVal, 
         FirstName: props.FirstName, 
-        LastName: props.LastName
+        LastName: props.LastName,
     }));
+    setPhoneNum(props.phoneNo);
 }, [props]);
 
 
@@ -26,7 +40,7 @@ const UserProfile = (props) => {
     
     e.preventDefault();
     try {
-        const response = await axios.patch(`/update-user-profile/${props.id}`,{data})
+        const response = await axios.patch(`/update-user-profile/${props.id}`,{data,phoneNo})
         if(response.data.success)
           {
             toast.success(response.data.success);
@@ -141,6 +155,12 @@ const UserProfile = (props) => {
                                   <input className="form-control" type="password"
                                     disabled />
                                 </div>
+                                <div className="mb-3">
+                                  <label className="form-label" htmlFor="phone_number">
+                                    <strong>Phone Number</strong>
+                                  </label>
+                                <PhoneInput setPhoneNum={setPhoneNum} />
+                                </div>
                               </div>
                             </div>
                           </>
@@ -208,6 +228,12 @@ const UserProfile = (props) => {
                                   </label>
                                   <input className="form-control" type="password" name='confirmPassword' value={data.confirmPassword}
                                     onChange={handleChange} />
+                                </div>
+                                <div className="mb-3">
+                                  <label className="form-label" htmlFor="phone_number">
+                                    <strong>Phone Number</strong>
+                                  </label>
+                                <PhoneInput setPhoneNum={setPhoneNum} phoneNo={phoneNo} />
                                 </div>
                               </div>
                             </div>

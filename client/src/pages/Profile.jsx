@@ -40,7 +40,8 @@ const Profile = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`/user-profile/${user._id}`);
-        const { FirstName, LastName, email, orders, googleID, address } =
+        console.log(response.data.orders)
+        const { FirstName, LastName, email, orders, googleID, address,phoneNo } =
           response.data;
         if (googleID)
           setData({
@@ -50,6 +51,7 @@ const Profile = () => {
             googleID: googleID,
             address: address,
             orders: orders,
+            phoneNo: phoneNo,
           });
         else
           setData({
@@ -59,6 +61,7 @@ const Profile = () => {
             address: address,
             googleID: null,
             orders: orders,
+            phoneNo: phoneNo,
           });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -99,6 +102,7 @@ const Profile = () => {
         email={data.email}
         googleID={data.googleID}
         id = {user._id}
+        phoneNo = {data.phoneNo}
         />}
         {render === 'Orders' && <Orders 
           orderData ={data.orders}

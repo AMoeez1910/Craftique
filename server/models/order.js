@@ -3,13 +3,11 @@ const { Schema } = mongoose;
 
 // Define Order Schema
 const OrderSchema = new Schema({
-  // User who placed the order
   buyer: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
-  // seller data is in the products (user ref -> brand  ||| product ref -> brand )
   products: [{
     product: {
       type: Schema.Types.ObjectId,
@@ -17,29 +15,21 @@ const OrderSchema = new Schema({
       required: true
     },
     quantity: {
-      type: Number,
+       type: Number,
       required: true,
-      min: 1 // Ensure minimum quantity is 1
+      min:1 
     }
   }],
 
-  // Total price of the order
   totalPrice: {
     type: Number,
     required: true,
-    min: 0 // Ensure total price is non-negative
+    min: 0
   },
 
-  // Timestamp for order placement
   placedAt: {
     type: Date,
     default: Date.now
-  },
-
-  // Shipping details (optional)
-  shippingAddress: {
-    type: String,
-    trim: true
   },
 
   // Status of the order

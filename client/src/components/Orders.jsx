@@ -30,10 +30,10 @@ const Orders = (props) => {
               <tbody>
                 {props.orderData.map((data, idx) => (
                 <tr key={idx}>
-                  <td>{idx}</td>
-                  <td>{data.Status}</td>
-                  <td>{new Date(data.Date).toISOString().split('T')[0]} at {data.Time}</td>
-                  <td>{data.Price}</td>
+                  <td>{data.orderId}</td>
+                  <td>{data.status}</td>
+                  <td>{new Date(data.placedAt).toISOString().split('T')[0]}</td>
+                  <td>{data.totalPrice}</td>
                   <td>
                     <button
                       className="btn btn-primary"
