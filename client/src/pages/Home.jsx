@@ -5,7 +5,7 @@ import { Products } from './Products';
 const Home = () => {  
   const {user} = useContext(UserContext)
   return (
-    <>
+    <div style={{ overflowY: 'auto', maxHeight: '100vh' }}>
         <Navbar
         links={[
           { href: "/", name: "Home" },
@@ -18,7 +18,7 @@ const Home = () => {
         ]} 
       />
       <Products />
-    </>
+    </div>
   )
 }
 

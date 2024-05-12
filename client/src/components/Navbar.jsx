@@ -10,10 +10,13 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Badge from '@mui/material/Badge';
+import { CartContext } from "../context/cart";
 export default function NavBar({ links }) {
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
+  const [cart] = useContext(CartContext);
   const logout = () => {
     axios
       .get("/logout")
@@ -39,6 +42,7 @@ export default function NavBar({ links }) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="bottom">
+
                 <div className="py-3">
                   {links.map((link, index) => {
                     if (!link.button) {
@@ -114,14 +118,20 @@ export default function NavBar({ links }) {
               </ul>
             </div>
             {user ? (
-              <a className="flex justify-center items-center" href="/profile">
-                <p className="m-auto pr-2">{user.FirstName}</p>{" "}
-                {/* user.name bla bla */}
+              <div className="flex justify-end items-center">
+              <a className="flex items-center" href="/profile">
+                <p className="pr-2 mt-3">{user.FirstName}</p>
                 <FontAwesomeIcon
                   icon={faUser}
                   className="h-4 border-1 p-2 rounded-full border-gray-500"
                 />
               </a>
+              <Badge badgeContent={cart.length} color="primary">
+                <Link to="/shoppingcart" className="ml-4">
+                  <ShoppingCartIcon />
+                </Link>
+              </Badge>
+            </div>
             ) : (
               <div className="flex">
                 {links.map((link, index) => {
@@ -142,6 +152,11 @@ export default function NavBar({ links }) {
                     );
                   }
                 })}
+                <Badge badgeContent={cart.length} color="primary">
+                <Link to="/shoppingcart">
+                    <ShoppingCartIcon className="ml-4 mt-2"/>
+                </Link>
+                </Badge>
               </div>
             )}
           </div>

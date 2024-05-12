@@ -13,6 +13,8 @@ import { Toaster } from "react-hot-toast";
 import { UserContextProvider } from "./context/userContext.jsx";
 import { ValidationFailure } from "./pages/ValidationFailure.jsx";
 import Profile from "./pages/Profile.jsx";
+import { CartProvider} from "./context/cart";
+import { Shoppingcart } from "./pages/Shoppingcart";
 axios.defaults.baseURL =`http://localhost:8000`;
 axios.defaults.withCredentials = true;
 
@@ -22,6 +24,7 @@ function App() {
     
     <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
     <UserContextProvider>
+    <CartProvider>
     <Routes>
     
     <Route path='/' element={<Home/>}
@@ -47,6 +50,10 @@ function App() {
         path="/profile"
         element={<Profile />}
       />
+      <Route
+        path="/shoppingcart"
+        element={<Shoppingcart />}
+      />
       <Route path="*" element={<NotFound />} />
     </Routes>
 
@@ -55,6 +62,7 @@ function App() {
             path="/verify/:id/:expirationTimestamp"
             element={<EmailVerify />}
           /> */}
+          </CartProvider>
     </UserContextProvider>
     </>
   );

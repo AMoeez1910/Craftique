@@ -199,8 +199,8 @@ const getProfile= async (req,res)=>{
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userData) => {
       if (err) throw err;
-      const {FirstName,email,_id} = await User.findById(userData.id);
-      res.json({FirstName,email,_id});
+      const {FirstName,email,_id,address} = await User.findById(userData.id);
+      res.json({FirstName,email,_id,address});
       
     });
   } else {
@@ -367,7 +367,7 @@ const updateUserAddress = async (req,res)=>{
 }
 const getProducts = async (req,res)=>{
     try {
-        const products = await Product.find()
+        const products = await Product.find().populate(path='brand',select='name')
         res.json(products)
     } catch (error) {
         console.error(error);
@@ -375,5 +375,22 @@ const getProducts = async (req,res)=>{
     }
 
 }
-
-module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts}
+const placeOrder = async (req,res)=>{
+    const {cart,total,user} = req.body
+    try {
+        const newOrder = new Order({
+            buyer: user,
+            products: cart,
+            totalPrice: total,
+            status: 'Pending'
+        })
+        const data = await newOrder.save()
+        await User.updateOne({_id:user},{$push:{orders:data._id}})
+        return res.json({ success: "Order placed successfully" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    
+}
+module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder}
