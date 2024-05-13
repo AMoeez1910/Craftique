@@ -31,18 +31,19 @@ export default function Address(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.patch(`/update-user-address/${props.id}`, {
-        data,
-      });
-      if (response.data.success) {
-        toast.success(response.data.success);
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      } else {
-        toast.error(response.data.error);
-      }
-      console.log(data);
+
+        const response = await axios.patch(`/update-user-address/${props.id}`,{data})
+        if(response.data.success)
+          {
+            toast.success(response.data.success);
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }
+          else{
+            toast.error(response.data.error);
+          }
+        console.log(data)
     } catch (error) {
       toast.error(error);
     }

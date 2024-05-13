@@ -7,9 +7,11 @@ import { Input } from "../components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "../components/ui/button";
 import pfp from "../assets/user_pfp.png";
+import { PhoneInput } from './PhoneInput';
 
 export default function UserProfile(props) {
   const navigate = useNavigate();
+  const [phoneNo, setPhoneNum] = useState("");
   const [data, setData] = useState({
     FirstName: "",
     LastName: "",
@@ -19,11 +21,13 @@ export default function UserProfile(props) {
 
   useEffect(() => {
     setData((prevVal) => ({
-      ...prevVal,
-      FirstName: props.FirstName,
-      LastName: props.LastName,
+        ...prevVal, 
+        FirstName: props.FirstName, 
+        LastName: props.LastName,
     }));
-  }, [props]);
+    setPhoneNum(props.phoneNo);
+}, [props]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

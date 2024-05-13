@@ -34,6 +34,7 @@ export default function Orders(props) {
           ))}
         </TableBody>
       </Table>
+
     </div>
   );
 }

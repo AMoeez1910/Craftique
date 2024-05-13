@@ -11,10 +11,13 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Badge from '@mui/material/Badge';
+import { CartContext } from "../context/cart";
 export default function NavBar({ links }) {
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
+  const [cart] = useContext(CartContext);
   const logout = () => {
     axios
       .get("/logout")
@@ -40,6 +43,7 @@ export default function NavBar({ links }) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left">
+
                 <div className="py-3">
                   {links.map((link, index) => {
                     if (!link.button) {
@@ -164,6 +168,20 @@ export default function NavBar({ links }) {
                   </PopoverContent>
                 </Popover>
               </div>
+              <div className="flex justify-end items-center">
+              <a className="flex items-center" href="/profile">
+                <p className="pr-2 mt-3">{user.FirstName}</p>
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="h-4 border-1 p-2 rounded-full border-gray-500"
+                />
+              </a>
+              <Badge badgeContent={cart.length} color="primary">
+                <Link to="/shoppingcart" className="ml-4">
+                  <ShoppingCartIcon />
+                </Link>
+              </Badge>
+            </div>
             ) : (
               <div className="flex">
                 {links.map((link, index) => {
@@ -184,6 +202,11 @@ export default function NavBar({ links }) {
                     );
                   }
                 })}
+                <Badge badgeContent={cart.length} color="primary">
+                <Link to="/shoppingcart">
+                    <ShoppingCartIcon className="ml-4 mt-2"/>
+                </Link>
+                </Badge>
               </div>
             )}
           </div>

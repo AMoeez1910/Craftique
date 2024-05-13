@@ -1,10 +1,11 @@
 import React, { useContext } from 'react'
 import Navbar from '../components/Navbar'
 import { UserContext } from '../context/userContext';
+import { Products } from './Products';
 const Home = () => {  
   const {user} = useContext(UserContext)
   return (
-    <>
+    <div style={{ overflowY: 'auto', maxHeight: '100vh' }}>
         <Navbar
         links={[
           { href: "/", name: "Home" },
@@ -16,7 +17,8 @@ const Home = () => {
           {button: true, path: "/Register", btn_name: "Register"}
         ]} 
       />
-    </>
+      <Products />
+    </div>
   )
 }
 

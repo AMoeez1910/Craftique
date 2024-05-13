@@ -9,7 +9,7 @@ function Sidebar({ items, setRender, render }) {
   };
 
   return (
-    <nav className={cn("flex space-x-1 lg:flex-col lg:space-x-0 lg:space-y-1")}>
+    <nav className={cn("flex space-x-1 lg:flex-col lg:space-x-0 lg:space-y-1 justify-center ")}>
       {items.map((item) => (
         <button
           key={item.title}

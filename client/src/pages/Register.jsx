@@ -9,17 +9,21 @@ import google from "../assets/google.svg";
 import { Form, FormItem } from "../components/ui/form";
 import { Input } from "../components/ui/input";
 import { Label } from "@radix-ui/react-label";
+import { PhoneInput } from "../components/PhoneInput";
 
 export default function Register() {
   const navigate = useNavigate();
+  const [phoneNo, setPhoneNum] = useState("");
+    
   const [data, setData] = useState({
     FirstName: "",
     LastName: "",
     email: "",
-    password: "",
+    password: ""
   });
   const registerUser = async (e) => {
     e.preventDefault();
+    
     const { FirstName, LastName, email, password, userType } = data;
     try {
       const { data } = await axios.post("/register", {
@@ -28,6 +32,7 @@ export default function Register() {
         email,
         password,
         userType,
+        phoneNo,
       });
       if (data.error) {
         if (data.error.message) {
@@ -101,7 +106,13 @@ export default function Register() {
                       </div>
                     </FormItem>
                     <FormItem>
-                      <div className="w-full mb-2">
+                      <div className="w-full">
+                        <Label htmlFor="phoneNo">Phone Number</Label>
+                    <PhoneInput setPhoneNum={setPhoneNum} />
+                      </div>
+                    </FormItem>
+                    <FormItem>
+                      <div className="w-full">
                         <Label htmlFor="inPass">Password</Label>
                         <Input
                           id="inPass"
@@ -114,6 +125,7 @@ export default function Register() {
                         />
                       </div>
                     </FormItem>
+                    
                     <FormItem>
                       <div className="w-full my-3">
                         <Button
