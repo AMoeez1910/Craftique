@@ -1,5 +1,3 @@
-import "./App.css";
-import "./bootstrap.js";
 import {Routes,Route} from 'react-router-dom'
 import axios from 'axios'
 import Register from "./pages/Register.jsx";
@@ -13,15 +11,19 @@ import { Toaster } from "react-hot-toast";
 import { UserContextProvider } from "./context/userContext.jsx";
 import { ValidationFailure } from "./pages/ValidationFailure.jsx";
 import Profile from "./pages/Profile.jsx";
+import { CartProvider} from "./context/cart";
+import { Shoppingcart } from "./pages/Shoppingcart";
+import SellerDash from "./pages/SellerDash";
+import Landing from "./pages/Landing";
 axios.defaults.baseURL =`http://localhost:8000`;
 axios.defaults.withCredentials = true;
 
 function App() {
   return (
     <>
-    
     <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
     <UserContextProvider>
+    <CartProvider>
     <Routes>
     
     <Route path='/' element={<Home/>}
@@ -47,17 +49,31 @@ function App() {
         path="/profile"
         element={<Profile />}
       />
+      <Route
+        path="/shoppingcart"
+        element={<Shoppingcart />}
+        />
+        <Route
+        path="/dash"
+        element={<SellerDash />}
+      />
+      <Route
+        path="/home"
+        element={<Landing/>}
+      />
       <Route path="*" element={<NotFound />} />
+      
     </Routes>
+    
 
     {/*  example 
     <Route
             path="/verify/:id/:expirationTimestamp"
             element={<EmailVerify />}
           /> */}
+          </CartProvider>
     </UserContextProvider>
     </>
   );
 }
-
 export default App;

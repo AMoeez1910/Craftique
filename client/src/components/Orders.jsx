@@ -1,63 +1,40 @@
-import React, { useState } from 'react'
+import React from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
 
-const Orders = (props) => {
+export default function Orders(props) {
   return (
-    <div className="d-flex flex-column" id="content-wrapper">
-  <div id="content">
-    <div className="container-fluid">
-      <h3 className="text-dark mb-4">Orders</h3>
-      <div className="card shadow">
-        <div className="card-header py-3">
-          <p className="text-primary m-0 fw-bold">Order Info</p>
-        </div>
-        <div className="card-body">
-          <div
-            className="table-responsive table mt-2"
-            id="dataTable"
-            role="grid"
-            aria-describedby="dataTable_info"
-          >
-            <table className="table my-0" id="dataTable">
-              <thead>
-                <tr>
-                  <th>OrderID</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                  <th>Price</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {props.orderData.map((data, idx) => (
-                <tr key={idx}>
-                  <td>{idx}</td>
-                  <td>{data.Status}</td>
-                  <td>{new Date(data.Date).toISOString().split('T')[0]} at {data.Time}</td>
-                  <td>{data.Price}</td>
-                  <td>
-                    <button
-                      className="btn btn-primary"
-                      type="button"
-                      style={{ marginTop: "-6px" }}
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr />
-              </tfoot>
-            </table>
-          </div>
-        </div>
-      </div>
+    <div>
+      <h3>Orders</h3>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>OrderID</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Amount</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {props.orderData.map((data, idx) => (
+            <TableRow key={idx}>
+              <TableCell>{data.orderId}</TableCell>
+              <TableCell>{data.status}</TableCell>
+              <TableCell>
+                {new Date(data.placedAt).toISOString().split("T")[0]}
+              </TableCell>
+              <TableCell>{data.totalPrice}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
     </div>
-  </div>
-</div>
-
-  )
+  );
 }
-
-export default Orders

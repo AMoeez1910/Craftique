@@ -1,140 +1,253 @@
-import { useState } from "react"
-import {toast} from 'react-hot-toast'
-import axios from 'axios'
-import { useNavigate } from "react-router-dom"
-import Navbar from "../components/Navbar"
+import { useState } from "react";
+import { toast } from "react-hot-toast";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
 import signup from "../assets/login.png";
+import { Button } from "../components/ui/button";
+import google from "../assets/google.svg";
+import { Form, FormItem } from "../components/ui/form";
+import { Input } from "../components/ui/input";
+import { Label } from "@radix-ui/react-label";
+import { PhoneInput } from "../components/PhoneInput";
 
-// create state
 export default function Register() {
-  const navigate = useNavigate()
-    const [data,setData]= useState({
-        FirstName:'',
-        LastName:'',
-        email:'',
-        password:'',
-    })
-    const registerUser = async (e) => {
-        // not to automatically load
-        e.preventDefault()
-        const {FirstName,LastName,email,password,userType} = data
-        try{
-            const {data} = await axios.post('/register',{
-                FirstName,LastName,email,password,userType
-              })
-              if(data.error){
-                if(data.error.message){
-                    toast.error(data.error.errors.email.properties.message)
-                }
-                else
-                toast.error(data.error)
-              }
-              else{
-                setData({})
-                toast.success("Registration Successful")
-                navigate('/login')
-              }
-        }
-        catch(error){
-            console.log(error)
-        }
+  const navigate = useNavigate();
+  const [phoneNo, setPhoneNum] = useState("");
+    
+  const [data, setData] = useState({
+    FirstName: "",
+    LastName: "",
+    email: "",
+    password: ""
+  });
+  const registerUser = async (e) => {
+    e.preventDefault();
+    
+    const { FirstName, LastName, email, password, userType } = data;
+    try {
+      const { data } = await axios.post("/register", {
+        FirstName,
+        LastName,
+        email,
+        password,
+        userType,
+        phoneNo,
+      });
+      if (data.error) {
+        if (data.error.message) {
+          toast.error(data.error.errors.email.properties.message);
+        } else toast.error(data.error);
+      } else {
+        setData({});
+        toast.success("Registration Successful");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
     }
-    const handleChange = (event)=>{
-        const { name, value } = event.target;
-        setData(prevVal=> ({...prevVal,[name]:value}))
-    }
-    return (
+  };
+
+  return (
     <>
-      <Navbar links={[{ button: true, path: "/register", btn_name: "Sign Up" }]} />
-      <section className="py-4 py-md-5 my-5">
-        <div className="container py-md-5">
-          <div className="row">
-            <div className="col-md-6 text-center">
-              <img className="img-fluid w-100" src={signup} />
+      <div>
+        <Navbar links={[{ button: true, path: "/Login", btn_name: "Login" }]} />
+        {/* Large Screen start */}
+        <div className="hidden lg:block">
+          <div className="py-5 flex justify-center items-center">
+            <div className="w-1/2">
+              <img className="w-full" src={signup} />
             </div>
-            <div className="col-md-5 col-xl-4 text-center text-md-start">
-              <h2 className="display-6 fw-bold mb-5">
-                <span className="underline pb-1">
-                  <strong>Sign up</strong>
-                </span>
-              </h2>
-              <form method="post" onSubmit={registerUser}>
-                <div className="mb-3">
-                  <input
-                    className="shadow-sm form-control"
-                    type="text"
-                    name="FirstName"
-                    placeholder="First Name"
-                    value={data.FirstName}
-                    onChange={handleChange}
-                  />
+            <div className="w-1/2 mb-10">
+              <div className="w-1/2">
+                <form onSubmit={registerUser} method="post">
+                  <Form>
+                    <h3 className="mb-5 text-3xl">Register</h3>
+                    <FormItem>
+                      <div className="w-full mb-2">
+                        <Label htmlFor="fName">First Name</Label>
+                        <Input
+                          id="fName"
+                          type="text"
+                          className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
+                          value={data.FirstName}
+                          onChange={(e) =>
+                            setData({ ...data, FirstName: e.target.value })
+                          }
+                        />
+                      </div>
+                    </FormItem>
+                    <FormItem>
+                      <div className="w-full mb-2">
+                        <Label htmlFor="lName">Last Name</Label>
+                        <Input
+                          id="lName"
+                          type="text"
+                          className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
+                          value={data.LastName}
+                          onChange={(e) =>
+                            setData({ ...data, LastName: e.target.value })
+                          }
+                        />
+                      </div>
+                    </FormItem>
+                    <FormItem>
+                      <div className="w-full mb-2">
+                        <Label htmlFor="inEmail">Email</Label>
+                        <Input
+                          id="inEmail"
+                          type="email"
+                          className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
+                          value={data.email}
+                          onChange={(e) =>
+                            setData({ ...data, email: e.target.value })
+                          }
+                        />
+                      </div>
+                    </FormItem>
+                    <FormItem>
+                      <div className="w-full">
+                        <Label htmlFor="phoneNo">Phone Number</Label>
+                    <PhoneInput setPhoneNum={setPhoneNum} />
+                      </div>
+                    </FormItem>
+                    <FormItem>
+                      <div className="w-full">
+                        <Label htmlFor="inPass">Password</Label>
+                        <Input
+                          id="inPass"
+                          type="password"
+                          className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
+                          value={data.password}
+                          onChange={(e) =>
+                            setData({ ...data, password: e.target.value })
+                          }
+                        />
+                      </div>
+                    </FormItem>
+                    
+                    <FormItem>
+                      <div className="w-full my-3">
+                        <Button
+                          className="w-full h-10"
+                          type="submit"
+                        >
+                          Register
+                        </Button>
+                      </div>
+                    </FormItem>
+                  </Form>
+                </form>
+                <div>
+                  <div className="flex justify-center items-center">
+                    <p className="m-auto text-sm">OR</p>
+                  </div>
+                  <div className="w-full mt-3">
+                    <Link to="http://localhost:8000/auth/google/callback">
+                      <Button className="w-full bg-white text-black border-1 rounded-sm h-10 border-2 border-gray-100 shadow-md">
+                        <img src={google} alt="Google" className="h-7 mr-2" />
+                        Register with Google
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-                <div className="mb-3">
-                  <input
-                    className="shadow-sm form-control"
-                    type="text"
-                    name="LastName"
-                    placeholder="Last Name"
-                    value={data.LastName}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    className="shadow-sm form-control"
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={data.email}
-                    onChange={handleChange}
-                  />
-                </div>
-                
-                <div className="mb-3">
-                  <input
-                    className="shadow-sm form-control"
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={data.password}
-                    onChange={handleChange
-                    }
-                  />
-                </div>
-                <div className="mb-5">
-                  <button className="btn btn-primary shadow" type="submit">
-                    Create account
-                  </button>
-                </div>
-              </form>
-              <p className="text-muted">
-                Have an account?{" "}
-                <a href="/login">
-                  Log in&nbsp;
-                  <svg
-                    className="icon icon-tabler icon-tabler-arrow-narrow-right"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <line x1={5} y1={12} x2={19} y2={12} />
-                    <line x1={15} y1={16} x2={19} y2={12} />
-                    <line x1={15} y1={8} x2={19} y2={12} />
-                  </svg>
-                </a>
-              </p>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+        {/* Large Screen end */}
+        {/* Mobile Screen Start */}
+        <div className="lg:hidden">
+          <div className="flex flex-col justify-center items-center h-screen w-screen pb-24">
+            <form onSubmit={registerUser} method="post" className="w-80">
+              <Form>
+                <h3 className="mb-5">Register</h3>
+                <FormItem>
+                  <div className="w-full">
+                    <Label htmlFor="fName1">First Name</Label>
+                    <Input
+                      id="fName1"
+                      type="text"
+                      className="border-1 rounded-sm h-10"
+                      value={data.FirstName}
+                      onChange={(e) =>
+                        setData({ ...data, FirstName: e.target.value })
+                      }
+                    />
+                  </div>
+                </FormItem>
+                <FormItem>
+                  <div className="w-full">
+                    <Label htmlFor="lName1">Last Name</Label>
+                    <Input
+                      id="lName1"
+                      type="text"
+                      className="border-1 rounded-sm h-10"
+                      value={data.LastName}
+                      onChange={(e) =>
+                        setData({ ...data, LastName: e.target.value })
+                      }
+                    />
+                  </div>
+                </FormItem>
+                <FormItem>
+                  <div className="w-full">
+                    <Label htmlFor="inEmail1">Email</Label>
+                    <Input
+                      id="inEmail1"
+                      type="email"
+                      className="border-1 rounded-sm h-10"
+                      value={data.email}
+                      onChange={(e) =>
+                        setData({ ...data, email: e.target.value })
+                      }
+                    />
+                  </div>
+                </FormItem>
+                <FormItem>
+                  <div className="w-full">
+                    <Label htmlFor="inPass1">Password</Label>
+                    <Input
+                      id="inPass1"
+                      type="password"
+                      className="border-1 rounded-sm h-10"
+                      value={data.password}
+                      onChange={(e) =>
+                        setData({ ...data, password: e.target.value })
+                      }
+                    />
+                  </div>
+                </FormItem>
+                <FormItem>
+                  <div className="w-full my-3">
+                    <Button
+                      className="w-full bg-black rounded-sm h-10"
+                      type="submit"
+                    >
+                      Register
+                    </Button>
+                  </div>
+                </FormItem>
+              </Form>
+            </form>
+            <div className="w-80">
+              <div className="flex justify-center items-center">
+                <p className="m-auto text-sm">OR</p>
+              </div>
+              <div className="w-full mt-3">
+                <Link to="http://localhost:8000/auth/google/callback">
+                  <Button className="w-full bg-white text-black border-1 rounded-sm h-10">
+                    <img src={google} alt="Google" className="h-7 mr-2" />
+                    Register with Google
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Mobile Screen end */}
+      </div>
     </>
-    
   );
 }
+document.body.className = "overflow-y-hidden";

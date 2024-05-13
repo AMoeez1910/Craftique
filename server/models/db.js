@@ -20,6 +20,12 @@ const user = new Schema({
         required: [true, 'User email required']
       },
     password:String,
+
+    phoneNo: {
+      type: String,
+      unique: true,
+      default: null
+  },
     googleID: { type: String, default: "" },
     address: {
       shippingAddress: {
@@ -33,17 +39,10 @@ const user = new Schema({
           country: { type: String, default: '' }
       }
   },
-    orders:{
-    type: [
-      {
-        Status: { type: String, default: 'Pending' }, 
-        Price:Number,
-        Date: { type: Date, default: Date.now }, 
-        Time: { type: String, default: () => new Date().toLocaleTimeString() }
-      }
-  ],
-  default:[]
-},
+  orders: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Order'
+  }],
     verified: { type: Boolean, default: false },
     expireAt: {
     type: Date,
@@ -52,7 +51,13 @@ const user = new Schema({
         expireAfterSeconds: 200,
         partialFilterExpression: { verified: false }
   }
-}
+},
+// seller 
+  brand:{
+    type: Schema.Types.ObjectId,
+    ref: 'Brand',
+    default: null
+  }
 })
 const User = model("User",user)
 module.exports = User
