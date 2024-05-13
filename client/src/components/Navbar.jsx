@@ -39,7 +39,7 @@ export default function NavBar({ links }) {
                   <FontAwesomeIcon icon={faBars} className="h-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="bottom">
+              <SheetContent side="left">
                 <div className="py-3">
                   {links.map((link, index) => {
                     if (!link.button) {
