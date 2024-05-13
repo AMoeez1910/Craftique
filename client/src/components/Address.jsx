@@ -49,18 +49,18 @@ export default function Address(props) {
   };
   return (
     <div>
-      <h3>Address</h3>
+      <h3 className="text-dark mb-4 text-xl">Address</h3>
       <div className="flex">
         <div className="w-1/2 mr-5">
-          <h6 className="my-4">Shipping Address</h6>
+          <h6 className="my-4 text-lg">Shipping Address</h6>
           <Form>
             <FormItem>
-              <div className="mt-3">
+              <div className="mb-4">
                 <Label htmlFor="shipAddress">Address</Label>
                 <Input
                   id="shipAddress"
                   type="text"
-                  className="border-1 rounded-sm h-10"
+                  className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                   value={props.addressData.shippingAddress.address}
                   onChange={(e) =>
                     setData({ ...data, shippingAddress: e.target.value })
@@ -68,14 +68,14 @@ export default function Address(props) {
                 />
               </div>
             </FormItem>
-            <div className="flex mt-3">
+            <div className="flex mb-4">
               <FormItem>
                 <div className="mr-2">
                   <Label htmlFor="shipCity">City</Label>
                   <Input
                     id="shipCity"
                     type="text"
-                    className="border-1 rounded-sm h-10"
+                    className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                     value={props.addressData.shippingAddress.city}
                     onChange={(e) =>
                       setData({ ...data, shippingCity: e.target.value })
@@ -89,7 +89,7 @@ export default function Address(props) {
                   <Input
                     id="shipCountry"
                     type="text"
-                    className="border-1 rounded-sm h-10"
+                    className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                     value={props.addressData.shippingAddress.country}
                     onChange={(e) =>
                       setData({ ...data, shippingCountry: e.target.value })
@@ -101,15 +101,15 @@ export default function Address(props) {
           </Form>
         </div>
         <div className="w-1/2 ml-5">
-          <h6 className="my-4">Billing Address</h6>
+          <h6 className="my-4 text-lg">Billing Address</h6>
           <Form>
             <FormItem>
-              <div className="mt-3">
+              <div className="mb-4">
                 <Label htmlFor="billAddress">Address</Label>
                 <Input
                   id="billAddress"
                   type="text"
-                  className="border-1 rounded-sm h-10"
+                  className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                   value={props.addressData.billingAddress.address}
                   onChange={(e) =>
                     setData({ ...data, billingAddress: e.target.value })
@@ -117,14 +117,14 @@ export default function Address(props) {
                 />
               </div>
             </FormItem>
-            <div className="flex mt-3">
+            <div className="flex mb-4">
               <FormItem>
                 <div className="mr-2">
                   <Label htmlFor="billCity">City</Label>
                   <Input
                     id="billCity"
                     type="text"
-                    className="border-1 rounded-sm h-10"
+                    className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                     value={props.addressData.billingAddress.city}
                     onChange={(e) =>
                       setData({ ...data, billingCity: e.target.value })
@@ -138,7 +138,7 @@ export default function Address(props) {
                   <Input
                     id="billCountry"
                     type="text"
-                    className="border-1 rounded-sm h-10"
+                    className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                     value={props.addressData.billingAddress.country}
                     onChange={(e) =>
                       setData({ ...data, billingCountry: e.target.value })
@@ -151,7 +151,7 @@ export default function Address(props) {
         </div>
       </div>
       <div className="mt-5 flex justify-center">
-        <Button className="bg-black w-3/5" type="submit" onClick={handleSubmit}>
+        <Button className="bg-black w-full" type="submit" onClick={handleSubmit}>
           Save Changes
         </Button>
       </div>

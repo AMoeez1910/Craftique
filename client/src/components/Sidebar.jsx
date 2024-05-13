@@ -5,13 +5,11 @@ import { buttonVariants } from "./ui/button";
 function Sidebar({ items, setRender, render }) {
 
   const handleClick = (itemName) => {
-    console.log("Clicked item:", itemName);
     setRender(itemName);
   };
 
   return (
     <nav className={cn("flex space-x-1 lg:flex-col lg:space-x-0 lg:space-y-1")}>
-    {console.log(render)}
       {items.map((item) => (
         <button
           key={item.title}

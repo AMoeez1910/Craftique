@@ -57,14 +57,14 @@ export default function Register() {
               <div className="w-1/2">
                 <form onSubmit={registerUser} method="post">
                   <Form>
-                    <h3 className="mb-5">Register</h3>
+                    <h3 className="mb-5 text-3xl">Register</h3>
                     <FormItem>
-                      <div className="w-full">
+                      <div className="w-full mb-2">
                         <Label htmlFor="fName">First Name</Label>
                         <Input
                           id="fName"
                           type="text"
-                          className="border-1 rounded-sm h-10"
+                          className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                           value={data.FirstName}
                           onChange={(e) =>
                             setData({ ...data, FirstName: e.target.value })
@@ -73,12 +73,12 @@ export default function Register() {
                       </div>
                     </FormItem>
                     <FormItem>
-                      <div className="w-full">
+                      <div className="w-full mb-2">
                         <Label htmlFor="lName">Last Name</Label>
                         <Input
                           id="lName"
                           type="text"
-                          className="border-1 rounded-sm h-10"
+                          className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                           value={data.LastName}
                           onChange={(e) =>
                             setData({ ...data, LastName: e.target.value })
@@ -87,12 +87,12 @@ export default function Register() {
                       </div>
                     </FormItem>
                     <FormItem>
-                      <div className="w-full">
+                      <div className="w-full mb-2">
                         <Label htmlFor="inEmail">Email</Label>
                         <Input
                           id="inEmail"
                           type="email"
-                          className="border-1 rounded-sm h-10"
+                          className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                           value={data.email}
                           onChange={(e) =>
                             setData({ ...data, email: e.target.value })
@@ -101,12 +101,12 @@ export default function Register() {
                       </div>
                     </FormItem>
                     <FormItem>
-                      <div className="w-full">
+                      <div className="w-full mb-2">
                         <Label htmlFor="inPass">Password</Label>
                         <Input
                           id="inPass"
                           type="password"
-                          className="border-1 rounded-sm h-10"
+                          className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                           value={data.password}
                           onChange={(e) =>
                             setData({ ...data, password: e.target.value })
@@ -117,7 +117,7 @@ export default function Register() {
                     <FormItem>
                       <div className="w-full my-3">
                         <Button
-                          className="w-full bg-black rounded-sm h-10"
+                          className="w-full h-10"
                           type="submit"
                         >
                           Register
@@ -132,7 +132,7 @@ export default function Register() {
                   </div>
                   <div className="w-full mt-3">
                     <Link to="http://localhost:8000/auth/google/callback">
-                      <Button className="w-full bg-white text-black border-1 rounded-sm h-10">
+                      <Button className="w-full bg-white text-black border-1 rounded-sm h-10 border-2 border-gray-100 shadow-md">
                         <img src={google} alt="Google" className="h-7 mr-2" />
                         Register with Google
                       </Button>

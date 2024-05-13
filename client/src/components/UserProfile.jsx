@@ -60,45 +60,57 @@ export default function UserProfile(props) {
     }
   };
   return (
-    <div className="">
-      <h3 className="text-dark mb-4" name="heading">
+    <div>
+      <h3 className="text-dark mb-4 text-xl">
         Profile
       </h3>
       <div className="flex justify-between">
         <div className="w-2/3">
           <Form>
             <FormItem>
-              <div className="w-4/5">
+              <div className="w-4/5 pb-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  className="border-1 rounded-sm h-10"
+                  className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                   placeholder={props.email}
                   disabled
                 />
               </div>
             </FormItem>
             <FormItem>
-              <div className="w-4/5 pt-8">
+              <div className="w-4/5 pb-2">
                 <Label htmlFor="name">Name</Label>
                 <Input
                   id="name"
                   type="name"
-                  className="border-1 rounded-sm h-10"
+                  className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                   placeholder={fullName}
+                  disabled
+                />
+              </div>
+            </FormItem>
+            <FormItem>
+              <div className="w-4/5">
+                <Label htmlFor="contact">Contact</Label>
+                <Input
+                  id="contact"
+                  type="contact"
+                  className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
+                  placeholder={props.phone}
                   disabled
                 />
               </div>
             </FormItem>
           </Form>
         </div>
-        <div className="w-1/3 flex flex-col justify-center items-center">
+        <div className="w-1/3 flex flex-col items-center">
           <Label>Profile Photo</Label>
           <Label htmlFor="picture" className="block cursor-pointer">
             <img
               id="preview"
-              className="h-24 w-24"
+              className="h-32 w-32"
               src={pfp}
               alt="Selected Image"
             />
@@ -107,14 +119,14 @@ export default function UserProfile(props) {
             id="picture"
             type="file"
             onChange={previewImage}
-            className="border-1 rounded-sm border-gray-100 cursor-pointer h-10 m-0 mt-1 p-2"
+            className="border-1 rounded-sm border-gray-100 cursor-pointer h-10 m-0 mt-4 p-2 border-2"
             accept="image/*"
           />
         </div>
       </div>
-      <div className="pt-8">
-        <h5>Change Password</h5>
-        <div className="pt-4">
+      <div className="pt-5">
+        <h3 className="text-dark mb-4 text-xl">Change Password</h3>
+        <div className="">
           <form>
             <Form>
               <div className="flex">
@@ -125,7 +137,7 @@ export default function UserProfile(props) {
                       <Input
                         id="newPass"
                         type="password"
-                        className="border-1 rounded-sm h-10"
+                        className="bborder-2 border-gray-100 rounded-sm h-10 shadow-sm"
                         value={data.newPassword}
                         onChange={(e) =>
                           setData({ ...data, newPassword: e.target.value })
@@ -141,7 +153,7 @@ export default function UserProfile(props) {
                       <Input
                         id="conPass"
                         type="password"
-                        className="border-1 rounded-sm h-10"
+                        className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                         value={data.confirmPassword}
                         onChange={(e) =>
                           setData({ ...data, confirmPassword: e.target.value })
