@@ -13,6 +13,8 @@ import { Toaster } from "react-hot-toast";
 import { UserContextProvider } from "./context/userContext.jsx";
 import { ValidationFailure } from "./pages/ValidationFailure.jsx";
 import Profile from "./pages/Profile.jsx";
+import SellerDash from "./pages/SellerDash";
+import Landing from "./pages/Landing";
 axios.defaults.baseURL =`http://localhost:8000`;
 axios.defaults.withCredentials = true;
 
@@ -47,8 +49,18 @@ function App() {
         path="/profile"
         element={<Profile />}
       />
+      <Route
+        path="/dash"
+        element={<SellerDash />}
+      />
+      <Route
+        path="/home"
+        element={<Landing/>}
+      />
       <Route path="*" element={<NotFound />} />
+      
     </Routes>
+    
 
     {/*  example 
     <Route

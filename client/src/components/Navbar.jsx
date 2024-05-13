@@ -5,6 +5,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Links from "./Links";
 import { UserContext } from "../context/userContext";
+import { Button } from "./ui/button";
 
 export default function Navbar({links  }) {
   const navigate = useNavigate();
@@ -33,14 +34,9 @@ export default function Navbar({links  }) {
         <a className="navbar-brand d-flex align-items-center" href="/">
           <img src={logo} style={{ width: "100px" }} alt="Logo"></img>
         </a>
-        <button
-          className="navbar-toggler"
-          data-bs-toggle="collapse"
-          data-bs-target="#navcol-1"
-        >
           <span className="visually-hidden">Toggle navigation</span>
           <span className="navbar-toggler-icon" />
-        </button>
+        <Button variant="outline">Button</Button>
         <div id="navcol-1" className="collapse navbar-collapse">
 
           <ul className="navbar-nav mx-auto">
