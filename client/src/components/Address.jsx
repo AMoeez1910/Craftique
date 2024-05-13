@@ -1,37 +1,37 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { Form, FormItem } from "../components/ui/form";
+import { Input } from "../components/ui/input";
+import { Label } from "@radix-ui/react-label";
+import { Button } from "../components/ui/button";
 
-const Address = (props) => {
+export default function Address(props) {
   const navigate = useNavigate();
   const [data, setData] = useState({
-    shippingAddress:'',
-    shippingCity:'',
-    shippingCountry:'',
-    billingAddress:'',
-    billingCity:'',
-    billingCountry:'',
+    shippingAddress: "",
+    shippingCity: "",
+    shippingCountry: "",
+    billingAddress: "",
+    billingCity: "",
+    billingCountry: "",
   });
-
   useEffect(() => {
-    setData(
-      {
-    shippingAddress:props.addressData.shippingAddress.address,
-    shippingCity:props.addressData.shippingAddress.city,
-    shippingCountry:props.addressData.shippingAddress.country,
-    billingAddress:props.addressData.billingAddress.address,
-    billingCity:props.addressData.billingAddress.city,
-    billingCountry:props.addressData.billingAddress.country
-  });
-}, [props]);
-
+    setData({
+      shippingAddress: props.addressData.shippingAddress.address,
+      shippingCity: props.addressData.shippingAddress.city,
+      shippingCountry: props.addressData.shippingAddress.country,
+      billingAddress: props.addressData.billingAddress.address,
+      billingCity: props.addressData.billingAddress.city,
+      billingCountry: props.addressData.billingAddress.country,
+    });
+  }, [props]);
 
   const handleSubmit = async (e) => {
-    // backend logic implement
-    
     e.preventDefault();
     try {
+
         const response = await axios.patch(`/update-user-address/${props.id}`,{data})
         if(response.data.success)
           {
@@ -48,154 +48,115 @@ const Address = (props) => {
       toast.error(error);
     }
   };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setData(prevVal => ({ ...prevVal, [name]: value }));
-  };
-
   return (
-    <div className="d-flex flex-column" id="content-wrapper">
-  <div id="content">
-    <div className="container-fluid">
-      <h3 className="text-dark mb-4">Address</h3>
-      <div className="card shadow">
-        <div className="card-body">
-          <div className="row">
-            <div className="col">
-              <div className="card shadow">
-                <div className="card-header py-3">
-                  <p className="text-primary m-0 fw-bold">Shipping Address</p>
-                </div>
-                <div className="card-body">
-                  <form>
-                    <div className="mb-3">
-                      <label className="form-label" htmlFor="address">
-                        <strong>Address</strong>
-                      </label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="address"
-                        placeholder={props.addressData.shippingAddress.address}
-                        name="shippingAddress"
-                        value={data.shippingAddress}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className="row">
-                      <div className="col">
-                        <div className="mb-3">
-                          <label className="form-label" htmlFor="city">
-                            <strong>City</strong>
-                          </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            id="city"
-                            placeholder={props.addressData.shippingAddress.city}
-                            name="shippingCity"
-                            value={data.shippingCity}
-                            onChange={handleChange}
-                          />
-                        </div>
-                      </div>
-                      <div className="col">
-                        <div className="mb-3">
-                          <label className="form-label" htmlFor="country">
-                            <strong>Country</strong>
-                          </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            id="country"
-                            placeholder={props.addressData.shippingAddress.country}
-                            name="shippingCountry"
-                            value={data.shippingCountry}
-                            onChange={handleChange}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    
-                  </form>
-                </div>
+    <div>
+      <h3 className="text-dark mb-4 text-xl">Address</h3>
+      <div className="flex">
+        <div className="w-1/2 mr-5">
+          <h6 className="my-4 text-lg">Shipping Address</h6>
+          <Form>
+            <FormItem>
+              <div className="mb-4">
+                <Label htmlFor="shipAddress">Address</Label>
+                <Input
+                  id="shipAddress"
+                  type="text"
+                  className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
+                  value={props.addressData.shippingAddress.address}
+                  onChange={(e) =>
+                    setData({ ...data, shippingAddress: e.target.value })
+                  }
+                />
               </div>
+            </FormItem>
+            <div className="flex mb-4">
+              <FormItem>
+                <div className="mr-2">
+                  <Label htmlFor="shipCity">City</Label>
+                  <Input
+                    id="shipCity"
+                    type="text"
+                    className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
+                    value={props.addressData.shippingAddress.city}
+                    onChange={(e) =>
+                      setData({ ...data, shippingCity: e.target.value })
+                    }
+                  />
+                </div>
+              </FormItem>
+              <FormItem>
+                <div className="ml-2">
+                  <Label htmlFor="shipCountry">Country</Label>
+                  <Input
+                    id="shipCountry"
+                    type="text"
+                    className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
+                    value={props.addressData.shippingAddress.country}
+                    onChange={(e) =>
+                      setData({ ...data, shippingCountry: e.target.value })
+                    }
+                  />
+                </div>
+              </FormItem>
             </div>
-            <div className="col">
-              <div className="card shadow">
-                <div className="card-header py-3">
-                  <p className="text-primary m-0 fw-bold">Billing Address</p>
-                </div>
-                <div className="card-body">
-                  <form>
-                    <div className="mb-3">
-                      <label className="form-label" htmlFor="address">
-                        <strong>Address</strong>
-                      </label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="address-1"
-                        placeholder={props.addressData.billingAddress.address}
-                        name="billingAddress"
-                        value={data.billingAddress}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className="row">
-                      <div className="col">
-                        <div className="mb-3">
-                          <label className="form-label" htmlFor="city">
-                            <strong>City</strong>
-                          </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            id="city-1"
-                            placeholder={props.addressData.billingAddress.city}
-                            name="billingCity"
-                            value={data.billingCity}
-                            onChange={handleChange}
-                          />
-                        </div>
-                      </div>
-                      <div className="col">
-                        <div className="mb-3">
-                          <label className="form-label" htmlFor="country">
-                            <strong>Country</strong>
-                          </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            id="country-1"
-                            placeholder={props.addressData.billingAddress.country}
-                            name="billingCountry"
-                            value={data.billingCountry}
-                            onChange={handleChange}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    
-                  </form>
-                  
-                </div>
+          </Form>
+        </div>
+        <div className="w-1/2 ml-5">
+          <h6 className="my-4 text-lg">Billing Address</h6>
+          <Form>
+            <FormItem>
+              <div className="mb-4">
+                <Label htmlFor="billAddress">Address</Label>
+                <Input
+                  id="billAddress"
+                  type="text"
+                  className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
+                  value={props.addressData.billingAddress.address}
+                  onChange={(e) =>
+                    setData({ ...data, billingAddress: e.target.value })
+                  }
+                />
               </div>
+            </FormItem>
+            <div className="flex mb-4">
+              <FormItem>
+                <div className="mr-2">
+                  <Label htmlFor="billCity">City</Label>
+                  <Input
+                    id="billCity"
+                    type="text"
+                    className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
+                    value={props.addressData.billingAddress.city}
+                    onChange={(e) =>
+                      setData({ ...data, billingCity: e.target.value })
+                    }
+                  />
+                </div>
+              </FormItem>
+              <FormItem>
+                <div className="ml-2">
+                  <Label htmlFor="billCountry">Country</Label>
+                  <Input
+                    id="billCountry"
+                    type="text"
+                    className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
+                    value={props.addressData.billingAddress.country}
+                    onChange={(e) =>
+                      setData({ ...data, billingCountry: e.target.value })
+                    }
+                  />
+                </div>
+              </FormItem>
             </div>
-            <div className="mb-3 mt-3">
-                      <button className="btn btn-primary btn-sm" type="submit" onClick={handleSubmit}>
-                        Save&nbsp;Settings
-                      </button>
-                    </div>
-          </div>
+          </Form>
         </div>
       </div>
+      <div className="mt-5 flex justify-center">
+        <Button className="bg-black w-full" type="submit" onClick={handleSubmit}>
+          Save Changes
+        </Button>
+      </div>
     </div>
-  </div>
-</div>
-
-  )
+  );
 }
-
-export default Address
+document.body.className = "overflow-y-hidden";

@@ -10,6 +10,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Badge from '@mui/material/Badge';
 import { CartContext } from "../context/cart";
@@ -41,7 +42,7 @@ export default function NavBar({ links }) {
                   <FontAwesomeIcon icon={faBars} className="h-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="bottom">
+              <SheetContent side="left">
 
                 <div className="py-3">
                   {links.map((link, index) => {
@@ -73,15 +74,15 @@ export default function NavBar({ links }) {
                                 <Link to={link.path} key={index}>
                                   <p className="h-9">
                                     {link.btn_name === "Login" ? (
-                                      <p className="text-black">
-                                        <b>Create a new account</b>
-                                      </p>
-                                    ) : (
                                       <p>
                                         Existing User?{" "}
                                         <p className="text-black inline">
-                                          <b>Click here to register</b>
+                                          <b>Click here to Log In</b>
                                         </p>
+                                      </p>
+                                    ) : (
+                                      <p className="text-black">
+                                        <b>Create a new account</b>
                                       </p>
                                     )}
                                   </p>
@@ -96,8 +97,35 @@ export default function NavBar({ links }) {
                 </SheetFooter>
               </SheetContent>
             </Sheet>
-            <div className="flex text-white text-lg font-mono hover:scale-110 transform transition-transform duration-500 justify-end h-7 pr-3">
+            <div
+              className={`flex text-white text-lg font-mono hover:scale-110 transform transition-transform duration-500 justify-end h-7 ${
+                user ? "" : "pr-4"
+              }`}
+            >
               <img src={logo} alt="Logo" />
+            </div>
+            <div className={`${user ? "block" : "hidden"}`}>
+              <div className="flex justify-center items-center cursor-pointer">
+                <Popover>
+                  <PopoverTrigger>
+                    <Button variant="ghost">
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        className="h-4 border-1 p-2 rounded-full border-gray-500"
+                      />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-40 border-1 rounded-sm py-3 pb-0">
+                    <Link to="/profile">
+                      <p className="cursor-pointer">Profile</p>
+                    </Link>
+                    <hr className="border-gray-800 border-1 my-2" />
+                    <p className="cursor-pointer pt-1" onClick={logout}>
+                      <b>Log Out</b>
+                    </p>
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
           </div>
         </div>
@@ -118,6 +146,28 @@ export default function NavBar({ links }) {
               </ul>
             </div>
             {user ? (
+              <div className="flex justify-center items-center cursor-pointer">
+                <Popover>
+                  <PopoverTrigger>
+                    <Button variant="ghost">
+                      <p className="m-auto pr-2">{user.FirstName}</p>
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        className="h-4 border-2 p-2 rounded-full border-gray-600 text-gray-600"
+                      />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-40 rounded-sm p-3">
+                    <Link to="/profile">
+                      <p className="cursor-pointer">Profile</p>
+                    </Link>
+                    <hr className="border-gray-800 border-1 my-2" />
+                    <p className="cursor-pointer" onClick={logout}>
+                      <b>Log Out</b>
+                    </p>
+                  </PopoverContent>
+                </Popover>
+              </div>
               <div className="flex justify-end items-center">
               <a className="flex items-center" href="/profile">
                 <p className="pr-2 mt-3">{user.FirstName}</p>
@@ -140,13 +190,13 @@ export default function NavBar({ links }) {
                     return (
                       <div>
                         <Link to={link.path} key={index}>
-                          <button
-                            className={`h-9 w-20 rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1 hover:text-gray-900 ${
+                          <Button
+                            className={`h-9 w-20 rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1  ${
                               evenIteration ? "bg-black text-white" : ""
                             }`}
                           >
                             {link.btn_name}
-                          </button>
+                          </Button>
                         </Link>
                       </div>
                     );

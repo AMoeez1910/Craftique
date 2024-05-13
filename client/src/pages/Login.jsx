@@ -55,14 +55,14 @@ export default function Login() {
               <div className="w-1/2">
                 <form onSubmit={loginUser} method="post">
                   <Form>
-                    <h3 className="mb-5">Log In</h3>
+                    <h3 className="mb-5 text-3xl">Log In</h3>
                     <FormItem>
-                      <div className="w-full">
+                      <div className="w-full pt-4">
                         <Label htmlFor="inEmail">Email</Label>
                         <Input
                           id="inEmail"
                           type="email"
-                          className="border-1 rounded-sm h-10"
+                          className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                           value={data.email}
                           onChange={(e) =>
                             setData({ ...data, email: e.target.value })
@@ -71,12 +71,12 @@ export default function Login() {
                       </div>
                     </FormItem>
                     <FormItem>
-                      <div className="w-full">
+                      <div className="w-full pt-4">
                         <Label htmlFor="inPass">Password</Label>
                         <Input
                           id="inPass"
                           type="password"
-                          className="border-1 rounded-sm h-10"
+                          className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
                           value={data.password}
                           onChange={(e) =>
                             setData({ ...data, password: e.target.value })
@@ -106,8 +106,9 @@ export default function Login() {
                     <FormItem>
                       <div className="w-full my-3">
                         <Button
-                          className="w-full bg-black rounded-sm h-10"
+                          className="w-full h-10"
                           type="submit"
+                          variant="default"
                         >
                           Log In
                         </Button>
@@ -121,7 +122,7 @@ export default function Login() {
                   </div>
                   <div className="w-full mt-3">
                     <Link to="http://localhost:8000/auth/google/callback">
-                      <Button className="w-full bg-white text-black border-1 rounded-sm h-10">
+                      <Button className="w-full bg-white text-black h-10 border-2 border-gray-100 rounded-sm shadow-md">
                         <img src={google} alt="Google" className="h-7 mr-2" />
                         Log In with Google
                       </Button>
