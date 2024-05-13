@@ -24,12 +24,12 @@ export default function Orders(props) {
         <TableBody>
           {props.orderData.map((data, idx) => (
             <TableRow key={idx}>
-              <TableCell>{idx}</TableCell>
-              <TableCell>{data.Status}</TableCell>
+              <TableCell>{data.orderId}</TableCell>
+              <TableCell>{data.status}</TableCell>
               <TableCell>
-                {new Date(data.Date).toISOString().split("T")[0]} at {data.Time}
+                {new Date(data.placedAt).toISOString().split("T")[0]}
               </TableCell>
-              <TableCell>{data.Price}</TableCell>
+              <TableCell>{data.totalPrice}</TableCell>
             </TableRow>
           ))}
         </TableBody>

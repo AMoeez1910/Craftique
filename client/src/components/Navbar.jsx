@@ -146,42 +146,35 @@ export default function NavBar({ links }) {
               </ul>
             </div>
             {user ? (
-              <div className="flex justify-center items-center cursor-pointer">
-                <Popover>
-                  <PopoverTrigger>
-                    <Button variant="ghost">
-                      <p className="m-auto pr-2">{user.FirstName}</p>
-                      <FontAwesomeIcon
-                        icon={faUser}
-                        className="h-4 border-2 p-2 rounded-full border-gray-600 text-gray-600"
-                      />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-40 rounded-sm p-3">
-                    <Link to="/profile">
-                      <p className="cursor-pointer">Profile</p>
-                    </Link>
-                    <hr className="border-gray-800 border-1 my-2" />
-                    <p className="cursor-pointer" onClick={logout}>
-                      <b>Log Out</b>
-                    </p>
-                  </PopoverContent>
-                </Popover>
+              <div className="flex justify-between items-center cursor-pointer">
+              <Popover>
+                <PopoverTrigger>
+                  <Button variant="ghost">
+                    <p className="pr-2">{user.FirstName}</p>
+                    <FontAwesomeIcon
+                      icon={faUser}
+                      className="h-4 border-2 p-2 rounded-full border-gray-600 text-gray-600"
+                    />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-40 rounded-sm p-3">
+                  <Link to="/profile" className="cursor-pointer">
+                    <p>Profile</p>
+                  </Link>
+                  <hr className="border-gray-800 border-1 my-2" />
+                  <p className="cursor-pointer" onClick={logout}>
+                    <b>Log Out</b>
+                  </p>
+                </PopoverContent>
+              </Popover>
+              <div className="flex items-center">
+                <Badge badgeContent={cart.length} color="primary">
+                  <Link to="/shoppingcart" className="ml-4">
+                    <ShoppingCartIcon />
+                  </Link>
+                </Badge>
               </div>
-              <div className="flex justify-end items-center">
-              <a className="flex items-center" href="/profile">
-                <p className="pr-2 mt-3">{user.FirstName}</p>
-                <FontAwesomeIcon
-                  icon={faUser}
-                  className="h-4 border-1 p-2 rounded-full border-gray-500"
-                />
-              </a>
-              <Badge badgeContent={cart.length} color="primary">
-                <Link to="/shoppingcart" className="ml-4">
-                  <ShoppingCartIcon />
-                </Link>
-              </Badge>
-            </div>
+              </div>
             ) : (
               <div className="flex">
                 {links.map((link, index) => {

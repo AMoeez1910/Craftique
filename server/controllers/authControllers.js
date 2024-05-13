@@ -182,9 +182,6 @@ const loginUser = async (req, res) => {
                 console.error('Error signing JWT:', err);
                 return res.status(500).json({ error: 'Internal Server Error' });
             }
-            // createBrand()
-            // createProduct()
-            createOrder()
             res.cookie('token', token);
             res.json({ success: 'Successfully Login', user: userDoc });
         });
