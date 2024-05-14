@@ -33,11 +33,11 @@ const Profile = () => {
   ];
 
   useEffect(() => {
+
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`/user-profile/${user._id}`);
-        console.log(response.data.orders)
-        const { FirstName, LastName, email, orders, googleID, address,phoneNo } =
+        const { FirstName, LastName, email, orders, googleID, address,phoneNo,image } =
           response.data;
         if (googleID)
           setData({
@@ -48,6 +48,7 @@ const Profile = () => {
             address: address,
             orders: orders,
             phoneNo: phoneNo,
+            image :image
           });
         else
           setData({
@@ -58,6 +59,7 @@ const Profile = () => {
             googleID: null,
             orders: orders,
             phoneNo: phoneNo,
+            image :image
           });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -101,6 +103,8 @@ const Profile = () => {
                 email={data.email}
                 googleID={data.googleID}
                 id={user._id}
+                phoneNo={data.phoneNo}
+                image = {data.image}
               />
             )}
             {render === "Orders" && <Orders orderData={data.orders} />}
