@@ -182,4 +182,3 @@ export default function UserProfile(props) {
     </div>
   );
 }
-document.body.className = "overflow-y-hidden";

@@ -77,5 +77,3 @@ export const Products = () => {
         </Grid>
     );
 };
-
-document.body.className = "overflow-y-hidden";

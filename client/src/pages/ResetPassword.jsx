@@ -120,4 +120,3 @@ export default function ResetPassword() {
     </>
   );
 }
-document.body.className = "overflow-y-hidden";

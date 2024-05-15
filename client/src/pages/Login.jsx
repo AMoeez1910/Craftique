@@ -219,4 +219,3 @@ export default function Login() {
     </>
   );
 }
-document.body.className = "overflow-y-hidden";

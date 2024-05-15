@@ -250,4 +250,4 @@ export default function Register() {
     </>
   );
 }
-document.body.className = "overflow-y-hidden";
+

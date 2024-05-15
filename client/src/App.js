@@ -13,7 +13,9 @@ import { ValidationFailure } from "./pages/ValidationFailure.jsx";
 import Profile from "./pages/Profile.jsx";
 import { CartProvider} from "./context/cart";
 import { Shoppingcart } from "./pages/Shoppingcart";
+import ProductCatalog from "./pages/ProductCatalog";
 import SellerDash from "./pages/SellerDash";
+import SellerHome from "./pages/SellerHome";
 import Landing from "./pages/Landing";
 axios.defaults.baseURL =`http://localhost:8000`;
 axios.defaults.withCredentials = true;
@@ -61,6 +63,14 @@ function App() {
         path="/home"
         element={<Landing/>}
       />
+      <Route
+        path="/products"
+        element={<ProductCatalog/>}
+      />
+      <Route
+        path="/sellerhome"
+        element={<SellerHome/>}
+      />
       <Route path="*" element={<NotFound />} />
       
     </Routes>
@@ -77,3 +87,4 @@ function App() {
   );
 }
 export default App;
+document.body.removeAttribute("class")

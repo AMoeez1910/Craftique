@@ -159,4 +159,3 @@ export default function Address(props) {
     </div>
   );
 }
-document.body.className = "overflow-y-hidden";
