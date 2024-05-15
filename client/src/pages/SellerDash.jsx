@@ -74,8 +74,22 @@ import {
   TooltipTrigger,
   TooltipProvider
 } from "../components/ui/tooltip"
+import { useContext, useEffect } from "react"
+import { UserContext } from "../context/userContext"
+import { Navigate } from "react-router-dom"
+import toast from "react-hot-toast"
 
 const SellerDash = ()=>  {
+  const {user,ready} = useContext(UserContext)
+
+  if (!ready) {
+    return "Loading.....";
+  }
+  if (ready && (!user || !user.isSeller)) {
+    toast.error('Please log in to access Or become A Seller!');
+    return <Navigate to={"/login"} />;
+  }
+
   return (
     <TooltipProvider>
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -274,10 +288,11 @@ const SellerDash = ()=>  {
           </DropdownMenu>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
-          <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
+          <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2 ">
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
               <Card
                 className="sm:col-span-2" x-chunk="dashboard-05-chunk-0"
+
               >
                 <CardHeader className="pb-3">
                   <CardTitle>Your Orders</CardTitle>
@@ -363,7 +378,7 @@ const SellerDash = ()=>  {
                 </div>
               </div>
               <TabsContent value="week">
-                <Card x-chunk="dashboard-05-chunk-3">
+                <Card x-chunk="dashboard-05-chunk-3" >
                   <CardHeader className="px-7">
                     <CardTitle>Orders</CardTitle>
                     <CardDescription>
@@ -371,7 +386,8 @@ const SellerDash = ()=>  {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Table>
+                  <div className="table-container" style={{ overflowY: 'scroll', maxHeight: '400px' }}>
+                    <Table >
                       <TableHeader>
                         <TableRow>
                           <TableHead>Customer</TableHead>
@@ -408,7 +424,128 @@ const SellerDash = ()=>  {
                           </TableCell>
                           <TableCell className="text-right">$250.00</TableCell>
                         </TableRow>
+                        <TableRow className="bg-accent">
+                          <TableCell>
+                            <div className="font-medium">Liam Johnson</div>
+                            <div className="hidden text-sm text-muted-foreground md:inline">
+                              liam@example.com
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            Sale
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <Badge className="text-xs" variant="secondary">
+                              Fulfilled
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            2023-06-23
+                          </TableCell>
+                          <TableCell className="text-right">$250.00</TableCell>
+                        </TableRow>
+                        <TableRow className="bg-accent">
+                          <TableCell>
+                            <div className="font-medium">Liam Johnson</div>
+                            <div className="hidden text-sm text-muted-foreground md:inline">
+                              liam@example.com
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            Sale
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <Badge className="text-xs" variant="secondary">
+                              Fulfilled
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            2023-06-23
+                          </TableCell>
+                          <TableCell className="text-right">$250.00</TableCell>
+                        </TableRow>
+                        <TableRow className="bg-accent">
+                          <TableCell>
+                            <div className="font-medium">Liam Johnson</div>
+                            <div className="hidden text-sm text-muted-foreground md:inline">
+                              liam@example.com
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            Sale
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <Badge className="text-xs" variant="secondary">
+                              Fulfilled
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            2023-06-23
+                          </TableCell>
+                          <TableCell className="text-right">$250.00</TableCell>
+                        </TableRow>
+                        <TableRow className="bg-accent">
+                          <TableCell>
+                            <div className="font-medium">Liam Johnson</div>
+                            <div className="hidden text-sm text-muted-foreground md:inline">
+                              liam@example.com
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            Sale
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <Badge className="text-xs" variant="secondary">
+                              Fulfilled
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            2023-06-23
+                          </TableCell>
+                          <TableCell className="text-right">$250.00</TableCell>
+                        </TableRow>
+                        <TableRow className="bg-accent">
+                          <TableCell>
+                            <div className="font-medium">Liam Johnson</div>
+                            <div className="hidden text-sm text-muted-foreground md:inline">
+                              liam@example.com
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            Sale
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <Badge className="text-xs" variant="secondary">
+                              Fulfilled
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            2023-06-23
+                          </TableCell>
+                          <TableCell className="text-right">$250.00</TableCell>
+                        </TableRow>
+                        <TableRow className="bg-accent">
+                          <TableCell>
+                            <div className="font-medium">Liam Johnson</div>
+                            <div className="hidden text-sm text-muted-foreground md:inline">
+                              liam@example.com
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            Sale
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <Badge className="text-xs" variant="secondary">
+                              Fulfilled
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            2023-06-23
+                          </TableCell>
+                          <TableCell className="text-right">$250.00</TableCell>
+                        </TableRow>
                         <TableRow>
+                        
                           <TableCell>
                             <div className="font-medium">Olivia Smith</div>
                             <div className="hidden text-sm text-muted-foreground md:inline">
@@ -550,6 +687,7 @@ const SellerDash = ()=>  {
                         </TableRow>
                       </TableBody>
                     </Table>
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>

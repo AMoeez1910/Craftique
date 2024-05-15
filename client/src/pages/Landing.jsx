@@ -22,4 +22,5 @@ const Landing = () => {
         
     )
 }
+document.body.removeAttribute("class")
 export default Landing

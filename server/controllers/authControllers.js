@@ -196,8 +196,8 @@ const getProfile= async (req,res)=>{
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userData) => {
       if (err) throw err;
-      const {FirstName,email,_id,address} = await User.findById(userData.id);
-      res.json({FirstName,email,_id,address});
+      const {FirstName,email,_id,address,isSeller,image} = await User.findById(userData.id);
+      res.json({FirstName,email,_id,address,isSeller,image});
       
     });
   } else {
@@ -302,7 +302,6 @@ const getUserProfileData = async (req,res)=>{
             path: 'orders',
             select: '_id totalPrice status placedAt', // Include _id which is orderId
         });
-
         const userProfileData = {
             FirstName: user.FirstName,
             LastName: user.LastName,
@@ -310,6 +309,7 @@ const getUserProfileData = async (req,res)=>{
             address: user.address,
             googleID: user.googleID,
             phoneNo: user.phoneNo,
+            image:user.image,
             orders: user.orders.map(order => ({
                 orderId: order._id, 
                 totalPrice: order.totalPrice,
@@ -325,21 +325,20 @@ const getUserProfileData = async (req,res)=>{
 }
 const updateUserProfile = async (req, res) => {
     const { id } = req.params;
-    const { data,phoneNo } = req.body;
+    const { data,phoneNo,imageUrl } = req.body;
     const { FirstName, LastName, newPassword, confirmPassword } = data;
-    console.log(phoneNo)
     try {
         if (!!newPassword) {
             if (newPassword === confirmPassword && newPassword.length >= 6) {
                 const salt = await bcrypt.genSalt(10);
                 const hashedPassword = await bcrypt.hash(newPassword, salt);
-                await User.updateMany({ "_id": id }, { "$set": { "FirstName": FirstName, "LastName": LastName, "password": hashedPassword,'phoneNo':phoneNo } });
+                await User.updateMany({ "_id": id }, { "$set": { "FirstName": FirstName, "LastName": LastName, "password": hashedPassword,'phoneNo':phoneNo,'image':imageUrl } });
                 return res.json({ success: "Changes updated along with password" });
             } else {
                 return res.json({ error: "Password doesn't match or must be at least 6 characters long!" });
             }
         } else {
-            await User.updateMany({ "_id": id }, { "$set": { "FirstName": FirstName, "LastName": LastName,'phoneNo':phoneNo } });
+            await User.updateMany({ "_id": id }, { "$set": { "FirstName": FirstName, "LastName": LastName,'phoneNo':phoneNo, 'image':imageUrl} });
             return res.json({ success: "Changes updated" });
         }
     } catch (error) {
@@ -379,15 +378,54 @@ const placeOrder = async (req,res)=>{
             buyer: user,
             products: cart,
             totalPrice: total,
-            status: 'Pending'
+            status: 'Processing'
         })
         const data = await newOrder.save()
         await User.updateOne({_id:user},{$push:{orders:data._id}})
-        return res.json({ success: "Order placed successfully" });
+        return res.json({ success: "Order Placed Successfully" ,orderId:data._id});
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
     
 }
-module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder}
+const registerBrand = async (req, res) => {
+    // no password
+    const {data,phoneNo,userid,urlImage} = req.body;
+    const { name, email,description } = data;
+    // create a new brand
+    const newBrand = new Brand({
+        name: name,
+        email: email,
+        image: urlImage,
+        description: description,
+        phoneNumber: phoneNo,
+        isActive: true
+    });
+    try {
+        const data = await newBrand.save()
+        // reference of seller in user schema and set isSeller to true
+        await User.updateOne({_id:userid},{brand:data._id,isSeller:true})
+        return res.json({ success: "Brand Successfully Created" });
+    } catch (error) {
+        console.error('Error creating brand:', error);
+        res.status(500).send({ error: 'Internal Server Error' });
+    }
+}
+const getOrderDetail = async (req,res)=>{
+    const {id} = req.params
+    try {
+        const order = await Order.findById(id).populate({
+            path: 'products.product',
+            select: 'name price images discount'
+        }).populate({
+            path: 'buyer',
+            select: 'FirstName email phoneNo address'
+        });
+        res.json(order)
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand,getOrderDetail}

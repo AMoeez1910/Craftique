@@ -13,46 +13,95 @@ import { ValidationFailure } from "./pages/ValidationFailure.jsx";
 import Profile from "./pages/Profile.jsx";
 import { CartProvider } from "./context/cart";
 import { Shoppingcart } from "./pages/Shoppingcart";
+import ProductCatalog from "./pages/ProductCatalog";
 import SellerDash from "./pages/SellerDash";
+import SellerHome from "./pages/SellerHome";
 import Landing from "./pages/Landing";
 import ProductDetails from "./pages/ProductDetails.jsx";
+import OrderInfo from './pages/OrderInfo.jsx';
+import { SellerRegistration } from './pages/SellerRegistration.jsx';
 axios.defaults.baseURL = `http://localhost:8000`;
 axios.defaults.withCredentials = true;
 
 function App() {
   return (
     <>
-      <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
-      <UserContextProvider>
-        <CartProvider>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/verify/:id/:expirationTimestamp"
-              element={<EmailVerify />}
-            />
-            <Route path="/ResetPassword" element={<ResetPassword />} />
-            <Route
-              path="/ForgotPassword/:id/:token"
-              element={<ForgotPassword />}
-            />
-            <Route
-              path="/google/auth/ValidationFailure"
-              element={<ValidationFailure />}
-            />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/shoppingcart" element={<Shoppingcart />} />
-            <Route path="/dash" element={<SellerDash />} />
-            <Route path="/home" element={<Landing />} />
-            <Route path="/productdetail" element={<ProductDetails />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </CartProvider>
-      </UserContextProvider>
+    <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
+    <UserContextProvider>
+    <CartProvider>
+    <Routes>
+    <Route path='/' element={<Home/>}
+      />
+      <Route path='/login' element={<Login/>}
+      />
+      <Route path='/register' element={<Register/>}
+      />
+      <Route
+            path="/verify/:id/:expirationTimestamp"
+            element={<EmailVerify />}
+          />
+      <Route 
+      path="/ResetPassword"
+       element={<ResetPassword />} />
+      <Route
+        path="/ForgotPassword/:id/:token"
+        element={<ForgotPassword />}
+      />
+      <Route
+        path="/google/auth/ValidationFailure"
+        element={<ValidationFailure />}
+      />
+      <Route
+        path="/profile"
+        element={<Profile />}
+      />
+      <Route
+        path="/shoppingcart"
+        element={<Shoppingcart />}
+        />
+        <Route
+        path="/dash"
+        element={<SellerDash />}
+      />
+      <Route
+        path="/home"
+        element={<Landing/>}
+      />
+      <Route
+        path="/products"
+        element={<ProductCatalog/>}
+      />
+      <Route
+        path="/sellerhome"
+        element={<SellerHome/>}
+      />
+      <Route
+        path="/order/:id"
+        element={<OrderInfo/>}
+        />
+        <Route
+        path="/seller-register"
+        element={<SellerRegistration/>}
+      />
+        <Route path="/productdetail" element={<ProductDetails />} />
+        <Route
+        path="/orders/:id"
+        element={<OrderInfo/>}
+      />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+    
+
+    {/*  example 
+    <Route
+            path="/verify/:id/:expirationTimestamp"
+            element={<EmailVerify />}
+          /> */}
+          </CartProvider>
+    </UserContextProvider>
     </>
   );
 }
 document.body.removeAttribute("class");
 export default App;
+document.body.removeAttribute("class")

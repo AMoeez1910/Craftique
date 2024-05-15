@@ -73,28 +73,29 @@ export const Shoppingcart = () => {
       JSON.stringify(cart.filter((item) => item.product._id !== product._id))
     );
   };
-  const placeOrder = async () => {
-    try {
-      if (!user) {
-        navigate("/login");
-        toast.error("Please login to place order");
-      }
-      if (!user.address.shippingAddress) {
-        navigate("/profile");
-        toast.error("Please add shipping address to place order");
-      } else {
-        await axios.post("/order", {
-          cart,
-          total: total + shipping,
-          user: user._id,
-        });
-        toast.success("Order placed successfully");
-        setCart([]);
-        localStorage.removeItem("cart");
-        navigate("/");
-      }
-    } catch (err) {
-      toast.error(err);
+ 
+    const placeOrder = async ()=>{
+        try{
+            if(!user){
+                navigate('/login')	
+                toast.error('Please login to place order')
+            }
+            if(!user.address.shippingAddress){
+                navigate('/profile')	
+                toast.error('Please add shipping address to place order')
+            }
+            else{
+                const response = await axios.post('/order', {cart, total: total + shipping,user: user._id})  
+                toast.success(response.data.success)
+                setCart([])
+                localStorage.removeItem('cart')
+                navigate('/orders/'+response.data.orderId)
+            }
+        }
+        catch(err)
+        {
+          console.log('Error')
+        }
     }
   };
   const subtotal = () => {

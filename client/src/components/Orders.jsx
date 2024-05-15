@@ -7,8 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
 
 export default function Orders(props) {
+  const navigate = useNavigate();
   return (
     <div>
       <h3>Orders</h3>
@@ -19,6 +22,7 @@ export default function Orders(props) {
             <TableHead>Status</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Amount</TableHead>
+            <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -30,6 +34,10 @@ export default function Orders(props) {
                 {new Date(data.placedAt).toISOString().split("T")[0]}
               </TableCell>
               <TableCell>{data.totalPrice}</TableCell>
+              
+              <TableCell><Button 
+                onClick={() => navigate('/orders/'+data.orderId)}
+              >View</Button></TableCell>
             </TableRow>
           ))}
         </TableBody>
