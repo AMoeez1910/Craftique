@@ -107,18 +107,34 @@ export default function NavBar({ links }) {
             <div className={`${user ? "block" : "hidden"}`}>
               <div className="flex justify-center items-center cursor-pointer">
                 <Popover>
-                  <PopoverTrigger>
-                    <Button variant="ghost">
-                      <FontAwesomeIcon
-                        icon={faUser}
-                        className="h-4 border-1 p-2 rounded-full border-gray-500"
-                      />
-                    </Button>
-                  </PopoverTrigger>
+                <PopoverTrigger>
+                      <Button variant="ghost">
+                        <div className="flex items-center">
+                          <p className="pr-2">{user.FirstName}</p>
+                          <div className="h-8 w-8 flex items-center justify-center rounded-full overflow-hidden">
+                            <img
+                              src={user.image}
+                              alt="User Avatar"
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                        </div>
+                      </Button>
+                    </PopoverTrigger>
                   <PopoverContent className="w-40 border-1 rounded-sm py-3 pb-0">
                     <Link to="/profile">
                       <p className="cursor-pointer">Profile</p>
                     </Link>
+                    {
+                    user?.isSeller ? (
+                      <Link to="/dash" className="cursor-pointer">
+                        <p>Seller Dashboard</p>
+                      </Link>
+                    ):(
+                      <Link to="/seller-register" className="cursor-pointer">
+                        <p>Become a Seller</p>
+                      </Link>
+                    )}
                     <hr className="border-gray-800 border-1 my-2" />
                     <p className="cursor-pointer pt-1" onClick={logout}>
                       <b>Log Out</b>
@@ -148,19 +164,35 @@ export default function NavBar({ links }) {
             {user ? (
               <div className="flex justify-between items-center cursor-pointer">
               <Popover>
-                <PopoverTrigger>
-                  <Button variant="ghost">
-                    <p className="pr-2">{user.FirstName}</p>
-                    <FontAwesomeIcon
-                      icon={faUser}
-                      className="h-4 border-2 p-2 rounded-full border-gray-600 text-gray-600"
-                    />
-                  </Button>
-                </PopoverTrigger>
+              <PopoverTrigger>
+                      <Button variant="ghost">
+                        <div className="flex items-center">
+                          <p className="pr-2">{user.FirstName}</p>
+                          <div className="h-8 w-8 flex items-center justify-center rounded-full overflow-hidden">
+                            <img
+                              src={user.image}
+                              alt="User Avatar"
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                        </div>
+                      </Button>
+                    </PopoverTrigger>
+
                 <PopoverContent className="w-40 rounded-sm p-3">
                   <Link to="/profile" className="cursor-pointer">
                     <p>Profile</p>
                   </Link>
+                  {
+                    user?.isSeller ? (
+                      <Link to="/dash" className="cursor-pointer">
+                        <p>Seller Dashboard</p>
+                      </Link>
+                    ):(
+                      <Link to="/seller-register" className="cursor-pointer">
+                        <p>Become a Seller</p>
+                      </Link>
+                    )}
                   <hr className="border-gray-800 border-1 my-2" />
                   <p className="cursor-pointer" onClick={logout}>
                     <b>Log Out</b>

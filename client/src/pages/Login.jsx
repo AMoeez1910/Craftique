@@ -41,7 +41,7 @@ export default function Login() {
   }
   return (
     <>
-      <div>
+       <div className="overflow-hidden">
         <Navbar
           links={[{ button: true, path: "/Register", btn_name: "Register" }]}
         />

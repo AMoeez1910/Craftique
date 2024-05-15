@@ -11,6 +11,8 @@ import { PhoneInput } from './PhoneInput';
 
 export default function UserProfile(props) {
   const navigate = useNavigate();
+  const preset_key = process.env.REACT_APP_CLOUDINARY_PRESET_KEY;
+  const cloud_name =  process.env.REACT_APP_CLOUD_NAME; ;
   const [phoneNo, setPhoneNum] = useState("");
   const [data, setData] = useState({
     FirstName: "",
@@ -18,6 +20,8 @@ export default function UserProfile(props) {
     newPassword: "",
     confirmPassword: "",
   });
+  const [image, setImage] = useState();
+  const [coverPreview, setCoverPreview] = useState();
 
   useEffect(() => {
     setData((prevVal) => ({
@@ -26,14 +30,29 @@ export default function UserProfile(props) {
         LastName: props.LastName,
     }));
     setPhoneNum(props.phoneNo);
+    setCoverPreview(props.image);
 }, [props]);
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let imageUrl = props.image; 
+  if (image) {
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("upload_preset", preset_key);
+    formData.append("cloud_name", cloud_name);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, {
+      method: "POST",
+      body: formData,
+    });
+    const imgdata = await res.json();
+    imageUrl = imgdata.url;
+  }
+
     try {
       const response = await axios.patch(`/update-user-profile/${props.id}`, {
-        data,
+        data,phoneNo,imageUrl
       });
       if (response.data.success) {
         toast.success(response.data.success);
@@ -64,7 +83,7 @@ export default function UserProfile(props) {
     }
   };
   return (
-    <div>
+    <div className="overflow-hidden">
       <h3 className="text-dark mb-4 text-xl">
         Profile
       </h3>
@@ -98,13 +117,7 @@ export default function UserProfile(props) {
             <FormItem>
               <div className="w-4/5">
                 <Label htmlFor="contact">Contact</Label>
-                <Input
-                  id="contact"
-                  type="contact"
-                  className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
-                  placeholder={props.phone}
-                  disabled
-                />
+                <PhoneInput setPhoneNum={setPhoneNum} phoneNo={phoneNo} />
               </div>
             </FormItem>
           </Form>
@@ -115,14 +128,17 @@ export default function UserProfile(props) {
             <img
               id="preview"
               className="h-32 w-32"
-              src={pfp}
+              src={coverPreview}
               alt="Selected Image"
             />
           </Label>
           <Input
             id="picture"
             type="file"
-            onChange={previewImage}
+            onChange={(e) => {
+              setImage(e.target.files[0]);
+              setCoverPreview(URL.createObjectURL(e.target.files[0]));
+            }}
             className="border-1 rounded-sm border-gray-100 cursor-pointer h-10 m-0 mt-4 p-2 border-2"
             accept="image/*"
           />

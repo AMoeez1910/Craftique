@@ -35,7 +35,7 @@ export default function ResetPassword() {
     <>
       <Navbar links={[{ button: true, path: "/login", btn_name: "Login" }]} />
       {/* Large Screens start */}
-      <div className="hidden lg:block">
+      <div className="hidden lg:block overflow-hidden">
         <div className="py-5 flex justify-center items-center">
           <div className="w-1/2">
             <img className="w-full" src={forgot} />

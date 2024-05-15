@@ -49,7 +49,7 @@ export default function Address(props) {
     }
   };
   return (
-    <div>
+    <div className="overflow-hidden">
       <h3 className="text-dark mb-4 text-xl">Address</h3>
       <div className="flex">
         <div className="w-1/2 mr-5">

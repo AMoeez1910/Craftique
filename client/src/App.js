@@ -18,6 +18,7 @@ import SellerDash from "./pages/SellerDash";
 import SellerHome from "./pages/SellerHome";
 import Landing from "./pages/Landing";
 import OrderInfo from './pages/OrderInfo.jsx';
+import { SellerRegistration } from './pages/SellerRegistration.jsx';
 axios.defaults.baseURL =`http://localhost:8000`;
 axios.defaults.withCredentials = true;
 
@@ -75,6 +76,8 @@ function App() {
       <Route
         path="/order/:id"
         element={<OrderInfo/>}
+        path="/seller-register"
+        element={<SellerRegistration/>}
       />
       <Route path="*" element={<NotFound />} />
       

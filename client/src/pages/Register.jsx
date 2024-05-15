@@ -50,7 +50,7 @@ export default function Register() {
 
   return (
     <>
-      <div>
+       <div className="overflow-hidden">
         <Navbar links={[{ button: true, path: "/Login", btn_name: "Login" }]} />
         {/* Large Screen start */}
         <div className="hidden lg:block">
@@ -250,4 +250,3 @@ export default function Register() {
     </>
   );
 }
-

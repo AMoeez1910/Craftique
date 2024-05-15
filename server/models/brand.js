@@ -7,15 +7,27 @@ const BrandSchema = new Schema({
     type: String,
     trim: true
   },
-  email: {
-    type: String
+  email:{ type: String,
+    validate: {
+      validator: async function(email) {
+        const Brand = await this.constructor.findOne({ email });
+        if(Brand) {
+          if(this.id === Brand.id) {
+            return true;
+          }
+          return false;
+        }
+        return true;
+      },
+      message: props => 'The specified email address is already in use.'
+    },
+    required: [true, 'Brand email required']
   },
   phoneNumber: {
     type: String
   },
   image: {
-    data: Buffer,
-    contentType: String
+    type:String
   },
   description: {
     type: String,
