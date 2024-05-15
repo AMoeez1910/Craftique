@@ -20,12 +20,23 @@ const user = new Schema({
         required: [true, 'User email required']
       },
     password:String,
-
-    phoneNo: {
+   phoneNo: {
       type: String,
-      unique: true,
-      default: null
-  },
+      validate: {
+        validator: async function(phoneNo) {
+          const user = await this.constructor.findOne({ phoneNo });
+          if(user) {
+            if(this.id === user.id) {
+              return true;
+            }
+            return false;
+          }
+          return true;
+        },
+        message: props => 'The specified Phone number is already in use.'
+      },
+      required: [true, 'Phone number required']
+    } ,
     googleID: { type: String, default: "" },
     address: {
       shippingAddress: {
@@ -53,10 +64,18 @@ const user = new Schema({
   }
 },
 // seller 
+  isSeller: {
+    type: Boolean,
+    default: false
+  },
   brand:{
     type: Schema.Types.ObjectId,
     ref: 'Brand',
     default: null
+  },
+  image:{
+    type:String,
+    default:""
   }
 })
 const User = model("User",user)

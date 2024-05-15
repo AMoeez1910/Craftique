@@ -78,4 +78,3 @@ export const Products = () => {
     );
 };
 
-document.body.className = "overflow-y-hidden";

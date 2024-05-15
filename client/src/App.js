@@ -15,6 +15,7 @@ import { CartProvider} from "./context/cart";
 import { Shoppingcart } from "./pages/Shoppingcart";
 import SellerDash from "./pages/SellerDash";
 import Landing from "./pages/Landing";
+import { SellerRegistration } from './pages/SellerRegistration.jsx';
 axios.defaults.baseURL =`http://localhost:8000`;
 axios.defaults.withCredentials = true;
 
@@ -60,6 +61,10 @@ function App() {
       <Route
         path="/home"
         element={<Landing/>}
+      />
+      <Route
+        path="/seller-register"
+        element={<SellerRegistration/>}
       />
       <Route path="*" element={<NotFound />} />
       
