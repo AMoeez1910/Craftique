@@ -35,7 +35,6 @@ const user = new Schema({
         },
         message: props => 'The specified Phone number is already in use.'
       },
-      required: [true, 'Phone number required']
     } ,
     googleID: { type: String, default: "" },
     address: {

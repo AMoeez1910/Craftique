@@ -97,7 +97,6 @@ export const Shoppingcart = () => {
           console.log('Error')
         }
     }
-  };
   const subtotal = () => {
     let total = 0;
     cart.map((item) => {

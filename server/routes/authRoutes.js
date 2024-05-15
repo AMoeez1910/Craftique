@@ -26,6 +26,7 @@ passport.use(
                     FirstName:profile.displayName,
                     googleID:profile.id,
                     email:profile.emails[0].value,
+                    image:profile.photos[0].value,
                     verified:true
                 })
                 await user.save()
