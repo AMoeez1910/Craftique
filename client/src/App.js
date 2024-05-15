@@ -13,8 +13,11 @@ import { ValidationFailure } from "./pages/ValidationFailure.jsx";
 import Profile from "./pages/Profile.jsx";
 import { CartProvider} from "./context/cart";
 import { Shoppingcart } from "./pages/Shoppingcart";
+import ProductCatalog from "./pages/ProductCatalog";
 import SellerDash from "./pages/SellerDash";
+import SellerHome from "./pages/SellerHome";
 import Landing from "./pages/Landing";
+import OrderInfo from './pages/OrderInfo.jsx';
 import { SellerRegistration } from './pages/SellerRegistration.jsx';
 axios.defaults.baseURL =`http://localhost:8000`;
 axios.defaults.withCredentials = true;
@@ -63,6 +66,16 @@ function App() {
         element={<Landing/>}
       />
       <Route
+        path="/products"
+        element={<ProductCatalog/>}
+      />
+      <Route
+        path="/sellerhome"
+        element={<SellerHome/>}
+      />
+      <Route
+        path="/order/:id"
+        element={<OrderInfo/>}
         path="/seller-register"
         element={<SellerRegistration/>}
       />
@@ -82,3 +95,4 @@ function App() {
   );
 }
 export default App;
+document.body.removeAttribute("class")
