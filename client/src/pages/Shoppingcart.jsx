@@ -1,61 +1,79 @@
-import React, { useContext, useEffect, useState } from 'react'
-import Navbar from '../components/Navbar'
-import { CartContext } from '../context/cart';
+import { Button } from "../components/ui/button";
+import { Separator } from "../components/ui/separator";
+import React, { useContext, useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
+import { CartContext } from "../context/cart";
+import { PlusIcon, MinusIcon } from "@radix-ui/react-icons";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/userContext";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-import { PlusIcon,MinusIcon } from "@radix-ui/react-icons";
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "../components/ui/table"
-import { Button } from '../components/ui/button';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { UserContext } from '../context/userContext';
-import axios from 'axios';
-import toast from 'react-hot-toast';
 export const Shoppingcart = () => {
-    const navigate = useNavigate();
-    const [cart,setCart] = useContext(CartContext);
-    const {user} = useContext(UserContext);
-    const [shipping,setshipping] = useState()
-    const [total,setTotal] = useState() 
-    useEffect(() => {
-        const total = cart.reduce((acc, item) => acc + (item.product.price - item.product.discount) * item.quantity, 0);
-        setTotal(total);
-        if (total > 10000) {
-            setshipping(0);
-        } else {
-            setshipping(500);
-        }
-    }, [cart]);
-    const removeFromCart = (product) => {
-        const productInCart = cart.find((item) => item.product._id === product._id);
-        
-        if (productInCart.quantity === 1) {
-            setCart(cart.filter((item) => item.product._id !== product._id));
-            localStorage.setItem('cart', JSON.stringify(cart.filter((item) => item.product._id !== product._id)));
-        } else {
-            setCart(
-                cart.map((item) =>
-                    item.product._id === product._id
-                        ? { ...item, quantity: item.quantity - 1 }
-                        : item
-                )
-            );
-            localStorage.setItem('cart', JSON.stringify(cart.map((item) =>
-                item.product._id === product._id
-                    ? { ...item, quantity: item.quantity - 1 }
-                    : item
-            )));
-        }
+  const navigate = useNavigate();
+  const [cart, setCart] = useContext(CartContext);
+  const { user } = useContext(UserContext);
+  const [shipping, setshipping] = useState();
+  const [total, setTotal] = useState();
+  useEffect(() => {
+    const total = cart.reduce(
+      (acc, item) =>
+        acc + (item.product.price - item.product.discount) * item.quantity,
+      0
+    );
+    setTotal(total);
+    if (total >= 1000) {
+      setshipping(0);
+    } else {
+      setshipping(50);
     }
-    const addToCart = (product) => {
-        setCart(cart.map((item) =>  item.product._id === product._id ? { ...item, quantity: item.quantity + 1 } : item));
+  }, [cart]);
+  const removeFromCart = (product) => {
+    const productInCart = cart.find((item) => item.product._id === product._id);
+
+    if (productInCart.quantity === 1) {
+      setCart(cart.filter((item) => item.product._id !== product._id));
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(cart.filter((item) => item.product._id !== product._id))
+      );
+    } else {
+      setCart(
+        cart.map((item) =>
+          item.product._id === product._id
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+      );
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(
+          cart.map((item) =>
+            item.product._id === product._id
+              ? { ...item, quantity: item.quantity - 1 }
+              : item
+          )
+        )
+      );
     }
+  };
+  const addToCart = (product) => {
+    setCart(
+      cart.map((item) =>
+        item.product._id === product._id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    );
+  };
+  const removeAll = (product) => {
+    setCart(cart.filter((item) => item.product._id !== product._id));
+    localStorage.setItem(
+      "cart",
+      JSON.stringify(cart.filter((item) => item.product._id !== product._id))
+    );
+  };
+ 
     const placeOrder = async ()=>{
         try{
             if(!user){
@@ -78,92 +96,148 @@ export const Shoppingcart = () => {
         {
           console.log('Error')
         }
-        
     }
+  };
+  const subtotal = () => {
+    let total = 0;
+    cart.map((item) => {
+      total += item.product.price * item.quantity;
+    });
+    return total;
+  };
+  const discount = () => {
+    let total = 0;
+    cart.map((item) => {
+      total += item.product.discount * item.quantity;
+    });
+    return total;
+  };
   return (
-      <>
-  <Navbar
-    links={[
-      { href: "/", name: "Home" },
-      { href: "#donate", name: "Donate Now" },
-      { href: "#past", name: "Past Campaigns" },
-      { href: "#volunteer", name: "Volunteer" },
-      { href: "#start", name: "Start a fundraiser" },
-      { button: true, path: "/Login", btn_name: "Login" },
-      { button: true, path: "/Register", btn_name: "Register" }
-    ]}
-  />
-  
-  <h1 style={{ textAlign: 'center' }}>Shopping Cart</h1>
-  <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <div style={{ flex: 2, marginRight: '20px' }}>
-        {cart.length === 0 ? (
-          <p>Your cart is empty</p>
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Image</TableHead>
-                <TableHead style={{ width: '100px' }}>Product</TableHead>
-                <TableHead>Quantity</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Discount</TableHead>
-                <TableHead className="text-right">SubTotal</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+    <>
+      <Navbar
+        links={[
+          { href: "/", name: "Home" },
+          { href: "#donate", name: "Donate Now" },
+          { href: "#past", name: "Past Campaigns" },
+          { href: "#volunteer", name: "Volunteer" },
+          { href: "#start", name: "Start a fundraiser" },
+          { button: true, path: "/Login", btn_name: "Login" },
+          { button: true, path: "/Register", btn_name: "Register" },
+        ]}
+      />
+      <main className="container mx-auto my-8 grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr]">
+        <div>
+          <h1 className="mb-4 text-2xl font-bold">Your Cart</h1>
+          {cart.length === 0 ? (
+            <p>Your cart is empty</p>
+          ) : (
+            <div className="space-y-4">
               {cart.map((item) => (
-                <TableRow key={item.product._id}>
-                <TableCell >
-                    <img src={item.product.images} alt={item.product.name} style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
-                </TableCell>
-                  <TableCell className="font-medium">{item.product.name}</TableCell>
-                  <TableCell style={{ display: 'flex', alignItems: 'center' }}>
-                    <div className='mt-4'>
-                    <Button variant="outline" size="icon" style={{ marginRight: '8px' }} onClick={() => removeFromCart(item.product)}>
-                        <MinusIcon className="h-4 w-4 mx-2" />
+                <div
+                  className="flex items-center gap-4 rounded-lg border bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+                  key={item.product._id}
+                >
+                  <img
+                    src={item.product.images}
+                    alt={item.product.name}
+                    className="rounded-md"
+                    height={80}
+                    style={{
+                      aspectRatio: "80/80",
+                      objectFit: "cover",
+                    }}
+                    width={80}
+                  />
+                  <div className="flex-1">
+                    <h3 className="text-md font-medium">{item.product.name}</h3>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={() => removeFromCart(item.product)}
+                    >
+                      <MinusIcon className="h-4 w-4" />
                     </Button>
-                    <span>{item.quantity}</span>
-                    <Button variant="outline" size="icon" style={{ marginLeft: '8px' }} onClick={() => addToCart(item.product)}>
-                        <PlusIcon className="h-4 w-4" />
+                    <span className="text-lg font-medium">{item.quantity}</span>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={() => addToCart(item.product)}
+                    >
+                      <PlusIcon className="h-4 w-4" />
                     </Button>
+                    <div className="text-lg font-medium">
+                      ${item.product.price * item.quantity}
                     </div>
-                  </TableCell>
-                  <TableCell>${item.product.price}</TableCell>
-                  <TableCell>${item.product.discount}</TableCell>
-                  <TableCell className="text-right">${(item.product.price - item.product.discount) * item.quantity}</TableCell>
-                </TableRow>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={() => removeAll(item.product)}
+                    >
+                      <XIcon className="h-4 w-4" />
+                      <span className="sr-only">Remove</span>
+                    </Button>
+                  </div>
+                </div>
               ))}
-            </TableBody>
-          </Table>
-        )}
-      </div>
-      {cart.length > 0 && (
-        <div style={{ flex: 1 }}>
-          <div style={{ textAlign: 'right' }}>
-            <h2>Checkout</h2>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <h4><b>SubTotal:</b></h4>
-              <h4>${total}</h4>
             </div>
-            <hr/>
-            <p><b>Shipping</b>: ${shipping}</p>
-            <p>Shipping to: {user?.address.shippingAddress.city}</p>
-            <a href='/profile'>Change Address</a>
-            <hr/>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <h2>Total:</h2>
-              <h2>${total + shipping}</h2>
-            </div>
-            <Button onClick={() => { placeOrder() }}>Place Order</Button>
-          </div>
+          )}
         </div>
-      )}
-    </div>
-  </div>
-</>
+        {cart.length === 0 ? (
+          ""
+        ) : (
+          <div className="rounded-lg border bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+            <h2 className="mb-4 text-xl font-bold">Order Summary</h2>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span>Subtotal</span>
+                <span className="font-medium">${subtotal()}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Discount</span>
+                <span className="font-medium text-green-500">
+                  -${discount()}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span>Shipping</span>
+                <span className="font-medium">${shipping}</span>
+              </div>
+              <Separator />
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-bold">Total</span>
+                <span className="text-lg font-bold">
+                  ${subtotal() + shipping - discount()}
+                </span>
+              </div>
+            </div>
+            <Button className="mt-6 w-full" onClick={() => placeOrder()}>
+              Place Order
+            </Button>
+          </div>
+        )}
+      </main>
+    </>
+  );
+};
 
-  )
-}
-// {user.address.shippingAddress.city},{user.address.shippingAddress.country}
+const XIcon = (props) => {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+};

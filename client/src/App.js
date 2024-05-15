@@ -1,5 +1,5 @@
-import {Routes,Route} from 'react-router-dom'
-import axios from 'axios'
+import { Routes, Route } from "react-router-dom";
+import axios from "axios";
 import Register from "./pages/Register.jsx";
 import Home from "./pages/Home.jsx";
 import EmailVerify from "./pages/EmailVerify.jsx";
@@ -11,15 +11,16 @@ import { Toaster } from "react-hot-toast";
 import { UserContextProvider } from "./context/userContext.jsx";
 import { ValidationFailure } from "./pages/ValidationFailure.jsx";
 import Profile from "./pages/Profile.jsx";
-import { CartProvider} from "./context/cart";
+import { CartProvider } from "./context/cart";
 import { Shoppingcart } from "./pages/Shoppingcart";
 import ProductCatalog from "./pages/ProductCatalog";
 import SellerDash from "./pages/SellerDash";
 import SellerHome from "./pages/SellerHome";
 import Landing from "./pages/Landing";
+import ProductDetails from "./pages/ProductDetails.jsx";
 import OrderInfo from './pages/OrderInfo.jsx';
 import { SellerRegistration } from './pages/SellerRegistration.jsx';
-axios.defaults.baseURL =`http://localhost:8000`;
+axios.defaults.baseURL = `http://localhost:8000`;
 axios.defaults.withCredentials = true;
 
 function App() {
@@ -82,6 +83,7 @@ function App() {
         path="/seller-register"
         element={<SellerRegistration/>}
       />
+        <Route path="/productdetail" element={<ProductDetails />} />
         <Route
         path="/orders/:id"
         element={<OrderInfo/>}
@@ -100,5 +102,6 @@ function App() {
     </>
   );
 }
+document.body.removeAttribute("class");
 export default App;
 document.body.removeAttribute("class")
