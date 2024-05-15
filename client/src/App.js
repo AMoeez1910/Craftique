@@ -39,7 +39,9 @@ function App() {
             path="/verify/:id/:expirationTimestamp"
             element={<EmailVerify />}
           />
-          <Route path="/ResetPassword" element={<ResetPassword />} />
+      <Route 
+      path="/ResetPassword"
+       element={<ResetPassword />} />
       <Route
         path="/ForgotPassword/:id/:token"
         element={<ForgotPassword />}
@@ -75,8 +77,14 @@ function App() {
       <Route
         path="/order/:id"
         element={<OrderInfo/>}
+        />
+        <Route
         path="/seller-register"
         element={<SellerRegistration/>}
+      />
+        <Route
+        path="/orders/:id"
+        element={<OrderInfo/>}
       />
       <Route path="*" element={<NotFound />} />
     </Routes>

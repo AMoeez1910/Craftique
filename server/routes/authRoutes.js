@@ -4,7 +4,7 @@ const cors = require('cors')
 const passport = require("passport")
 const User = require('../models/db')
 const OAuth2Strategy = require("passport-google-oauth20").Strategy
-const {registerUser,getProfile,loginUser,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress, getProducts,placeOrder,registerBrand} = require('../controllers/authControllers')
+const {registerUser,getProfile,loginUser,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress, getProducts,placeOrder,registerBrand,getOrderDetail} = require('../controllers/authControllers')
 router.use(
     cors({
         credentials:true,
@@ -60,6 +60,7 @@ router.get('/logout',logOut)
 router.get('/user-profile/:id',getUserProfileData)
 router.get('/verify/:id/:expirationTimestamp', verifyMail)
 router.get('/products',getProducts)
+router.get('/orderinfo/:id',getOrderDetail)
 router.get('/auth/google',passport.authenticate('google', { scope: ['profile','email'] }))
 router.get('/auth/google/callback',passport.authenticate('google', { failureRedirect: 'http://localhost:3000/google/auth/ValidationFailure' }),
 function(req, res) {

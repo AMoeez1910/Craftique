@@ -2,7 +2,33 @@
 import { CardTitle, CardHeader, CardContent, Card } from "../components/ui/card"
 import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "../components/ui/table"
 import { Separator } from "../components/ui/separator"
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 const OrderInfo =() =>  {
+  const {id} = useParams();
+  const [data,setData] = useState();
+  const [loading, setLoading] = useState(true); 
+  const [subtotal, setSubtotal] = useState(0);
+  useEffect(() => {
+    const getOrder = async () => {
+      try {
+        const { data } = await axios.get(`/orderinfo/${id}`);
+        setData(data);
+        setLoading(false); 
+        setSubtotal(data.products.reduce((acc,item) => acc +(item.product.price-item.product.discount)*item.quantity,0))
+      } catch (error) {
+        console.error(error);
+        setLoading(false); 
+      }
+    };
+
+    getOrder();
+  }, [id]); 
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="flex flex-col">
       <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40">
@@ -11,7 +37,7 @@ const OrderInfo =() =>  {
           <span className="sr-only">Home</span>
         </a>
         <div className="flex-1">
-          <h1 className="font-semibold text-lg">Order #3102</h1>
+          <h1 className="font-semibold text-lg">Order #{data._id}</h1>
         </div>
       </header>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -20,27 +46,27 @@ const OrderInfo =() =>  {
             <div className="grid gap-4">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-white">
+                  <div className={`flex h-8 w-8 items-center justify-center rounded-full ${data.status==='Processing'?(" bg-black text-white"):("bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400")}`}>
                     <TruckIcon className="h-4 w-4" />
                   </div>
                   <div className="text-sm font-medium">Processing</div>
                 </div>
                 <div className="h-[1px] flex-1 bg-gray-200 dark:bg-gray-700" />
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                  <div className={`flex h-8 w-8 items-center justify-center rounded-full ${data.status==='Shipped'?(" bg-black text-white"):("bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400")}`}>
                     <TruckIcon className="h-4 w-4" />
                   </div>
                   <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Shipped</div>
                 </div>
                 <div className="h-[1px] flex-1 bg-gray-200 dark:bg-gray-700" />
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                  <div className={`flex h-8 w-8 items-center justify-center rounded-full ${data.status==='Delivered'?(" bg-black text-white"):("bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400")}`}>
                     <TruckIcon className="h-4 w-4" />
                   </div>
                   <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Delivered</div>
                 </div>
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">Order placed on June 23, 2022</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">Order placed on {new Date(data.placedAt).toISOString().split("T")[0]}</div>
             </div>
             <Card>
               <CardHeader>
@@ -56,38 +82,27 @@ const OrderInfo =() =>  {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>
-                        <div className="flex items-center gap-4">
-                          <img
-                            alt="Product image"
-                            className="aspect-square rounded-md object-cover"
-                            height="64"
-                            src="/placeholder.svg"
-                            width="64"
-                          />
-                          <div className="font-medium">Glimmer Lamps</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>2</TableCell>
-                      <TableCell>$120.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="flex items-center gap-4">
-                          <img
-                            alt="Product image"
-                            className="aspect-square rounded-md object-cover"
-                            height="64"
-                            src="/placeholder.svg"
-                            width="64"
-                          />
-                          <div className="font-medium">Aqua Filters</div>
-                        </div>
-                      </TableCell>
-                      <TableCell>3</TableCell>
-                      <TableCell>$49.00</TableCell>
-                    </TableRow>
+                    {
+                      data.products.map((product) => ( 
+                        <TableRow key={product._id}>
+                          <TableCell>
+                            <div className="flex items-center gap-4">
+                              <img
+                                alt="Product image"
+                                className="aspect-square rounded-md object-cover"
+                                height="64"
+                                src={product.product.images[0]}
+                                width="64"
+                              />
+                              <div className="font-medium">{product.product.name}</div>
+                            </div>
+                          </TableCell>
+                          <TableCell>{product.quantity}</TableCell>
+                          <TableCell>{product.product.price}</TableCell>
+                        </TableRow>
+                      ))
+                    }
+                      
                   </TableBody>
                 </Table>
               </CardContent>
@@ -100,12 +115,16 @@ const OrderInfo =() =>  {
                   <CardTitle>Shipping address</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm">
-                  <div>
-                    Sophia Anderson
-                    <br />
-                    1234 Main St.
-                    <br />
-                    Anytown, CA 12345
+                <div>
+                  {data?.buyer ? (
+                    <>
+                      {data.buyer.address.shippingAddress.address}
+                      <br />
+                      {data.buyer.address.shippingAddress.city}, {data.buyer.address.shippingAddress.country}
+                    </>
+                  ) : (
+                    <></>
+                  )}
                   </div>
                 </CardContent>
               </div>
@@ -114,8 +133,43 @@ const OrderInfo =() =>  {
                 <CardHeader>
                   <CardTitle>Billing address</CardTitle>
                 </CardHeader>
-                <CardContent className="text-sm">Same as shipping address</CardContent>
+                <CardContent className="text-sm">
+                <div>
+                  {data?.buyer ? (
+                    <>
+                      {data.buyer.address.billingAddress.address}
+                      <br />
+                      {data.buyer.address.billingAddress.city}, {data.buyer.address.billingAddress.country}
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                  </div>
+                </CardContent>
               </div>
+            </Card>
+            <Card>
+              <div>
+                <CardHeader>
+                  <CardTitle>User Details</CardTitle>
+                </CardHeader>
+                <CardContent className="text-sm">
+                <div>
+                  {data?.buyer ? (
+                    <>
+                      {data.buyer.FirstName}
+                      <br />
+                      {data.buyer.email}
+                      <br/>
+                      {data.buyer.phoneNo}
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                  </div>
+                </CardContent>
+              </div>
+              
             </Card>
             <Card>
               <CardHeader>
@@ -124,16 +178,18 @@ const OrderInfo =() =>  {
               <CardContent className="grid gap-4">
                 <div className="flex items-center">
                   <div>Subtotal</div>
-                  <div className="ml-auto">$169.00</div>
+                  <div className="ml-auto">{
+                    subtotal
+                  }</div>
                 </div>
                 <div className="flex items-center">
-                  <div>Discount</div>
-                  <div className="ml-auto">-$19.00</div>
+                  <div>Shipping</div>
+                  <div className="ml-auto">{data.totalPrice-subtotal}</div>
                 </div>
                 <Separator />
                 <div className="flex items-center font-medium">
                   <div>Total</div>
-                  <div className="ml-auto">$150.00</div>
+                  <div className="ml-auto">{data.totalPrice}</div>
                 </div>
               </CardContent>
             </Card>

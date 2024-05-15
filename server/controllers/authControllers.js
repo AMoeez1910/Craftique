@@ -327,7 +327,6 @@ const updateUserProfile = async (req, res) => {
     const { id } = req.params;
     const { data,phoneNo,imageUrl } = req.body;
     const { FirstName, LastName, newPassword, confirmPassword } = data;
-    console.log(phoneNo)
     try {
         if (!!newPassword) {
             if (newPassword === confirmPassword && newPassword.length >= 6) {
@@ -379,11 +378,11 @@ const placeOrder = async (req,res)=>{
             buyer: user,
             products: cart,
             totalPrice: total,
-            status: 'Pending'
+            status: 'Processing'
         })
         const data = await newOrder.save()
         await User.updateOne({_id:user},{$push:{orders:data._id}})
-        return res.json({ success: "Order placed successfully" });
+        return res.json({ success: "Order Placed Successfully" ,orderId:data._id});
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -412,6 +411,21 @@ const registerBrand = async (req, res) => {
         console.error('Error creating brand:', error);
         res.status(500).send({ error: 'Internal Server Error' });
     }
-
 }
-module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand}
+const getOrderDetail = async (req,res)=>{
+    const {id} = req.params
+    try {
+        const order = await Order.findById(id).populate({
+            path: 'products.product',
+            select: 'name price images discount'
+        }).populate({
+            path: 'buyer',
+            select: 'FirstName email phoneNo address'
+        });
+        res.json(order)
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand,getOrderDetail}

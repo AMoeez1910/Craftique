@@ -67,16 +67,16 @@ export const Shoppingcart = () => {
                 toast.error('Please add shipping address to place order')
             }
             else{
-                await axios.post('/order', {cart, total: total + shipping,user: user._id})  
-                toast.success('Order placed successfully')	
+                const response = await axios.post('/order', {cart, total: total + shipping,user: user._id})  
+                toast.success(response.data.success)
                 setCart([])
                 localStorage.removeItem('cart')
-                navigate('/')
+                navigate('/orders/'+response.data.orderId)
             }
         }
         catch(err)
         {
-            toast.error(err)
+          console.log('Error')
         }
         
     }
