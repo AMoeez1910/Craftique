@@ -110,10 +110,10 @@ export default function NavBar({ links }) {
                 <PopoverTrigger>
                       <Button variant="ghost">
                         <div className="flex items-center">
-                          <p className="pr-2">{user.FirstName}</p>
+                          <p className="pr-2">{user?.FirstName}</p>
                           <div className="h-8 w-8 flex items-center justify-center rounded-full overflow-hidden">
                             <img
-                              src={user.image}
+                              src={user?.image}
                               alt="User Avatar"
                               className="h-full w-full object-cover"
                             />

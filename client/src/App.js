@@ -29,7 +29,6 @@ function App() {
     <UserContextProvider>
     <CartProvider>
     <Routes>
-    
     <Route path='/' element={<Home/>}
       />
       <Route path='/login' element={<Login/>}
@@ -80,7 +79,6 @@ function App() {
         element={<SellerRegistration/>}
       />
       <Route path="*" element={<NotFound />} />
-      
     </Routes>
     
 
