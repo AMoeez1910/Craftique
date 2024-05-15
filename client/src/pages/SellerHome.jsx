@@ -1,5 +1,5 @@
 import { AvatarImage, AvatarFallback, Avatar } from "../components/ui/avatar"
-
+import { Button } from "../components/ui/button"
 const SellerHome =()=> {
   return (
     <>
@@ -23,7 +23,17 @@ const SellerHome =()=> {
         </div>
       </div>
       <div className="container px-4 md:px-6 py-12">
-        <h2 className="text-2xl font-bold mb-6">Featured</h2>
+      <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 mb-10">
+        <h2 className="text-2xl font-bold tracking-tight md:text-3xl">Featured Products</h2>
+          <p className="text-gray-500 dark:text-gray-400">
+          </p>
+          <Button
+            className="ml-auto shrink-0 bg-gray-900 text-gray-50 hover:bg-gray-900/90 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90"
+            variant="outline"
+          >
+            View all products
+          </Button>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="relative group overflow-hidden rounded-lg">
             <a className="absolute inset-0 z-10" href="#">
