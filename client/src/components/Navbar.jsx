@@ -11,9 +11,10 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Badge from '@mui/material/Badge';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Badge from "@mui/material/Badge";
 import { CartContext } from "../context/cart";
+
 export default function NavBar({ links }) {
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
@@ -43,7 +44,6 @@ export default function NavBar({ links }) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left">
-
                 <div className="py-3">
                   {links.map((link, index) => {
                     if (!link.button) {
@@ -147,33 +147,33 @@ export default function NavBar({ links }) {
             </div>
             {user ? (
               <div className="flex justify-between items-center cursor-pointer">
-              <Popover>
-                <PopoverTrigger>
-                  <Button variant="ghost">
-                    <p className="pr-2">{user.FirstName}</p>
-                    <FontAwesomeIcon
-                      icon={faUser}
-                      className="h-4 border-2 p-2 rounded-full border-gray-600 text-gray-600"
-                    />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-40 rounded-sm p-3">
-                  <Link to="/profile" className="cursor-pointer">
-                    <p>Profile</p>
-                  </Link>
-                  <hr className="border-gray-800 border-1 my-2" />
-                  <p className="cursor-pointer" onClick={logout}>
-                    <b>Log Out</b>
-                  </p>
-                </PopoverContent>
-              </Popover>
-              <div className="flex items-center">
-                <Badge badgeContent={cart.length} color="primary">
-                  <Link to="/shoppingcart" className="ml-4">
-                    <ShoppingCartIcon />
-                  </Link>
-                </Badge>
-              </div>
+                <Popover>
+                  <PopoverTrigger>
+                    <Button variant="ghost">
+                      <p className="pr-2">{user.FirstName}</p>
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        className="h-4 border-2 p-2 rounded-full border-gray-600 text-gray-600"
+                      />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-40 rounded-sm p-3">
+                    <Link to="/profile" className="cursor-pointer">
+                      <p>Profile</p>
+                    </Link>
+                    <hr className="border-gray-800 border-1 my-2" />
+                    <p className="cursor-pointer" onClick={logout}>
+                      <b>Log Out</b>
+                    </p>
+                  </PopoverContent>
+                </Popover>
+                <div className="flex items-center">
+                  <Badge badgeContent={cart.length} color="primary">
+                    <Link to="/shoppingcart" className="ml-4">
+                      <ShoppingCartIcon />
+                    </Link>
+                  </Badge>
+                </div>
               </div>
             ) : (
               <div className="flex">
@@ -185,7 +185,7 @@ export default function NavBar({ links }) {
                         <Link to={link.path} key={index}>
                           <Button
                             className={`h-9 w-20 rounded-md transition duration-500 ease-in-out transform hover:-translate-y-1  ${
-                              evenIteration ? "bg-black text-white" : ""
+                              evenIteration ? " " : "bg-white text-black"
                             }`}
                           >
                             {link.btn_name}
@@ -196,9 +196,9 @@ export default function NavBar({ links }) {
                   }
                 })}
                 <Badge badgeContent={cart.length} color="primary">
-                <Link to="/shoppingcart">
-                    <ShoppingCartIcon className="ml-4 mt-2"/>
-                </Link>
+                  <Link to="/shoppingcart">
+                    <ShoppingCartIcon className="ml-4 mt-2" />
+                  </Link>
                 </Badge>
               </div>
             )}

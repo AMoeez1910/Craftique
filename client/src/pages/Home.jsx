@@ -13,8 +13,8 @@ const Home = () => {
           { href: "#past", name: "Past Campaigns" },
           { href: "#volunteer", name: "Volunteer" },
           { href: "#start", name: "Start a fundraiser" },
-          {button: true, path: "/Login", btn_name: "Login"},
-          {button: true, path: "/Register", btn_name: "Register"}
+          {button: true, path: "/login", btn_name: "Login"},
+          {button: true, path: "/register", btn_name: "Register"}
         ]} 
       />
       <Products />
