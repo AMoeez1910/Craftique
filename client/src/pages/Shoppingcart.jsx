@@ -74,7 +74,7 @@ export const Shoppingcart = () => {
     );
   };
  
-    const placeOrder = async ()=>{
+  const placeOrder = async ()=>{
         try{
             if(!user){
                 navigate('/login')	
@@ -97,7 +97,6 @@ export const Shoppingcart = () => {
           console.log('Error')
         }
     }
-  };
   const subtotal = () => {
     let total = 0;
     cart.map((item) => {
@@ -114,17 +113,15 @@ export const Shoppingcart = () => {
   };
   return (
     <>
-      <Navbar
-        links={[
+      <Navbar links={[
           { href: "/", name: "Home" },
           { href: "#donate", name: "Donate Now" },
           { href: "#past", name: "Past Campaigns" },
           { href: "#volunteer", name: "Volunteer" },
           { href: "#start", name: "Start a fundraiser" },
-          { button: true, path: "/Login", btn_name: "Login" },
-          { button: true, path: "/Register", btn_name: "Register" },
-        ]}
-      />
+          {button: true, path: "/login", btn_name: "Login"},
+          {button: true, path: "/register", btn_name: "Register"}
+        ]} />
       <main className="container mx-auto my-8 grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr]">
         <div>
           <h1 className="mb-4 text-2xl font-bold">Your Cart</h1>

@@ -82,13 +82,13 @@ import toast from "react-hot-toast"
 const SellerDash = ()=>  {
   const {user,ready} = useContext(UserContext)
 
-  if (!ready) {
-    return "Loading.....";
-  }
-  if (ready && (!user || !user.isSeller)) {
-    toast.error('Please log in to access Or become A Seller!');
-    return <Navigate to={"/login"} />;
-  }
+  // if (!ready) {
+  //   return "Loading.....";
+  // }
+  // if (ready && (!user || !user.isSeller)) {
+  //   toast.error('Please log in to access Or become A Seller!');
+  //   return <Navigate to={"/login"} />;
+  // }
 
   return (
     <TooltipProvider>
