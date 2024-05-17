@@ -1,4 +1,4 @@
-const ProductCard = () => {
+const ProductCard = ({name,image,price}) => {
     return (
         <div className="relative group">
                             <a className="absolute inset-0 z-10" href="#">
@@ -8,11 +8,11 @@ const ProductCard = () => {
                                 alt="Product Image"
                                 className="rounded-lg object-cover w-full aspect-square group-hover:opacity-50 transition-opacity"
                                 height={300}
-                                src="https://placehold.co/600x400"
+                                src={image}
                                 width={300}
                             />
                             <div className="flex-1 py-4">
-                                <h3 className="font-semibold tracking-tight">Ergonomic Office Chair</h3>
+                                <h3 className="font-semibold tracking-tight">{name}</h3>
                                 <div className="flex items-center gap-2 text-sm">
                                     <div className="flex items-center gap-0.5">
                                         <StarIcon className="w-4 h-4 fill-primary" />
@@ -23,7 +23,7 @@ const ProductCard = () => {
                                     </div>
                                     <span className="text-gray-500 dark:text-gray-400">(72)</span>
                                 </div>
-                                <h4 className="font-semibold text-lg">$179.99</h4>
+                                <h4 className="font-semibold text-lg">PKR {price}</h4>
                             </div>
                         </div>
     );

@@ -112,4 +112,3 @@ function App() {
 }
 document.body.removeAttribute("class");
 export default App;
-document.body.removeAttribute("class")
