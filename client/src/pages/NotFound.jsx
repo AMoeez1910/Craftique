@@ -7,7 +7,7 @@ const NotFound = () => {
     <div className="container mx-auto">
         <div className="flex flex-col items-center justify-center">
             <div className="text-center w-1/2">
-                <img className="w-1/2 mx-auto" src={error} />
+                <img className="w-full mx-auto" src={error} />
             </div>
             <div className="text-center">
                 <h2 className="text-4xl font-bold mb-4">Page Not Found</h2>
