@@ -123,7 +123,7 @@ export default function Login() {
                   <div className="w-full mt-3">
                     <Link to="http://localhost:8000/auth/google/callback">
                       <Button className="w-full bg-white text-black h-10 border-2 border-gray-100 rounded-sm shadow-md">
-                        <img src={google} alt="Google" className="h-7 mr-2" />
+                        <img src={google} alt="Google" className="h-7 mr-2 py-1" />
                         Log In with Google
                       </Button>
                     </Link>

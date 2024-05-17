@@ -106,7 +106,7 @@ const PhoneInputComponent = React.forwardRef(({ setPhoneNum,phoneNo,className, o
         inputComponent={InputComponent}
         onChange={handleChange}
         placeholder={phoneNo}
-        maxLength={15}
+        maxLength={10}
         {...props}
       />
     );

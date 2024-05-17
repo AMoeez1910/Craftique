@@ -114,16 +114,13 @@ export const Shoppingcart = () => {
   return (
     <>
       <Navbar links={[
-          { href: "/", name: "Home" },
-          { href: "#donate", name: "Donate Now" },
-          { href: "#past", name: "Past Campaigns" },
-          { href: "#volunteer", name: "Volunteer" },
-          { href: "#start", name: "Start a fundraiser" },
+          
           {button: true, path: "/login", btn_name: "Login"},
           {button: true, path: "/register", btn_name: "Register"}
         ]} />
       <main className="container mx-auto my-8 grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr]">
         <div>
+          {console.log(cart)}
           <h1 className="mb-4 text-2xl font-bold">Your Cart</h1>
           {cart.length === 0 ? (
             <p>Your cart is empty</p>
