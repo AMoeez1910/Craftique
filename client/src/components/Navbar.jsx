@@ -62,7 +62,7 @@ export default function NavBar({ links }) {
           </NavigationMenuItem>
 
           {/* mobile */}
-          <span className="flex md:hidden">
+          <span className="flex lg:hidden">
             
 
             <Sheet
@@ -71,7 +71,7 @@ export default function NavBar({ links }) {
             >
               <SheetTrigger className="px-2">
                 <Menu
-                  className="flex md:hidden h-5 w-5"
+                  className="flex lg:hidden h-5 w-5"
                   onClick={() => setIsOpen(true)}
                 >
                   <span className="sr-only">Menu Icon</span>
@@ -183,7 +183,7 @@ export default function NavBar({ links }) {
           </span>
 
           {/* desktop */}
-          <nav className="hidden md:flex gap-4">
+          <nav className="hidden lg:flex gap-4">
             <a href="#">Categories</a>
             <a href="#">Deals</a>
             <a href="#">What's New</a>
@@ -191,7 +191,7 @@ export default function NavBar({ links }) {
             <a href="#">Cultural</a>
           </nav>
 
-          <div className="hidden md:flex gap-2">
+          <div className="hidden lg:flex gap-2">
           {user ? (
               <div className="flex justify-between items-center cursor-pointer">
               <Popover>
