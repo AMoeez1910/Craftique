@@ -17,10 +17,8 @@ export default function Component() {
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [reviews, setReviews] = useState([{rating:0,review:''}])
-  const [avgRating, setAvgRating] = useState(0)
-  const navigate = useNavigate()  
-  const [fetchCalled, setFetchCalled] = useState(false);
+  const [reviews, setReviews] = useState({ rating: 0, review: '' });
+  const navigate = useNavigate() 
 
   const fetchProducts = async () => {
     try {
@@ -35,18 +33,19 @@ export default function Component() {
   };
   
   useEffect(() => {
-    if (!fetchCalled) {
-      fetchProducts();
-      setFetchCalled(true);
-    }
-  }, [fetchCalled]);
+    fetchProducts();
+  }, []);
   
   const submitReview = async () => {
     if (reviews.rating === 0 || reviews.review === '') {
       toast.error("Please fill all the fields");
     } else {
       try {
-        const response = await axios.post('/product-reviews', { reviews, id: user._id, product: id, avgRating });
+        const totalRating = data.reviews.reduce((acc, review) => acc + review.rating, 0) + reviews.rating;
+      const totalReviews = data.reviews.length + 1;
+      const averageRating = totalRating / totalReviews;
+      const avgCount = Math.round(averageRating); 
+        const response = await axios.post('/product-reviews', { reviews, id: user._id, product: id ,avgRating:avgCount});
         toast.success(response.data.success);
         setReviews({ rating: 0, review: '' });
   
@@ -117,7 +116,6 @@ export default function Component() {
                 (() => {
                   const averageRating = data.reviews.reduce((acc, review) => acc + review.rating, 0) / data.reviews.length;
                   const starCount = Math.round(averageRating); 
-                  setAvgRating(starCount)
                   const stars = [];
                   
                   for (let i = 0; i < 5; i++) {
