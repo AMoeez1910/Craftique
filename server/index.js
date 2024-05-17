@@ -6,7 +6,7 @@ const session = require("express-session")
 const cookieParser = require('cookie-parser')
 const passport = require("passport")
 const {mongoose} = require ('mongoose')
-
+const stripe = require ("./routes/stripe")
 //middleware
 const corsOptions ={
     origin:'http://localhost:3000', 
@@ -27,7 +27,7 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session())
 app.use('/',require('./routes/authRoutes'))
-
+app.use("/payment",stripe)
 mongoose.connect(process.env.MONGODB_URL)
 .then(()=>console.log("Database connected successfully"))
 .catch((err)=>console.log("Database not connected",err))

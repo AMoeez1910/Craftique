@@ -1,4 +1,5 @@
 import {
+  Box,
   ChevronLeft,
   ChevronRight,
   Copy,
@@ -17,6 +18,13 @@ import {
   Truck,
   Users2,
 } from "lucide-react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select"
 
 import { Badge } from "../components/ui/badge"
 import {
@@ -74,22 +82,86 @@ import {
   TooltipTrigger,
   TooltipProvider
 } from "../components/ui/tooltip"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { UserContext } from "../context/userContext"
-import { Navigate } from "react-router-dom"
+import { Link,Navigate, useNavigate } from "react-router-dom"
 import toast from "react-hot-toast"
+import axios from "axios"
+import { Money } from "@mui/icons-material"
 
 const SellerDash = ()=>  {
-  const {user,ready} = useContext(UserContext)
+  const { user, ready,setUser } = useContext(UserContext);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [display, setDisplay] = useState()
+  const [status, setStatus] = useState()
+  const [seller, setSeller] = useState()
+  const navigate = useNavigate()
+  const logout = () => {
+    axios
+      .get("/logout")
+      .then((res) => {
+        if (res.data && res.data.Status === "Success") {
+          setUser(null);
+          toast.success("Successfully logged out");
+          navigate("/");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 
-  if (!ready) {
-    return "Loading.....";
+  useEffect(()=>{
+    const fetchData = async () => {
+      if (status && status.id) {
+        try {
+          const response = await axios.patch(`/update-order-status/${status.id}`,{status:status.status});
+          toast.success(response.data.success)
+        } catch (error) {
+          console.error("error");
+        }
+      }
+    };
+    if (status) {
+      fetchData();
+    }
+  },[status])
+  useEffect(() => {
+    const fetchData = async () => {
+      if (ready && user && user._id) {
+        try {
+          const response = await axios.get(`/seller/${user._id}`);
+          setSeller(response.data.brand);
+          setData(response.data.orders);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+
+    if (ready) {
+      fetchData();
+    }
+  }, [ready, user]);
+  const subtotal = () => {
+    let total = 0;
+    display.products.map((item,index) => {
+      const productDetail = display.productDetails[index]
+      total += productDetail.price * item.quantity;
+    });
+    return total;
+  };
+  if (loading) {
+    return "Loading...";
   }
+
   if (ready && (!user || !user.isSeller)) {
-    toast.error('Please log in to access Or become A Seller!');
-    return <Navigate to={"/login"} />;
+    toast.error('Please log in to access or become a seller!');
+    return <Navigate to="/login" />;
   }
-
   return (
     <TooltipProvider>
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -100,7 +172,7 @@ const SellerDash = ()=>  {
             className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
           >
             <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
-            <span className="sr-only">Acme Inc</span>
+            <span className="sr-only"></span>
           </a>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -179,88 +251,64 @@ const SellerDash = ()=>  {
         </nav>
       </aside>
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button size="icon" variant="outline" className="sm:hidden">
-                <PanelLeft className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="sm:max-w-xs">
-              <nav className="grid gap-6 text-lg font-medium">
-                <a
-                  href="#"
-                  className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                >
-                  <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-                  <span className="sr-only">Acme Inc</span>
-                </a>
-                <a
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Home className="h-5 w-5" />
-                  Dashboard
-                </a>
-                <a
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-foreground"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
-                </a>
-                <a
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Package className="h-5 w-5" />
-                  Products
-                </a>
-                <a
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Users2 className="h-5 w-5" />
-                  Customers
-                </a>
-                <a
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <LineChart className="h-5 w-5" />
-                  Settings
-                </a>
-              </nav>
-            </SheetContent>
-          </Sheet>
-          <Breadcrumb className="hidden md:flex">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <a href="#">Dashboard</a>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <a href="#">Orders</a>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Recent Orders</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
-          </div>
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button size="icon" variant="outline" className="sm:hidden">
+              <PanelLeft className="h-5 w-5" />
+              <span className="sr-only">Toggle Menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="sm:max-w-xs">
+            <nav className="grid gap-6 text-lg font-medium">
+              <a
+                href="#"
+                className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+              >
+                <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
+                <span className="sr-only"></span>
+              </a>
+              <a
+                href="#"
+                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              >
+                <Home className="h-5 w-5" />
+                Dashboard
+              </a>
+              <a
+                href="#"
+                className="flex items-center gap-4 px-2.5 text-foreground"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                Orders
+              </a>
+              <a
+                href="#"
+                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              >
+                <Package className="h-5 w-5" />
+                Products
+              </a>
+              <a
+                href="#"
+                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              >
+                <Users2 className="h-5 w-5" />
+                Customers
+              </a>
+              <a
+                href="#"
+                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              >
+                <LineChart className="h-5 w-5" />
+                Settings
+              </a>
+            </nav>
+          </SheetContent>
+        </Sheet>
+
+        <div className="flex items-center gap-4 ml-auto">
+          <span>Hello, <b>{seller?.name}</b></span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -269,10 +317,10 @@ const SellerDash = ()=>  {
                 className="overflow-hidden rounded-full"
               >
                 <img
-                  src="/placeholder-user.jpg"
+                  src={seller?.image}
                   width={36}
                   height={36}
-                  alt="Avatar"
+                  alt="ProfilePicture"
                   className="overflow-hidden rounded-full"
                 />
               </Button>
@@ -283,10 +331,12 @@ const SellerDash = ()=>  {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <Button onClick={logout}>Logout</Button>  
+              
             </DropdownMenuContent>
           </DropdownMenu>
-        </header>
+        </div>
+      </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2 ">
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
@@ -306,78 +356,27 @@ const SellerDash = ()=>  {
                 </CardFooter>
               </Card>
               <Card x-chunk="dashboard-05-chunk-1">
-                <CardHeader className="pb-2">
-                  <CardDescription>This Week</CardDescription>
-                  <CardTitle className="text-4xl">$1,329</CardTitle>
+                <CardHeader className="pb-2 pad2x">
+                  <CardDescription>Total Earnings</CardDescription>
+                  <CardTitle className="text-4xl">
+                  Rs,{
+                    data?.reduce((acc, order) => acc + order.totalPrice, 0)
+                  }</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-xs text-muted-foreground">
-                    +25% from last week
-                  </div>
                 </CardContent>
-                <CardFooter>
-                  <Progress value={25} aria-label="25% increase" />
-                </CardFooter>
               </Card>
-              <Card x-chunk="dashboard-05-chunk-2">
-                <CardHeader className="pb-2">
-                  <CardDescription>This Month</CardDescription>
-                  <CardTitle className="text-4xl">$5,329</CardTitle>
+              <Card x-chunk="dashboard-05-chunk-2 ">
+                <CardHeader className="pb-2 pad1">
+                  <CardDescription>Total Orders</CardDescription>
+                  <CardTitle className="text-4xl">{data?.length}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-xs text-muted-foreground">
-                    +10% from last month
-                  </div>
                 </CardContent>
-                <CardFooter>
-                  <Progress value={12} aria-label="12% increase" />
-                </CardFooter>
               </Card>
             </div>
-            <Tabs defaultValue="week">
-              <div className="flex items-center">
-                <TabsList>
-                  <TabsTrigger value="week">Week</TabsTrigger>
-                  <TabsTrigger value="month">Month</TabsTrigger>
-                  <TabsTrigger value="year">Year</TabsTrigger>
-                </TabsList>
-                <div className="ml-auto flex items-center gap-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-7 gap-1 text-sm"
-                      >
-                        <ListFilter className="h-3.5 w-3.5" />
-                        <span className="sr-only sm:not-sr-only">Filter</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuCheckboxItem checked>
-                        Fulfilled
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>
-                        Declined
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>
-                        Refunded
-                      </DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="h-7 gap-1 text-sm"
-                  >
-                    <File className="h-3.5 w-3.5" />
-                    <span className="sr-only sm:not-sr-only">Export</span>
-                  </Button>
-                </div>
-              </div>
-              <TabsContent value="week">
+            <Tabs defaultValue="">
+              <TabsContent value="">
                 <Card x-chunk="dashboard-05-chunk-3" >
                   <CardHeader className="px-7">
                     <CardTitle>Orders</CardTitle>
@@ -392,7 +391,7 @@ const SellerDash = ()=>  {
                         <TableRow>
                           <TableHead>Customer</TableHead>
                           <TableHead className="hidden sm:table-cell">
-                            Type
+                            Payment Method
                           </TableHead>
                           <TableHead className="hidden sm:table-cell">
                             Status
@@ -404,287 +403,41 @@ const SellerDash = ()=>  {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        <TableRow className="bg-accent">
-                          <TableCell>
-                            <div className="font-medium">Liam Johnson</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              liam@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-23
-                          </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
-                        </TableRow>
-                        <TableRow className="bg-accent">
-                          <TableCell>
-                            <div className="font-medium">Liam Johnson</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              liam@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-23
-                          </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
-                        </TableRow>
-                        <TableRow className="bg-accent">
-                          <TableCell>
-                            <div className="font-medium">Liam Johnson</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              liam@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-23
-                          </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
-                        </TableRow>
-                        <TableRow className="bg-accent">
-                          <TableCell>
-                            <div className="font-medium">Liam Johnson</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              liam@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-23
-                          </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
-                        </TableRow>
-                        <TableRow className="bg-accent">
-                          <TableCell>
-                            <div className="font-medium">Liam Johnson</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              liam@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-23
-                          </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
-                        </TableRow>
-                        <TableRow className="bg-accent">
-                          <TableCell>
-                            <div className="font-medium">Liam Johnson</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              liam@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-23
-                          </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
-                        </TableRow>
-                        <TableRow className="bg-accent">
-                          <TableCell>
-                            <div className="font-medium">Liam Johnson</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              liam@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-23
-                          </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
-                        </TableRow>
-                        <TableRow>
-                        
-                          <TableCell>
-                            <div className="font-medium">Olivia Smith</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              olivia@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Refund
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="outline">
-                              Declined
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-24
-                          </TableCell>
-                          <TableCell className="text-right">$150.00</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <div className="font-medium">Noah Williams</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              noah@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Subscription
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-25
-                          </TableCell>
-                          <TableCell className="text-right">$350.00</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <div className="font-medium">Emma Brown</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              emma@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-26
-                          </TableCell>
-                          <TableCell className="text-right">$450.00</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <div className="font-medium">Liam Johnson</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              liam@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-23
-                          </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <div className="font-medium">Liam Johnson</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              liam@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-23
-                          </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <div className="font-medium">Olivia Smith</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              olivia@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Refund
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="outline">
-                              Declined
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-24
-                          </TableCell>
-                          <TableCell className="text-right">$150.00</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <div className="font-medium">Emma Brown</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              emma@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-26
-                          </TableCell>
-                          <TableCell className="text-right">$450.00</TableCell>
-                        </TableRow>
+                      {
+                        data?.map((order) => (
+                          <TableRow key={order._id}
+                          onClick={()=> {setDisplay(order) 
+                          }}
+                          className={display && display._id === order._id ? "bg-accent" : ""}
+                          >
+                            <TableCell>
+                              <div className="font-medium">{order.buyerDetails.FirstName}</div>
+                              <div className="hidden text-sm text-muted-foreground md:inline">
+                                {order.buyerDetails.email}
+                              </div>
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                              {order.paymentMethod}
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                            <Select onValueChange={(value) => setStatus({id:order._id,status:value})} defaultValue={order.status}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder={order.status} />
+                                </SelectTrigger>
+                              <SelectContent >
+                                <SelectItem value="Processing">Processing</SelectItem>
+                                <SelectItem value="Shipped">Shipped</SelectItem>
+                                <SelectItem value="Delivered">Delivered</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {new Date(order.placedAt).toISOString().split("T")[0]}
+                            </TableCell>
+                            <TableCell className="text-right">{order.totalPrice}</TableCell>
+                          </TableRow>
+                        ))
+                      }
                       </TableBody>
                     </Table>
                     </div>
@@ -700,7 +453,7 @@ const SellerDash = ()=>  {
               <CardHeader className="flex flex-row items-start bg-muted/50">
                 <div className="grid gap-0.5">
                   <CardTitle className="group flex items-center gap-2 text-lg">
-                    Order Oe31b70H
+                    Order {display?._id}
                     <Button
                       size="icon"
                       variant="outline"
@@ -710,65 +463,52 @@ const SellerDash = ()=>  {
                       <span className="sr-only">Copy Order ID</span>
                     </Button>
                   </CardTitle>
-                  <CardDescription>Date: November 23, 2023</CardDescription>
+                  <CardDescription>Date: { 
+                    display?.placedAt ? display.placedAt.split("T")[0] : ""
+                  }</CardDescription>
                 </div>
-                <div className="ml-auto flex items-center gap-1">
-                  <Button size="sm" variant="outline" className="h-8 gap-1">
+                <div className="ml-auto flex  gap-1">
+                  { display? (<Button size="sm" variant="outline" className="h-8 gap-1">
+                <Link to={'/orders/'+display?._id} className="flex items-center gap-2">
                     <Truck className="h-3.5 w-3.5" />
                     <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
-                      Track Order
+                        Track Order
                     </span>
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="outline" className="h-8 w-8">
-                        <MoreVertical className="h-3.5 w-3.5" />
-                        <span className="sr-only">More</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Export</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Trash</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                </Link>
+            </Button>):(<></>)}
                 </div>
               </CardHeader>
               <CardContent className="p-6 text-sm">
                 <div className="grid gap-3">
                   <div className="font-semibold">Order Details</div>
                   <ul className="grid gap-3">
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                        Glimmer Lamps x <span>2</span>
-                      </span>
-                      <span>$250.00</span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                        Aqua Filters x <span>1</span>
-                      </span>
-                      <span>$49.00</span>
-                    </li>
+                  {
+                  display?.products.map((product, index) => {
+                    const productDetail = display.productDetails[index];
+                    return (
+                      <li key={product._id} className="flex items-center justify-between">
+                        <div>
+                          <span>{productDetail.name}</span>
+                        </div>
+                        <span>{product.quantity}</span>
+                      </li>
+                    );
+                  })
+                }
                   </ul>
                   <Separator className="my-2" />
                   <ul className="grid gap-3">
                     <li className="flex items-center justify-between">
                       <span className="text-muted-foreground">Subtotal</span>
-                      <span>$299.00</span>
+                      <span>{display? `Rs ${subtotal()}`:""}</span>
                     </li>
                     <li className="flex items-center justify-between">
                       <span className="text-muted-foreground">Shipping</span>
-                      <span>$5.00</span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Tax</span>
-                      <span>$25.00</span>
+                      <span>{display? `Rs ${display.totalPrice-subtotal()}`:""}</span>
                     </li>
                     <li className="flex items-center justify-between font-semibold">
                       <span className="text-muted-foreground">Total</span>
-                      <span>$329.00</span>
+                      <span>Rs {display?.totalPrice}</span>
                     </li>
                   </ul>
                 </div>
@@ -777,15 +517,16 @@ const SellerDash = ()=>  {
                   <div className="grid gap-3">
                     <div className="font-semibold">Shipping Information</div>
                     <address className="grid gap-0.5 not-italic text-muted-foreground">
-                      <span>Liam Johnson</span>
-                      <span>1234 Main St.</span>
-                      <span>Anytown, CA 12345</span>
+                
+                      <span>{display?.buyerDetails.address.shippingAddress.address}</span>
+                      <span>{display?.buyerDetails.address.shippingAddress.city}, {display?.buyerDetails.address.shippingAddress.country}</span>
                     </address>
                   </div>
                   <div className="grid auto-rows-max gap-3">
                     <div className="font-semibold">Billing Information</div>
                     <div className="text-muted-foreground">
-                      Same as shipping address
+                      <span>{display?.buyerDetails.address.billingAddress.address}</span><br/>
+                      <span>{display?.buyerDetails.address.billingAddress.city}, {display?.buyerDetails.address.billingAddress.country}</span>
                     </div>
                   </div>
                 </div>
@@ -795,18 +536,19 @@ const SellerDash = ()=>  {
                   <dl className="grid gap-3">
                     <div className="flex items-center justify-between">
                       <dt className="text-muted-foreground">Customer</dt>
-                      <dd>Liam Johnson</dd>
+                      <dd><span>{display?.buyerDetails.FirstName}</span></dd>
                     </div>
                     <div className="flex items-center justify-between">
                       <dt className="text-muted-foreground">Email</dt>
                       <dd>
-                        <a href="mailto:">liam@acme.com</a>
+                        <a href="mailto:"><span>{display?.buyerDetails.email}</span>
+</a>
                       </dd>
                     </div>
                     <div className="flex items-center justify-between">
                       <dt className="text-muted-foreground">Phone</dt>
                       <dd>
-                        <a href="tel:">+1 234 567 890</a>
+                        <a href="tel:"><span>{display?.buyerDetails.phoneNo}</span></a>
                       </dd>
                     </div>
                   </dl>
@@ -817,35 +559,19 @@ const SellerDash = ()=>  {
                   <dl className="grid gap-3">
                     <div className="flex items-center justify-between">
                       <dt className="flex items-center gap-1 text-muted-foreground">
-                        <CreditCard className="h-4 w-4" />
-                        Visa
+                        {
+                          display?.paymentMethod === "Pay through Stripe" ? (
+                            <CreditCard className="h-4 w-4" />
+                          ) : (
+                            <Money className="h-4 w-4" />
+                          )
+                        }
+                        {display?.paymentMethod}
                       </dt>
-                      <dd>**** **** **** 4532</dd>
                     </div>
                   </dl>
                 </div>
               </CardContent>
-              <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-                <div className="text-xs text-muted-foreground">
-                  Updated <time dateTime="2023-11-23">November 23, 2023</time>
-                </div>
-                <Pagination className="ml-auto mr-0 w-auto">
-                  <PaginationContent>
-                    <PaginationItem>
-                      <Button size="icon" variant="outline" className="h-6 w-6">
-                        <ChevronLeft className="h-3.5 w-3.5" />
-                        <span className="sr-only">Previous Order</span>
-                      </Button>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <Button size="icon" variant="outline" className="h-6 w-6">
-                        <ChevronRight className="h-3.5 w-3.5" />
-                        <span className="sr-only">Next Order</span>
-                      </Button>
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </CardFooter>
             </Card>
           </div>
         </main>
@@ -855,3 +581,42 @@ const SellerDash = ()=>  {
   )
 }
 export default SellerDash;
+{/* <TableCell>
+                            <div className="font-medium">Liam Johnson</div>
+                            <div className="hidden text-sm text-muted-foreground md:inline">
+                              liam@example.com
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            Sale
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <Badge className="text-xs" variant="secondary">
+                              Fulfilled
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            2023-06-23
+                          </TableCell>
+                          <TableCell className="text-right">$250.00</TableCell>
+                        </TableRow>
+                        
+                        <TableRow>
+                          <TableCell>
+                            <div className="font-medium">Emma Brown</div>
+                            <div className="hidden text-sm text-muted-foreground md:inline">
+                              emma@example.com
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            Sale
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <Badge className="text-xs" variant="secondary">
+                              Fulfilled
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            2023-06-26
+                          </TableCell>
+                          <TableCell className="text-right">$450.00</TableCell> */}

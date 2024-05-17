@@ -40,7 +40,10 @@ const ProductSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Brand'
   },
-
+  category:{
+    type:String,
+    required: [true, 'Category is required']
+  },
   updated: {
     type: Date,
     default: Date.now

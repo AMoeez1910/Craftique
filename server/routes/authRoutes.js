@@ -4,7 +4,7 @@ const cors = require('cors')
 const passport = require("passport")
 const User = require('../models/db')
 const OAuth2Strategy = require("passport-google-oauth20").Strategy
-const {registerUser,getProfile,loginUser,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress, getProducts,placeOrder,registerBrand,getOrderDetail} = require('../controllers/authControllers')
+const {registerUser,getProfile,loginUser,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress, getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus} = require('../controllers/authControllers')
 router.use(
     cors({
         credentials:true,
@@ -51,10 +51,12 @@ router.post("/login",loginUser)
 router.post('/ResetPassword', PasswordReset)
 router.post('/order',placeOrder	)
 router.post('/registerBrand',registerBrand)
+router.post('/create-checkout-session', stripeIntegration)
 // patch 
 router.patch('/ForgotPassword/:id/:token', NewPassword)
 router.patch('/update-user-profile/:id',updateUserProfile)
 router.patch('/update-user-address/:id',updateUserAddress)
+router.patch('/update-order-status/:id',updateStatus)
 // get 
 router.get("/profile",getProfile);
 router.get('/logout',logOut)
@@ -62,6 +64,7 @@ router.get('/user-profile/:id',getUserProfileData)
 router.get('/verify/:id/:expirationTimestamp', verifyMail)
 router.get('/products',getProducts)
 router.get('/orderinfo/:id',getOrderDetail)
+router.get('/seller/:id',sellerDetails)
 router.get('/auth/google',passport.authenticate('google', { scope: ['profile','email'] }))
 router.get('/auth/google/callback',passport.authenticate('google', { failureRedirect: 'http://localhost:3000/google/auth/ValidationFailure' }),
 function(req, res) {
