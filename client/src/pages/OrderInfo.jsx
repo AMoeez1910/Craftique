@@ -4,12 +4,13 @@ import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from ".
 import { Separator } from "../components/ui/separator"
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 const OrderInfo =() =>  {
   const {id} = useParams();
   const [data,setData] = useState();
   const [loading, setLoading] = useState(true); 
   const [subtotal, setSubtotal] = useState(0);
+  const navigate = useNavigate();
   useEffect(() => {
     const getOrder = async () => {
       try {
@@ -20,6 +21,7 @@ const OrderInfo =() =>  {
       } catch (error) {
         console.error(error);
         setLoading(false); 
+        navigate('/*')
       }
     };
 

@@ -13,10 +13,6 @@ const ReviewSchema = new Schema({
     ref: 'User',
     default: null
   },
-  title: {
-    type: String,
-    trim: true
-  },
   rating: {
     type: Number,
     default: 0
@@ -24,10 +20,6 @@ const ReviewSchema = new Schema({
   review: {
     type: String,
     trim: true
-  },
-  isRecommended: {
-    type: Boolean,
-    default: true
   },
   updated: Date,
   created: {
