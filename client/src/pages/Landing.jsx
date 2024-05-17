@@ -1,4 +1,4 @@
-import NavbarLand from "../components/NavbarLand"
+import Navbar from "../components/Navbar"
 import Hero from "../components/Hero"
 import Categories from "../components/Categories"
 import Bestseller from "../components/Bestseller"
@@ -10,7 +10,17 @@ const Landing = () => {
     return(
         <div>
             
-            <NavbarLand />
+            <Navbar
+                links={[
+                { href: "/", name: "Home" },
+                { href: "#donate", name: "Donate Now" },
+                { href: "#past", name: "Past Campaigns" },
+                { href: "#volunteer", name: "Volunteer" },
+                { href: "#start", name: "Start a fundraiser" },
+                {button: true, path: "/login", btn_name: "Login"},
+                {button: true, path: "/register", btn_name: "Register"}
+                ]} 
+            />
             <Hero />
             <Categories />
             <Bestseller />

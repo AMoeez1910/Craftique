@@ -14,14 +14,18 @@ import Profile from "./pages/Profile.jsx";
 import { CartProvider } from "./context/cart";
 import { Shoppingcart } from "./pages/Shoppingcart";
 import ProductCatalog from "./pages/ProductCatalog";
+import Navbar from "./components/Navbar.jsx";
 import SellerDash from "./pages/SellerDash";
 import SellerHome from "./pages/SellerHome";
 import Landing from "./pages/Landing";
 import ProductDetails from "./pages/ProductDetails.jsx";
 import OrderInfo from './pages/OrderInfo.jsx';
 import { SellerRegistration } from './pages/SellerRegistration.jsx';
+import AddProduct from "./pages/AddProduct";
+import ProductInfo from "./pages/ProductInfo.jsx";
 axios.defaults.baseURL = `http://localhost:8000`;
 axios.defaults.withCredentials = true;
+
 
 function App() {
   return (
@@ -30,7 +34,7 @@ function App() {
     <UserContextProvider>
     <CartProvider>
     <Routes>
-    <Route path='/' element={<Home/>}
+    <Route path='/' element={<Landing/>}
       />
       <Route path='/login' element={<Login/>}
       />
@@ -64,10 +68,6 @@ function App() {
         element={<SellerDash />}
       />
       <Route
-        path="/home"
-        element={<Landing/>}
-      />
-      <Route
         path="/products"
         element={<ProductCatalog/>}
       />
@@ -87,6 +87,14 @@ function App() {
         <Route
         path="/orders/:id"
         element={<OrderInfo/>}
+      />
+        <Route
+        path="/seller/products"
+        element={<ProductInfo/>}
+      />
+      <Route
+        path="/seller/add"
+        element={<AddProduct/>}
       />
       <Route path="*" element={<NotFound />} />
     </Routes>
