@@ -22,7 +22,6 @@ import OrderInfo from "./pages/OrderInfo.jsx";
 import { SellerRegistration } from "./pages/SellerRegistration.jsx";
 import AddProduct from "./pages/AddProduct";
 import ProductInfo from "./pages/ProductInfo.jsx";
-import { ThreeDots } from "react-loader-spinner";
 import SellerCatalog from "./pages/SellerCatalog.jsx";
 axios.defaults.baseURL = `http://localhost:8000`;
 axios.defaults.withCredentials = true;
