@@ -30,43 +30,85 @@ axios.defaults.withCredentials = true;
 function App() {
   return (
     <>
-      <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
-      <UserContextProvider>
-        <CartProvider>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/verify/:id/:expirationTimestamp"
-              element={<EmailVerify />}
-            />
-            <Route path="/ResetPassword" element={<ResetPassword />} />
-            <Route
-              path="/ForgotPassword/:id/:token"
-              element={<ForgotPassword />}
-            />
-            <Route
-              path="/google/auth/ValidationFailure"
-              element={<ValidationFailure />}
-            />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/shoppingcart" element={<Shoppingcart />} />
-            <Route path="/dash" element={<SellerDash />} />
-            <Route path="/products" element={<ProductCatalog />} />
-            <Route path="/sellerhome/:id" element={<SellerHome />} />
-            <Route path="/order/:id" element={<OrderInfo />} />
-            <Route path="/seller-register" element={<SellerRegistration />} />
-            <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/orders/:id" element={<OrderInfo />} />
-            <Route path="/seller/products" element={<ProductInfo />} />
-            <Route path="/seller/add" element={<AddProduct />} />
-            <Route path="/artisans" element={<Artisans />} />
-            <Route path="/product/seller/:id" element={<SellerCatalog />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </CartProvider>
-      </UserContextProvider>
+
+    
+    <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
+    <UserContextProvider>
+    <CartProvider>
+    <Routes>
+    <Route path='/' element={<Landing/>}
+      />
+      <Route path='/login' element={<Login/>}
+      />
+      <Route path='/register' element={<Register/>}
+      />
+      <Route
+            path="/verify/:id/:expirationTimestamp"
+            element={<EmailVerify />}
+          />
+      <Route 
+      path="/ResetPassword"
+       element={<ResetPassword />} />
+      <Route
+        path="/ForgotPassword/:id/:token"
+        element={<ForgotPassword />}
+      />
+      <Route
+        path="/google/auth/ValidationFailure"
+        element={<ValidationFailure />}
+      />
+      <Route
+        path="/profile"
+        element={<Profile />}
+      />
+      <Route
+        path="/shoppingcart"
+        element={<Shoppingcart />}
+        />
+        <Route
+        path="/dash"
+        element={<SellerDash />}
+      />
+      <Route
+        path="/products"
+        element={<ProductCatalog/>}
+      />
+      <Route path="/sellerhome/:id" element={<SellerHome />} />
+      <Route
+        path="/order/:id"
+        element={<OrderInfo/>}
+        />
+        <Route
+        path="/seller-register"
+        element={<SellerRegistration/>}
+      />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route
+        path="/orders/:id"
+        element={<OrderInfo/>}
+      />
+        <Route
+        path="/seller/products"
+        element={<ProductInfo/>}
+      />
+      <Route
+        path="/seller/add"
+        element={<AddProduct/>}
+      />
+      <Route path="/artisans" element={<Artisans />} />
+      <Route path="/product/seller/:id" element={<SellerCatalog />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+    
+
+    {/*  example 
+    <Route
+            path="/verify/:id/:expirationTimestamp"
+            element={<EmailVerify />}
+          /> */}
+          </CartProvider>
+    </UserContextProvider>
+
     </>
   );
 }

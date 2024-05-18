@@ -23,7 +23,6 @@ const FeaturedArtisan = () => {
   }, []);
   return (
     <section className="w-full py-8 md:py-10 lg:py-10">
-      {console.log(artisan)}
       <div className="container grid gap-6 md:gap-8 px-4 md:px-6">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
           <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
