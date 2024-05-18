@@ -83,26 +83,29 @@ export default function NavBar({ links }) {
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col justify-start items-start gap-4 mt-4">
-                  <Accordion type="single" collapsible className="w-full">
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger className="py-3">
-                        Categories
-                      </AccordionTrigger>
-                      <AccordionContent className="pt-2 pl-3">
-                        <Link>Ceramics</Link>
-                      </AccordionContent>
-                      <AccordionContent className="pt-2 pl-3">
-                        <Link>Textiles</Link>
-                      </AccordionContent>
-                      <AccordionContent className="pt-2 pl-3">
-                        <Link>Woodworks</Link>
-                      </AccordionContent>
-                      <AccordionContent className="pt-2 pl-3">
-                        <Link>Leatherworks</Link>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                  <Link className="">Top Picks</Link>
+                  <Link className="pt-3">
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="item-1">
+                        <AccordionTrigger className="py-3">
+                          Categories
+                        </AccordionTrigger>
+                        <AccordionContent className="pt-2 pl-3">
+                          <Link>Ceramics</Link>
+                        </AccordionContent>
+                        <AccordionContent className="pt-2 pl-3">
+                          <Link>Textiles</Link>
+                        </AccordionContent>
+                        <AccordionContent className="pt-2 pl-3">
+                          <Link>Woodworks</Link>
+                        </AccordionContent>
+                        <AccordionContent className="pt-2 pl-3">
+                          <Link>Leatherworks</Link>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </Link>
+                  
+                  <Link className="pt-3">Top Picks</Link>
                   <Link className="pt-3">Featured Artisans</Link>
                   <Link className="pt-3">Testimonials</Link>
                   <SheetFooter>
