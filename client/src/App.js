@@ -27,6 +27,7 @@ axios.defaults.withCredentials = true;
 function App() {
   return (
     <>
+    
     <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
     <UserContextProvider>
     <CartProvider>
