@@ -1,7 +1,5 @@
-import BestsellerCard from "./BestSellerCard"
 import { useNavigate } from 'react-router-dom';
-const Bestseller = () => {
-const navigate = useNavigate();
+
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/cart";
@@ -9,6 +7,7 @@ import toast from "react-hot-toast";
 import { Button } from "../components/ui/button";
 
 const Bestseller = () => {
+  const navigate = useNavigate();
   const [cartProduct, setCartProduct] = useState();
   const [products, setProducts] = useState([
     {

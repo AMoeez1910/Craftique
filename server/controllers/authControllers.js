@@ -472,6 +472,11 @@ const getAllSellers = async (req,res)=>{
             select: 'name image'
         });
         res.json(sellers)
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }}
 const stripeIntegration = async (req, res) => {
     const {cart,total,user,paymentMethod} = req.body
     const newCart = cart.map(item => {
