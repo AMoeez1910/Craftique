@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import axios from "axios";
 import Register from "./pages/Register.jsx";
-import Home from "./pages/Home.jsx";
 import EmailVerify from "./pages/EmailVerify.jsx";
 import Login from "./pages/Login.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
@@ -14,7 +13,6 @@ import Profile from "./pages/Profile.jsx";
 import { CartProvider } from "./context/cart";
 import { Shoppingcart } from "./pages/Shoppingcart";
 import ProductCatalog from "./pages/ProductCatalog";
-import Navbar from "./components/Navbar.jsx";
 import SellerDash from "./pages/SellerDash";
 import SellerHome from "./pages/SellerHome";
 import Landing from "./pages/Landing";
@@ -71,10 +69,7 @@ function App() {
         path="/products"
         element={<ProductCatalog/>}
       />
-      <Route
-        path="/sellerhome"
-        element={<SellerHome/>}
-      />
+      <Route path="/sellerhome/:id" element={<SellerHome />} />
       <Route
         path="/order/:id"
         element={<OrderInfo/>}

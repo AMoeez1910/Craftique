@@ -5,29 +5,34 @@ import { Separator } from "../components/ui/separator"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-const OrderInfo =() =>  {
-  const {id} = useParams();
-  const [data,setData] = useState();
-  const [loading, setLoading] = useState(true); 
+const OrderInfo = () => {
+  const { id } = useParams();
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState(true);
   const [subtotal, setSubtotal] = useState(0);
   useEffect(() => {
     const getOrder = async () => {
       try {
         const { data } = await axios.get(`/orderinfo/${id}`);
         setData(data);
-        setLoading(false); 
-        setSubtotal(data.products.reduce((acc,item) => acc +(item.product.price-item.product.discount)*item.quantity,0))
+        setLoading(false);
+        setSubtotal(data.products.reduce((acc, item) => acc + (item.product.price - item.product.discount) * item.quantity, 0))
       } catch (error) {
         console.error(error);
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
     getOrder();
-  }, [id]); 
+  }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (<div className="flex h-screen w-full items-center justify-center">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="animate-spin rounded-full border-4 border-gray-300 border-t-gray-900 h-12 w-12 dark:border-gray-600 dark:border-t-gray-50" />
+        <p className="text-gray-500 dark:text-gray-400">Loading content...</p>
+      </div>
+    </div>)
   }
   return (
     <div className="flex flex-col">
@@ -46,21 +51,21 @@ const OrderInfo =() =>  {
             <div className="grid gap-4">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <div className={`flex h-8 w-8 items-center justify-center rounded-full ${data.status==='Processing'?(" bg-black text-white"):("bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400")}`}>
+                  <div className={`flex h-8 w-8 items-center justify-center rounded-full ${data.status === 'Processing' ? (" bg-black text-white") : ("bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400")}`}>
                     <TruckIcon className="h-4 w-4" />
                   </div>
                   <div className="text-sm font-medium">Processing</div>
                 </div>
                 <div className="h-[1px] flex-1 bg-gray-200 dark:bg-gray-700" />
                 <div className="flex items-center gap-2">
-                  <div className={`flex h-8 w-8 items-center justify-center rounded-full ${data.status==='Shipped'?(" bg-black text-white"):("bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400")}`}>
+                  <div className={`flex h-8 w-8 items-center justify-center rounded-full ${data.status === 'Shipped' ? (" bg-black text-white") : ("bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400")}`}>
                     <TruckIcon className="h-4 w-4" />
                   </div>
                   <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Shipped</div>
                 </div>
                 <div className="h-[1px] flex-1 bg-gray-200 dark:bg-gray-700" />
                 <div className="flex items-center gap-2">
-                  <div className={`flex h-8 w-8 items-center justify-center rounded-full ${data.status==='Delivered'?(" bg-black text-white"):("bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400")}`}>
+                  <div className={`flex h-8 w-8 items-center justify-center rounded-full ${data.status === 'Delivered' ? (" bg-black text-white") : ("bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400")}`}>
                     <TruckIcon className="h-4 w-4" />
                   </div>
                   <div className="text-sm font-medium text-gray-500 dark:text-gray-400">Delivered</div>
@@ -83,7 +88,7 @@ const OrderInfo =() =>  {
                   </TableHeader>
                   <TableBody>
                     {
-                      data.products.map((product) => ( 
+                      data.products.map((product) => (
                         <TableRow key={product._id}>
                           <TableCell>
                             <div className="flex items-center gap-4">
@@ -102,7 +107,7 @@ const OrderInfo =() =>  {
                         </TableRow>
                       ))
                     }
-                      
+
                   </TableBody>
                 </Table>
               </CardContent>
@@ -115,16 +120,16 @@ const OrderInfo =() =>  {
                   <CardTitle>Shipping address</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm">
-                <div>
-                  {data?.buyer ? (
-                    <>
-                      {data.buyer.address.shippingAddress.address}
-                      <br />
-                      {data.buyer.address.shippingAddress.city}, {data.buyer.address.shippingAddress.country}
-                    </>
-                  ) : (
-                    <></>
-                  )}
+                  <div>
+                    {data?.buyer ? (
+                      <>
+                        {data.buyer.address.shippingAddress.address}
+                        <br />
+                        {data.buyer.address.shippingAddress.city}, {data.buyer.address.shippingAddress.country}
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </CardContent>
               </div>
@@ -134,16 +139,16 @@ const OrderInfo =() =>  {
                   <CardTitle>Billing address</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm">
-                <div>
-                  {data?.buyer ? (
-                    <>
-                      {data.buyer.address.billingAddress.address}
-                      <br />
-                      {data.buyer.address.billingAddress.city}, {data.buyer.address.billingAddress.country}
-                    </>
-                  ) : (
-                    <></>
-                  )}
+                  <div>
+                    {data?.buyer ? (
+                      <>
+                        {data.buyer.address.billingAddress.address}
+                        <br />
+                        {data.buyer.address.billingAddress.city}, {data.buyer.address.billingAddress.country}
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </CardContent>
               </div>
@@ -154,22 +159,22 @@ const OrderInfo =() =>  {
                   <CardTitle>User Details</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm">
-                <div>
-                  {data?.buyer ? (
-                    <>
-                      {data.buyer.FirstName}
-                      <br />
-                      {data.buyer.email}
-                      <br/>
-                      {data.buyer.phoneNo}
-                    </>
-                  ) : (
-                    <></>
-                  )}
+                  <div>
+                    {data?.buyer ? (
+                      <>
+                        {data.buyer.FirstName}
+                        <br />
+                        {data.buyer.email}
+                        <br />
+                        {data.buyer.phoneNo}
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </CardContent>
               </div>
-              
+
             </Card>
             <Card>
               <CardHeader>
@@ -184,7 +189,7 @@ const OrderInfo =() =>  {
                 </div>
                 <div className="flex items-center">
                   <div>Shipping</div>
-                  <div className="ml-auto">{data.totalPrice-subtotal}</div>
+                  <div className="ml-auto">{data.totalPrice - subtotal}</div>
                 </div>
                 <Separator />
                 <div className="flex items-center font-medium">

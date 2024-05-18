@@ -41,7 +41,7 @@ export default function ResetPassword() {
             <img className="w-full" src={forgot} />
           </div>
           <div className="w-1/2 mb-10">
-            <div className="w-1/2">
+            <div className="w-1/2 m-auto">
               <form method="post" onSubmit={ResetPasswordUser}>
                 <Form>
                   <h3 className="mb-5 font-bold text-2xl">Reset Password</h3>

@@ -428,4 +428,39 @@ const getOrderDetail = async (req,res)=>{
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand,getOrderDetail}
+const getSellerDetails = async (req,res)=>{
+    const {id} = req.params
+    try {
+        // Find products by brand ID and populate the brand details
+        const products = await Product.find({ brand: id }).populate({
+          path: 'brand',
+        });
+        
+        if (!products || products.length === 0) {
+          return res.status(404).json({ error: 'No products found for this brand' });
+        }
+    
+        // Since all products should have the same brand, we can take the brand from the first product
+    
+    
+        // Respond with the brand details
+        res.json(products)
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+}
+const getAllSellers = async (req,res)=>{
+    try {
+        const sellers = await User.find({isSeller:true}).populate({
+            path: 'brand',
+            select: 'name image'
+        });
+        res.json(sellers)
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand,getOrderDetail,getSellerDetails,createBrand,createProduct,createOrder, getAllSellers}
