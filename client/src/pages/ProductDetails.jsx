@@ -37,7 +37,7 @@ export default function Component() {
   }, []);
   
   const submitReview = async () => {
-    if (reviews.rating === 0 || reviews.review === '') {
+    if (reviews.rating === 0) {
       toast.error("Please fill all the fields");
     } else {
       try {
