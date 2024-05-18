@@ -142,7 +142,11 @@ export const Shoppingcart = () => {
         ]} />
       <main className="container mx-auto my-8 grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr]">
         <div>
+<<<<<<< HEAD
         {console.log(cart)}
+=======
+          {console.log(cart)}
+>>>>>>> 54670e3fd52516b5e2c40dcb2ac2c2ee9be61770
           <h1 className="mb-4 text-2xl font-bold">Your Cart</h1>
           {cart.length === 0 ? (
             <p>Your cart is empty</p>
