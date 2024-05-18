@@ -79,7 +79,6 @@ const Profile = () => {
   }, [user]);
 
   if (!ready) {
-    if (loading) {
       return (
         <div className="flex h-screen w-full items-center justify-center">
           <div className="flex flex-col items-center space-y-4">
@@ -90,7 +89,6 @@ const Profile = () => {
           </div>
         </div>
       );
-    }
   }
   if (ready && !user) {
     return <Navigate to={"/login"} />;

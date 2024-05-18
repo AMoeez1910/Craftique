@@ -30,16 +30,6 @@ axios.defaults.withCredentials = true;
 function App() {
   return (
     <>
-      <ThreeDots
-        visible={true}
-        height="80"
-        width="80"
-        color="#4fa94d"
-        radius="9"
-        ariaLabel="three-dots-loading"
-        wrapperStyle={{}}
-        wrapperClass=""
-      />
       <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
       <UserContextProvider>
         <CartProvider>
