@@ -3,6 +3,7 @@ import { Button } from "../components/ui/button";
 import { Separator } from "../components/ui/separator";
 import { Input } from "../components/ui/input";
 import { AvatarImage, AvatarFallback, Avatar } from "../components/ui/avatar";
+import NavBar from "../components/Navbar";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/cart";
 import { UserContext } from "../context/userContext";
@@ -11,14 +12,15 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 export default function Component() {
-  const [data,setData] = useState()
-  const {id} = useParams();
+  const [data, setData] = useState();
+  const { id } = useParams();
   const [cart, setCart] = useContext(CartContext);
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [reviews, setReviews] = useState({ rating: 0, review: '' });
   const navigate = useNavigate() 
+
 
   const fetchProducts = async () => {
     try {
@@ -55,8 +57,7 @@ export default function Component() {
         console.error("Error submitting review:", error);
       }
     }
-  }
-  
+  };
 
   const addToCart = (product) => {
     const productInCart = cart.find((item) => item.product._id === product._id);
@@ -93,7 +94,13 @@ export default function Component() {
   }
   return (
     <>
-      <div className="h-screen flex justify-center items-center">
+      <NavBar
+        links={[
+          { button: true, path: "/login", btn_name: "Login" },
+          { button: true, path: "/register", btn_name: "Register" },
+        ]}
+      />
+      <div className="h-[93vh] flex justify-center items-center">
         <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6">
           <div className="grid gap-4 md:gap-10 items-start">
             <img
@@ -134,6 +141,7 @@ export default function Component() {
               
                 </div>
                 <div className="text-4xl font-bold">PKR {data.product.price}</div>
+
               </div>
             </div>
             <div className="grid gap-4 md:gap-10">
@@ -162,6 +170,7 @@ export default function Component() {
       </div>
       <Separator />
       <div className="mx-auto px-4 md:px-6 max-w-2xl grid gap-12">
+
         <div className="flex gap-4">
           <div className="grid gap-4">
             <div className="flex gap-4 items-start">
@@ -195,6 +204,7 @@ export default function Component() {
   
               />
               <Button className="mt-4" onClick ={submitReview}>Submit Review</Button>
+
             </div>
           </div>
         </div>
@@ -258,6 +268,7 @@ export default function Component() {
           </>
         ))
       }
+
       </div>
     </>
   );

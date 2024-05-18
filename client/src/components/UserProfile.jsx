@@ -7,12 +7,12 @@ import { Input } from "../components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "../components/ui/button";
 import pfp from "../assets/user_pfp.png";
-import { PhoneInput } from './PhoneInput';
+import { PhoneInput } from "./PhoneInput";
 
 export default function UserProfile(props) {
   const navigate = useNavigate();
   const preset_key = process.env.REACT_APP_CLOUDINARY_PRESET_KEY;
-  const cloud_name =  process.env.REACT_APP_CLOUD_NAME; ;
+  const cloud_name = process.env.REACT_APP_CLOUD_NAME;
   const [phoneNo, setPhoneNum] = useState("");
   const [data, setData] = useState({
     FirstName: "",
@@ -25,34 +25,38 @@ export default function UserProfile(props) {
 
   useEffect(() => {
     setData((prevVal) => ({
-        ...prevVal, 
-        FirstName: props.FirstName, 
-        LastName: props.LastName,
+      ...prevVal,
+      FirstName: props.FirstName,
+      LastName: props.LastName,
     }));
     setPhoneNum(props.phoneNo);
     setCoverPreview(props.image);
-}, [props]);
-
+  }, [props]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let imageUrl = props.image; 
-  if (image) {
-    const formData = new FormData();
-    formData.append("file", image);
-    formData.append("upload_preset", preset_key);
-    formData.append("cloud_name", cloud_name);
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, {
-      method: "POST",
-      body: formData,
-    });
-    const imgdata = await res.json();
-    imageUrl = imgdata.url;
-  }
+    let imageUrl = props.image;
+    if (image) {
+      const formData = new FormData();
+      formData.append("file", image);
+      formData.append("upload_preset", preset_key);
+      formData.append("cloud_name", cloud_name);
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const imgdata = await res.json();
+      imageUrl = imgdata.url;
+    }
 
     try {
       const response = await axios.patch(`/update-user-profile/${props.id}`, {
-        data,phoneNo,imageUrl
+        data,
+        phoneNo,
+        imageUrl,
       });
       if (response.data.success) {
         toast.success(response.data.success);
@@ -84,9 +88,7 @@ export default function UserProfile(props) {
   };
   return (
     <div className="overflow-hidden">
-      <h3 className="text-dark mb-4 text-xl">
-        Profile
-      </h3>
+      <h3 className="text-dark mb-4 text-xl">Profile</h3>
       <div className="flex justify-between">
         <div className="w-2/3">
           <Form>
@@ -117,7 +119,12 @@ export default function UserProfile(props) {
             <FormItem>
               <div className="w-4/5">
                 <Label htmlFor="contact">Contact</Label>
-                <PhoneInput setPhoneNum={setPhoneNum} phoneNo={phoneNo} />
+                <PhoneInput
+                  id="contact"
+                  setPhoneNum={setPhoneNum}
+                  value={phoneNo?.toString().substring(1)}
+                  className=""
+                />
               </div>
             </FormItem>
           </Form>

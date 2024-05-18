@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import axios from "axios";
 import Register from "./pages/Register.jsx";
-import Home from "./pages/Home.jsx";
 import EmailVerify from "./pages/EmailVerify.jsx";
 import Login from "./pages/Login.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
@@ -14,19 +13,17 @@ import Profile from "./pages/Profile.jsx";
 import { CartProvider } from "./context/cart";
 import { Shoppingcart } from "./pages/Shoppingcart";
 import ProductCatalog from "./pages/ProductCatalog";
-import Navbar from "./components/Navbar.jsx";
 import SellerDash from "./pages/SellerDash";
 import SellerHome from "./pages/SellerHome";
 import Landing from "./pages/Landing";
 import ProductDetails from "./pages/ProductDetails.jsx";
-import OrderInfo from './pages/OrderInfo.jsx';
-import { SellerRegistration } from './pages/SellerRegistration.jsx';
+import OrderInfo from "./pages/OrderInfo.jsx";
+import { SellerRegistration } from "./pages/SellerRegistration.jsx";
 import AddProduct from "./pages/AddProduct";
 import ProductInfo from "./pages/ProductInfo.jsx";
 import { Products } from "./pages/Products.jsx";
 axios.defaults.baseURL = `http://localhost:8000`;
 axios.defaults.withCredentials = true;
-
 
 function App() {
   return (
@@ -110,9 +107,10 @@ function App() {
           /> */}
           </CartProvider>
     </UserContextProvider>
+
     </>
   );
 }
 document.body.removeAttribute("class");
 export default App;
-document.body.removeAttribute("class")
+document.body.removeAttribute("class");
