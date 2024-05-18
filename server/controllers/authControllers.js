@@ -11,6 +11,8 @@ const Category = require('../models/category')
 const OAuth2Strategy = require("passport-google-oauth20").Strategy
 const findOrCreate = require("mongoose-findorcreate")
 const { Schema } = require('mongoose')
+const Stripe = require('stripe')
+const stripe = Stripe('sk_test_51OT909JvFBCqm5cO3mOWVLKvR5cdT6eDnK05rYu0tGuuwfNa6xRHNsa0Mfny4NQPSe2Z0S57SXIqrNISCl7oDJ5M00b178UuU5')
 // const email_existence = require('email-existence') 
 
 const createBrand = async (req, res) => {
@@ -177,7 +179,7 @@ const loginUser = async (req, res) => {
             FirstName: userDoc.FirstName,
             email: userDoc.email,
             id: userDoc._id
-        }, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+        }, process.env.JWT_SECRET, (err, token) => {
             if (err) {
                 console.error('Error signing JWT:', err);
                 return res.status(500).json({ error: 'Internal Server Error' });
@@ -196,8 +198,8 @@ const getProfile= async (req,res)=>{
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userData) => {
       if (err) throw err;
-      const {FirstName,email,_id,address,isSeller,image} = await User.findById(userData.id);
-      res.json({FirstName,email,_id,address,isSeller,image});
+      const {FirstName,email,_id,address,isSeller,image,phoneNo} = await User.findById(userData.id);
+      res.json({FirstName,email,_id,address,isSeller,image,phoneNo});
       
     });
   } else {
@@ -372,16 +374,29 @@ const getProducts = async (req,res)=>{
 
 }
 const placeOrder = async (req,res)=>{
-    const {cart,total,user} = req.body
+    const {cart,total,user,paymentMethod} = req.body
     try {
         const newOrder = new Order({
             buyer: user,
             products: cart,
             totalPrice: total,
-            status: 'Processing'
+            status: 'Processing',
+            paymentMethod: paymentMethod	
         })
         const data = await newOrder.save()
         await User.updateOne({_id:user},{$push:{orders:data._id}})
+        // add the quantity of product in cart to itemssold in product schema and decrease the quantity in product schema
+        cart.forEach(async (item) => {
+            await Product.updateOne(
+                { _id: item.product },
+                {
+                    $inc: {
+                        itemsSold: item.quantity, 
+                        quantity: -item.quantity 
+                    }
+                }
+            );
+        });
         return res.json({ success: "Order Placed Successfully" ,orderId:data._id});
     } catch (error) {
         console.error(error);
@@ -409,7 +424,7 @@ const registerBrand = async (req, res) => {
         return res.json({ success: "Brand Successfully Created" });
     } catch (error) {
         console.error('Error creating brand:', error);
-        res.status(500).send({ error: 'Internal Server Error' });
+        res.status(500).send({ error: error });
     }
 }
 const getOrderDetail = async (req,res)=>{
@@ -457,10 +472,152 @@ const getAllSellers = async (req,res)=>{
             select: 'name image'
         });
         res.json(sellers)
+const stripeIntegration = async (req, res) => {
+    const {cart,total,user,paymentMethod} = req.body
+    const newCart = cart.map(item => {
+        return {
+           product:
+           { _id: item.product._id},
+            quantity: item.quantity
+        };
+    });
+    const customer = await stripe.customers.create({
+        metadata:{
+            user:user,
+            cart:JSON.stringify(newCart),
+            total:total,
+            paymentMethod:paymentMethod
+        }
+    })
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [{
+            price_data: {
+                currency: 'PKR',
+                product_data: {
+                    name: 'Total Amount', // You can customize this if needed
+                },
+                unit_amount: total * 100, // Total amount in cents
+            },
+            quantity: 1, // Quantity should be 1 for total amount
+        }],
+        customer: customer.id,
+        mode: 'payment',
+        success_url: 'http://localhost:3000/checkout-success',
+        cancel_url: 'http://localhost:3000/shoppingcart',
+    });
+  res.send({url:session.url});
+}
+const sellerDetails = async (req,res)=>{
+    const {id} = req.params
+    try {
+        const user = await User.findById(id).populate('brand')
+        //use this to find orders made to brand
+        // $lookup: Joins the products collection to the Order documents to get full product details for each order.
+        // $match: Filters the orders to include only those where at least one product's brand matches the given brandId.
+        // $project: Projects the necessary fields and filters the productDetails to include only products that match the brandId.
+        // $lookup: Joins the users collection to get buyer details.
+        // $unwind: Ensures that the buyer details are returned as a single object instead of an array.
+
+        const orders = await Order.aggregate([
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'products.product',
+                    foreignField: '_id',
+                    as: 'productDetails'
+                }
+            },
+            {
+                $match: {
+                    'productDetails.brand': user.brand._id
+                }
+            },
+            {
+                $project: {
+                    buyer: 1,
+                    products: 1,
+                    totalPrice: 1,
+                    paymentMethod: 1,
+                    placedAt: 1,
+                    status: 1,
+                    productDetails: {
+                        $filter: {
+                            input: '$productDetails',
+                            as: 'product',
+                            cond: { $eq: ['$$product.brand', user.brand._id] }
+                        }
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'buyer',
+                    foreignField: '_id',
+                    as: 'buyerDetails'
+                }
+            },
+            {
+                $unwind: '$buyerDetails'
+            }
+        ]);
+        res.json({orders,brand:user.brand});
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+const updateStatus = async (req,res)=>{
+    const {id} = req.params
+    const {status} = req.body
+    console.log(id,status)
+    try{
+        const data = await Order.updateOne({_id:id},{status:status})
+        if(data){
+         return  res.json({success:'Status Updated'})
+        }
+    }
+    catch(err){
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+const getProductsDetails = async (req,res)=>{
+    const {id} = req.params
+    try {
+        const product = await Product.findById(id).populate('brand')
+        const reviews = await Review.find({product:id}).populate(
+            {
+                path:'user',
+                select:'FirstName image'
+            }
+        
+        ).sort({created:-1})
+            
+        res.json({product,reviews})
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
-module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand,getOrderDetail,getSellerDetails,createBrand,createProduct,createOrder, getAllSellers}
+const addProductReview = async (req,res) =>{
+    const {reviews,id,product,avgRating} = req.body
+    try {
+        const newReview = new Review({
+            user:id,
+            product:product,
+            review:reviews.review,
+            rating:reviews.rating,
+            updated:Date.now()
+        })
+        await newReview.save()
+        await Product.updateOne({_id:product},{avgRating:avgRating})
+        res.json({success:'Review Added'})
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus,getProductsDetails,addProductReview, getSellerDetails, getAllSellers}

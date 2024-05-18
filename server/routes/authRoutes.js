@@ -4,7 +4,7 @@ const cors = require('cors')
 const passport = require("passport")
 const User = require('../models/db')
 const OAuth2Strategy = require("passport-google-oauth20").Strategy
-const {registerUser,getProfile,loginUser,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress, getProducts,placeOrder,registerBrand,getOrderDetail,getSellerDetails,getAllSellers} = require('../controllers/authControllers')
+const {registerUser,getProfile,loginUser,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress, getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus,getProductsDetails,addProductReview,getSellerDetails,getAllSellers} = require('../controllers/authControllers')
 router.use(
     cors({
         credentials:true,
@@ -26,8 +26,8 @@ passport.use(
                     FirstName:profile.displayName,
                     googleID:profile.id,
                     email:profile.emails[0].value,
-                    verified:true,
-                    phoneNo:"03",
+                    image:profile.photos[0].value,
+                    verified:true
                 })
                 await user.save()
             }
@@ -51,10 +51,13 @@ router.post("/login",loginUser)
 router.post('/ResetPassword', PasswordReset)
 router.post('/order',placeOrder	)
 router.post('/registerBrand',registerBrand)
+router.post('/create-checkout-session', stripeIntegration)
+router.post('/product-reviews',addProductReview)
 // patch 
 router.patch('/ForgotPassword/:id/:token', NewPassword)
 router.patch('/update-user-profile/:id',updateUserProfile)
 router.patch('/update-user-address/:id',updateUserAddress)
+router.patch('/update-order-status/:id',updateStatus)
 // get 
 router.get("/profile",getProfile);
 router.get('/logout',logOut)
@@ -64,6 +67,8 @@ router.get('/products',getProducts)
 router.get('/seller/:id',getSellerDetails)
 router.get('/sellers',getAllSellers)
 router.get('/orderinfo/:id',getOrderDetail)
+router.get('/seller/:id',sellerDetails)
+router.get('/products/:id',getProductsDetails)
 router.get('/auth/google',passport.authenticate('google', { scope: ['profile','email'] }))
 
 router.get('/auth/google/callback',passport.authenticate('google', { failureRedirect: 'http://localhost:3000/google/auth/ValidationFailure' }),

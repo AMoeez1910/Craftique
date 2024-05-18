@@ -40,17 +40,37 @@ const ProductSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Brand'
   },
-
+  category:{
+    type:String,
+    required: [true, 'Category is required']
+  },
+  itemsSold:{
+    type: Number,
+    default: 0
+  },
   updated: {
     type: Date,
     default: Date.now
+  },
+  avgRating:{
+    type: Number,
+    default: 0
+  },
+  longDescription:{
+    type: String,
+    trim: true
   },
   created: {
     type: Date,
     default: Date.now
   }
 });
-
+ProductSchema.pre('save', function(next) {
+  if (this.quantity === 0) {
+      this.isActive = false; 
+  }
+  next();
+});
 // Create index on commonly queried fields if needed
 // ProductSchema.index({ name: 1 });
 

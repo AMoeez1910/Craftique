@@ -48,7 +48,7 @@ const Profile = () => {
             address: address,
             orders: orders,
             phoneNo: phoneNo,
-            image :image
+            image :user.image
           });
         else
           setData({
@@ -59,7 +59,7 @@ const Profile = () => {
             googleID: null,
             orders: orders,
             phoneNo: phoneNo,
-            image :image
+            image :user.image
           });
       } catch (error) {
         console.error("Error fetching user data:", error);

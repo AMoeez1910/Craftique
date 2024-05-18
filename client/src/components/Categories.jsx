@@ -7,7 +7,7 @@ const Categories =()=> {
     <section className="pt-12 md:pt-16 lg:pt-10 pb-5">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-8 md:mb-10 lg:mb-12 flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight md:text-3xl">Shop by categories</h2>
+        <h2 className="text-2xl font-bold tracking-tight md:text-3xl">Shop By Category</h2>
         </div>
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           <div className="flex flex-col items-center rounded-lg bg-white p-4 transition-all hover:scale-105 dark:bg-gray-950">

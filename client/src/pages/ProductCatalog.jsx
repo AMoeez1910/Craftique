@@ -192,6 +192,7 @@ const ProductCatalog = () => {
                                             Over Rs. 200
                                         </Label>
                                     </div>
+
                                 </div>
                             </div>
                         </div>

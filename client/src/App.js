@@ -17,13 +17,13 @@ import SellerDash from "./pages/SellerDash";
 import SellerHome from "./pages/SellerHome";
 import Landing from "./pages/Landing";
 import ProductDetails from "./pages/ProductDetails.jsx";
-import OrderInfo from './pages/OrderInfo.jsx';
-import { SellerRegistration } from './pages/SellerRegistration.jsx';
+import OrderInfo from "./pages/OrderInfo.jsx";
+import { SellerRegistration } from "./pages/SellerRegistration.jsx";
 import AddProduct from "./pages/AddProduct";
 import ProductInfo from "./pages/ProductInfo.jsx";
+import { Products } from "./pages/Products.jsx";
 axios.defaults.baseURL = `http://localhost:8000`;
 axios.defaults.withCredentials = true;
-
 
 function App() {
   return (
@@ -33,6 +33,8 @@ function App() {
     <CartProvider>
     <Routes>
     <Route path='/' element={<Landing/>}
+      />
+    <Route path='/home' element={<Products/>}
       />
       <Route path='/login' element={<Login/>}
       />
@@ -78,7 +80,7 @@ function App() {
         path="/seller-register"
         element={<SellerRegistration/>}
       />
-        <Route path="/productdetail" element={<ProductDetails />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
         <Route
         path="/orders/:id"
         element={<OrderInfo/>}
@@ -102,6 +104,7 @@ function App() {
           /> */}
           </CartProvider>
     </UserContextProvider>
+
     </>
   );
 }

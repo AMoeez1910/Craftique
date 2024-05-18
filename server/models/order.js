@@ -26,7 +26,10 @@ const OrderSchema = new Schema({
     required: true,
     min: 0
   },
-
+  paymentMethod:{
+    type: String,
+    required: true
+  },
   placedAt: {
     type: Date,
     default: Date.now

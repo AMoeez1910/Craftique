@@ -1,9 +1,9 @@
 import HeroImg from '../assets/hero_img.png';
 const Hero = () => {
   return (
-    <section className="relative w-full h-[80vh] py-12 md:py-24 lg:py-32">
-      <div className="container px-4 md:px-6">
-        <div className="grid items-center justify-center gap-8 lg:grid-cols-2">
+    <section className="flex w-full items-center justify-center">
+      <div className="container grid grid-cols-1 items-center gap-6 md:grid-cols-2 mt-8">
+        <div className="space-y-4">
           <div className="space-y-4 text-center z-10">
             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl lg:text-6xl">
               Made with ♥️ by Local Artisans
@@ -20,12 +20,15 @@ const Hero = () => {
             </a>
           </div>
         </div>
+        <img
+          alt="Hero Image"
+          className="mx-auto aspect-[4/3] rounded-xl object-cover"
+          height={600}
+          src={HeroImg}
+          width={800}
+        />
       </div>
-      <img
-        className="absolute inset-0 z-0 h-full w-full object-cover"
-        src={HeroImg}
-      />
     </section>
-  )
-  }
+  );
+};
 export default Hero;
