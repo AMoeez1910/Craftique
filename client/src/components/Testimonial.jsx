@@ -8,7 +8,7 @@ const Testimonial = () => {
         <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
           What our customers say
         </h2>
-        <div className="overflow-hidden grid grid-cols-3 gap-6">
+        <div className="overflow-hidden grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div>
             <Card className="p-6 bg-gray-50 dark:bg-gray-800 h-64">
               <div className="flex items-start gap-6">

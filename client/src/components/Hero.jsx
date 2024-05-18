@@ -1,5 +1,7 @@
+import { useNavigate } from 'react-router-dom';
 import HeroImg from '../assets/hero_img.png';
 const Hero = () => {
+  const navigate = useNavigate();
   return (
     <section className="flex w-full items-center justify-center">
       <div className="container grid grid-cols-1 items-center gap-6 md:grid-cols-2 mt-8">
@@ -12,12 +14,12 @@ const Hero = () => {
               Discover unique, handcrafted products made by local artisans in
               your community.
             </p>
-            <a
+            <button
               className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-              href="#"
+              onClick={() => navigate("/products")}
             >
               View products
-            </a>
+            </button>
           </div>
         </div>
         <img

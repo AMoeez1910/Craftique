@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/cart";
@@ -96,11 +95,11 @@ const Bestseller = () => {
         </div>
         <div className="mt-8 md:mt-12 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {products.map((product) => (
-            <div className="bg-white transition-colors h-full">
+            <div className="bg-white transition-colors h-full hover:opacity-80">
               <div className="aspect-[4/3] bg-gray-100 overflow-hidden">
                 <img
                   alt="Product Image"
-                  className="object-cover w-full h-full"
+                  className="object-cover w-full h-full cursor-pointer"
                   height={300}
                   src={product.images}
                   style={{

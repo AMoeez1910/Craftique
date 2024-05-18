@@ -469,7 +469,7 @@ const getAllSellers = async (req,res)=>{
     try {
         const sellers = await User.find({isSeller:true}).populate({
             path: 'brand',
-            select: 'name image'
+            select: 'name image description'
         });
         res.json(sellers)
 

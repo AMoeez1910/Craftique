@@ -1,34 +1,57 @@
+const ProductCard = ({ product }) => {
+  return (
+    <div className="relative group">
+      <a className="absolute inset-0 z-10" href="#">
+        <span className="sr-only">View</span>
+      </a>
+      <img
+        alt="Product Image"
+        className="rounded-lg object-cover w-full aspect-square group-hover:opacity-50 transition-opacity"
+        height={300}
+        src={product.images}
+        width={300}
+      />
+      <div className="flex-1 py-4">
+        <h3 className="font-semibold tracking-tight">{product.name}</h3>
+        <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-0.5">
+            {(() => {
+              const stars = [];
 
-const ProductCard = ({name,image,price}) => {
-    return (
-        <div className="relative group">
-                            <a className="absolute inset-0 z-10" href="#">
-                                <span className="sr-only">View</span>
-                            </a>
-                            <img
-                                alt="Product Image"
-                                className="rounded-lg object-cover w-full aspect-square group-hover:opacity-50 transition-opacity"
-                                height={300}
-                                src={image}
-                                width={300}
-                            />
-                            <div className="flex-1 py-4">
-                                <h3 className="font-semibold tracking-tight">{name}</h3>
-                                <div className="flex items-center gap-2 text-sm">
-                                    <div className="flex items-center gap-0.5">
-                                        <StarIcon className="w-4 h-4 fill-primary" />
-                                        <StarIcon className="w-4 h-4 fill-primary" />
-                                        <StarIcon className="w-4 h-4 fill-primary" />
-                                        <StarIcon className="w-4 h-4 fill-muted stroke-muted-foreground" />
-                                        <StarIcon className="w-4 h-4 fill-muted stroke-muted-foreground" />
-                                    </div>
-                                    <span className="text-gray-500 dark:text-gray-400">(72)</span>
-                                </div>
-                                <h4 className="font-semibold text-lg">PKR {price}</h4>
-                            </div>
-                        </div>
-    );
-    }   
+              for (let i = 0; i < 5; i++) {
+                if (i < product.avgRating) {
+                  stars.push(
+                    <StarIcon className="w-5 h-5 fill-primary" key={i} />
+                  );
+                } else {
+                  stars.push(
+                    <StarIcon
+                      className="w-5 h-5 fill-muted stroke-muted-foreground"
+                      key={i}
+                    />
+                  );
+                }
+              }
+              return stars;
+            })()}
+          </div>
+        </div>
+        <span className="font-semibold text-lg">
+          {product.discount === 0 ? (
+            <span className="text-lg">Rs. {product.price}</span>
+          ) : (
+            <div className="flex items-center">
+              <span className="line-through text-sm">Rs. {product.price}</span>
+              <span className="text-lg ml-3">
+                Rs. {product.price - product.discount}
+              </span>
+            </div>
+          )}
+        </span>
+      </div>
+    </div>
+  );
+};
 export default ProductCard;
 function StarIcon(props) {
   return (
