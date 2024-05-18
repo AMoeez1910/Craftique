@@ -3,11 +3,100 @@ import { Button } from "../components/ui/button";
 import { Separator } from "../components/ui/separator";
 import { Input } from "../components/ui/input";
 import { AvatarImage, AvatarFallback, Avatar } from "../components/ui/avatar";
-import { useState } from "react";
 import NavBar from "../components/Navbar";
+import { useContext, useEffect, useState } from "react";
+import { CartContext } from "../context/cart";
+import { UserContext } from "../context/userContext";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function Component() {
+  const [data, setData] = useState();
+  const { id } = useParams();
+  const [cart, setCart] = useContext(CartContext);
+  const { user } = useContext(UserContext);
+  const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [reviews, setReviews] = useState({ rating: 0, review: "" });
+  const navigate = useNavigate();
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`/products/${id}`);
+      setData(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setLoading(false);
+      navigate("/*");
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const submitReview = async () => {
+    if (reviews.rating === 0) {
+      toast.error("Please fill all the fields");
+    } else {
+      try {
+        const totalRating =
+          data.reviews.reduce((acc, review) => acc + review.rating, 0) +
+          reviews.rating;
+        const totalReviews = data.reviews.length + 1;
+        const averageRating = totalRating / totalReviews;
+        const avgCount = Math.round(averageRating);
+        const response = await axios.post("/product-reviews", {
+          reviews,
+          id: user._id,
+          product: id,
+          avgRating: avgCount,
+        });
+        toast.success(response.data.success);
+        setReviews({ rating: 0, review: "" });
+        fetchProducts();
+      } catch (error) {
+        console.error("Error submitting review:", error);
+      }
+    }
+  };
+
+  const addToCart = (product) => {
+    const productInCart = cart.find((item) => item.product._id === product._id);
+    if (productInCart) {
+      setCart(
+        cart.map((item) =>
+          item.product._id === product._id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        )
+      );
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(
+          cart.map((item) =>
+            item.product._id === product._id
+              ? { ...item, quantity: item.quantity + quantity }
+              : item
+          )
+        )
+      );
+    } else {
+      setCart([...cart, { product, quantity: quantity }]);
+      localStorage.setItem(
+        "cart",
+        JSON.stringify([...cart, { product, quantity: quantity }])
+      );
+    }
+    toast.success("Added to cart");
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <NavBar
@@ -22,26 +111,47 @@ export default function Component() {
             <img
               alt="Product Image"
               className="object-cover h-[60vh] border border-gray-200 w-full rounded-lg overflow-hidden dark:border-gray-800"
-              src=""
+              src={data.product.images[0]}
             />
           </div>
           <div className="grid gap-4 md:gap-10 items-start">
             <div className="grid gap-2">
               <h1 className="font-bold text-3xl lg:text-4xl">
-                Acme Prism T-Shirt
+                {data.product.name}
               </h1>
               <div>
-                <p>60% combed ringspun cotton/40% polyester jersey tee.</p>
+                <p>{data.product.description}</p>
               </div>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-0.5">
-                  <StarIcon className="w-5 h-5 fill-primary" />
-                  <StarIcon className="w-5 h-5 fill-primary" />
-                  <StarIcon className="w-5 h-5 fill-primary" />
-                  <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                  <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+                  {(() => {
+                    const averageRating =
+                      data.reviews.reduce(
+                        (acc, review) => acc + review.rating,
+                        0
+                      ) / data.reviews.length;
+                    const starCount = Math.round(averageRating);
+                    const stars = [];
+
+                    for (let i = 0; i < 5; i++) {
+                      if (i < starCount) {
+                        stars.push(
+                          <StarIcon className="w-5 h-5 fill-primary" key={i} />
+                        );
+                      } else {
+                        stars.push(
+                          <StarIcon
+                            className="w-5 h-5 fill-muted stroke-muted-foreground"
+                            key={i}
+                          />
+                        );
+                      }
+                    }
+                    return stars;
+                  })()}
+                  ({data.reviews.length})
                 </div>
-                <div className="text-4xl font-bold">Rs. 99</div>
+                <div className="text-4xl font-bold">Rs. {data.product.price}</div>
               </div>
             </div>
             <div className="grid gap-4 md:gap-10">
@@ -73,7 +183,7 @@ export default function Component() {
                   </Button>
                 </div>
               </div>
-              <Button size="lg">Add to cart</Button>
+              <Button size="lg" onClick={() => addToCart(data.product)}>Add to cart</Button>
             </div>
           </div>
         </div>
