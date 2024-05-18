@@ -443,6 +443,35 @@ const getOrderDetail = async (req,res)=>{
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+const getSellerDetails = async (req,res)=>{
+    const {id} = req.params
+    try {
+        // Find products by brand ID and populate the brand details
+        const products = await Product.find({ brand: id }).populate({
+          path: 'brand',
+        });
+        
+        if (!products || products.length === 0) {
+          return res.status(404).json({ error: 'No products found for this brand' });
+        }
+    
+        // Since all products should have the same brand, we can take the brand from the first product
+    
+    
+        // Respond with the brand details
+        res.json(products)
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+}
+const getAllSellers = async (req,res)=>{
+    try {
+        const sellers = await User.find({isSeller:true}).populate({
+            path: 'brand',
+            select: 'name image'
+        });
+        res.json(sellers)
 const stripeIntegration = async (req, res) => {
     const {cart,total,user,paymentMethod} = req.body
     const newCart = cart.map(item => {
@@ -572,6 +601,7 @@ const getProductsDetails = async (req,res)=>{
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
 const addProductReview = async (req,res) =>{
     const {reviews,id,product,avgRating} = req.body
     try {
@@ -590,42 +620,4 @@ const addProductReview = async (req,res) =>{
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus,getProductsDetails,addProductReview}
-// const stripeIntegration = async (req, res) => {
-//     const {cart,total,user,payment} = req.body
-//     // 
-//     const newCart = cart.map(item => {
-//         return {
-//            product:
-//            { _id: item.product._id},
-//             quantity: item.quantity
-//         };
-//     });
-//     const customer = await stripe.customers.create({
-//         metadata:{
-//             user:user,
-//             cart:JSON.stringify(newCart),
-//             total:total,
-//             payment:payment
-//         }
-//     })
-//     const session = await stripe.checkout.sessions.create({
-    
-//     line_items: cart.map((item) => ({
-//         price_data: {
-//         currency: 'usd',
-//         product_data: {
-//           name: item.product.name,
-//           images: [item.product.images[0]],
-//         },
-//         unit_amount: item.product.price * 100,
-//       },
-//       quantity: item.quantity,
-//     })),
-//     customer : customer.id,
-//     mode: 'payment',
-//     success_url: 'http://localhost:3000/checkout-success',
-//     cancel_url: 'http://localhost:3000/shoppingcart',
-//   });
-//   res.send({url:session.url});
-// }
+module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus,getProductsDetails,addProductReview, getSellerDetails, getAllSellers}

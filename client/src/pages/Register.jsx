@@ -59,10 +59,10 @@ export default function Register() {
               <img className="w-full" src={signup} />
             </div>
             <div className="w-1/2 mb-10">
-              <div className="w-1/2">
+              <div className="w-1/2 m-auto">
                 <form onSubmit={registerUser} method="post">
                   <Form>
-                    <h3 className="mb-5 text-3xl">Register</h3>
+                    <h3 className="mb-5 text-3xl font-bold">Register</h3>
                     <FormItem>
                       <div className="w-full mb-2">
                         <Label htmlFor="fName">First Name</Label>
@@ -161,7 +161,7 @@ export default function Register() {
           <div className="flex flex-col justify-center items-center h-screen w-screen pb-24">
             <form onSubmit={registerUser} method="post" className="w-80">
               <Form>
-                <h3 className="mb-5">Register</h3>
+                <h3 className="mb-5 font-bold text-xl">Register</h3>
                 <FormItem>
                   <div className="w-full">
                     <Label htmlFor="fName1">First Name</Label>

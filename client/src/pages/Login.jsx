@@ -49,13 +49,13 @@ export default function Login() {
         <div className="hidden lg:block">
           <div className="py-5 flex justify-center items-center">
             <div className="w-1/2">
-              <img className="w-full" src={login} />
+              <img className="w-full m-auto p-16" src={login} />
             </div>
             <div className="w-1/2 mb-10">
-              <div className="w-1/2">
+              <div className="w-1/2 m-auto">
                 <form onSubmit={loginUser} method="post">
                   <Form>
-                    <h3 className="mb-5 text-3xl">Log In</h3>
+                    <h3 className="mb-5 text-3xl font-bold">Log In</h3>
                     <FormItem>
                       <div className="w-full pt-4">
                         <Label htmlFor="inEmail">Email</Label>
@@ -139,7 +139,7 @@ export default function Login() {
           <div className="flex flex-col justify-center items-center h-screen w-screen pb-24">
             <form onSubmit={loginUser} method="post" className="w-80">
               <Form>
-                <h3 className="mb-5">Log In</h3>
+                <h3 className="mb-5 font-bold text-xl">Log In</h3>
                 <FormItem>
                   <div className="w-full">
                     <Label htmlFor="inEmai1">Email</Label>

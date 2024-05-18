@@ -71,10 +71,7 @@ function App() {
         path="/products"
         element={<ProductCatalog/>}
       />
-      <Route
-        path="/sellerhome"
-        element={<SellerHome/>}
-      />
+      <Route path="/sellerhome/:id" element={<SellerHome />} />
       <Route
         path="/order/:id"
         element={<OrderInfo/>}
@@ -113,4 +110,3 @@ function App() {
 }
 document.body.removeAttribute("class");
 export default App;
-document.body.removeAttribute("class");

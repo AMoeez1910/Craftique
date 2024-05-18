@@ -1,14 +1,28 @@
+import { useState, useEffect } from "react";
 import { AvatarImage, AvatarFallback, Avatar } from "../components/ui/avatar"
 import { Button } from "../components/ui/button"
-const SellerHome =()=> {
+import axios from "axios";
+import { useParams } from 'react-router-dom';
+import { set } from "date-fns";
+const SellerHome = () => {
+  const { id } = useParams();
+  const [seller, setSeller] = useState([]);
+  useEffect(() => {
+    const fetchProductData = async (id) => {
+      const response = await axios.get(`/seller/${id}`);
+      setSeller(response.data);
+    }
+    fetchProductData(id)
+  }, [])
   return (
     <>
+      {console.log(seller)}
       <div className="relative h-[50vh] w-full overflow-hidden">
         <img
           alt="Backdrop"
           className="h-full w-full object-cover"
           height={1080}
-          src="https://placehold.co/600x400"
+          src={seller[0]?.brand.image}
           style={{
             aspectRatio: "1920/1080",
             objectFit: "cover",
@@ -23,8 +37,8 @@ const SellerHome =()=> {
         </div>
       </div>
       <div className="container px-4 md:px-6 py-12">
-      <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 mb-10">
-        <h2 className="text-2xl font-bold tracking-tight md:text-3xl">Featured Products</h2>
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 mb-10">
+          <h2 className="text-2xl font-bold tracking-tight md:text-3xl">Featured Products</h2>
           <p className="text-gray-500 dark:text-gray-400">
           </p>
           <Button
@@ -43,7 +57,7 @@ const SellerHome =()=> {
               alt="Product 1"
               className="object-cover w-full h-full"
               height={600}
-              src="https://placehold.co/600x400"
+              src={seller[0]?.images[0]}
               style={{
                 aspectRatio: "800/600",
                 objectFit: "cover",
@@ -52,84 +66,42 @@ const SellerHome =()=> {
             />
           </div>
           <div className="grid grid-cols-2 gap-6">
-            <div className="relative group overflow-hidden rounded-lg">
-              <a className="absolute inset-0 z-10" href="#">
-                <span className="sr-only">View</span>
-              </a>
-              <img
-                alt="Product 2"
-                className="object-cover w-full h-60"
-                height={300}
-                src="https://placehold.co/600x400"
-                style={{
-                  aspectRatio: "400/300",
-                  objectFit: "cover",
-                }}
-                width={400}
-              />
-            </div>
-            <div className="relative group overflow-hidden rounded-lg">
-              <a className="absolute inset-0 z-10" href="#">
-                <span className="sr-only">View</span>
-              </a>
-              <img
-                alt="Product 3"
-                className="object-cover w-full h-60"
-                height={300}
-                src="https://placehold.co/600x400"
-                style={{
-                  aspectRatio: "400/300",
-                  objectFit: "cover",
-                }}
-                width={400}
-              />
-            </div>
-            <div className="relative group overflow-hidden rounded-lg">
-              <a className="absolute inset-0 z-10" href="#">
-                <span className="sr-only">View</span>
-              </a>
-              <img
-                alt="Product 4"
-                className="object-cover w-full h-60"
-                height={300}
-                src="https://placehold.co/600x400"
-                style={{
-                  aspectRatio: "400/300",
-                  objectFit: "cover",
-                }}
-                width={400}
-              />
-            </div>
-            <div className="relative group overflow-hidden rounded-lg">
-              <a className="absolute inset-0 z-10" href="#">
-                <span className="sr-only">View</span>
-              </a>
-              <img
-                alt="Product 5"
-                className="object-cover w-full h-60"
-                height={300}
-                src="https://placehold.co/600x400"
-                style={{
-                  aspectRatio: "400/300",
-                  objectFit: "cover",
-                }}
-                width={400}
-              />
-            </div>
+            {
+              seller?.slice(1,5).map((product, index) => (
+                <div className="relative group overflow-hidden rounded-lg">
+                  <a className="absolute inset-0 z-10" href="#">
+                    <span className="sr-only">View</span>
+                  </a>
+                  <img
+                    alt="Product 2"
+                    className="object-cover w-full h-60"
+                    height={300}
+                    src={product.images[0]}
+                    style={{
+                      aspectRatio: "400/300",
+                      objectFit: "cover",
+                    }}
+                    width={400}
+                  />
+                </div>
+              ))
+              
+            }
+            
+                
           </div>
         </div>
         <div className="mt-12 grid md:grid-cols-2 gap-8">
           <div>
-            <h3 className="text-xl font-bold mb-2">John Doe</h3>
+            <h3 className="text-xl font-bold mb-2">{seller[0]?.brand.name}</h3>
             <div className="flex items-center gap-2 mb-4">
-              <LocateIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-              <span className="text-gray-500 dark:text-gray-400">New York, USA</span>
+              <MailIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+              <p className="text-gray-500 dark:text-gray-400">
+                {seller[0]?.brand.email}
+              </p>
             </div>
-            <p className="text-gray-500 dark:text-gray-400">
-              John Doe is a passionate seller who specializes in handcrafted home decor items. With an eye for detail
-              and a love for sustainable materials, he creates unique and beautiful pieces that add a touch of elegance
-              to any space.
-            </p>
+            <p className="text-gray-500 dark:text-gray-400">{seller[0]?.brand.description}</p>
+
           </div>
           <div>
             <h3 className="text-xl font-bold mb-4">Reviews</h3>
@@ -186,26 +158,9 @@ const SellerHome =()=> {
   )
 }
 export default SellerHome
-function LocateIcon(props) {
+function MailIcon(props) {
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="2" x2="5" y1="12" y2="12" />
-      <line x1="19" x2="22" y1="12" y2="12" />
-      <line x1="12" x2="12" y1="2" y2="5" />
-      <line x1="12" x2="12" y1="19" y2="22" />
-      <circle cx="12" cy="12" r="7" />
-    </svg>
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 2C0.447715 2 0 2.44772 0 3V12C0 12.5523 0.447715 13 1 13H14C14.5523 13 15 12.5523 15 12V3C15 2.44772 14.5523 2 14 2H1ZM1 3L14 3V3.92494C13.9174 3.92486 13.8338 3.94751 13.7589 3.99505L7.5 7.96703L1.24112 3.99505C1.16621 3.94751 1.0826 3.92486 1 3.92494V3ZM1 4.90797V12H14V4.90797L7.74112 8.87995C7.59394 8.97335 7.40606 8.97335 7.25888 8.87995L1 4.90797Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
   )
 }
 

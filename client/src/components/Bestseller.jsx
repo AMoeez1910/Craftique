@@ -1,3 +1,7 @@
+import BestsellerCard from "./BestSellerCard"
+import { useNavigate } from 'react-router-dom';
+const Bestseller = () => {
+const navigate = useNavigate();
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/cart";
@@ -83,12 +87,12 @@ const Bestseller = () => {
             >
               Flash Deals 🔥
             </a>
-            <a
-              className="inline-flex h-10 items-center justify-center rounded-md bg-transparent px-6 text-sm font-medium text-gray-900 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:text-gray-50 dark:hover:underline dark:focus-visible:ring-gray-300"
-              href="#"
+            <Button
+              className="inline-flex h-10 items-center justify-center rounded-md"
+              onClick={() => navigate("/products")}
             >
               View all
-            </a>
+            </Button>
           </div>
         </div>
         <div className="mt-8 md:mt-12 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
