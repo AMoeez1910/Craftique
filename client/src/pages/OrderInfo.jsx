@@ -186,6 +186,10 @@ const OrderInfo =() =>  {
                   <div>Shipping</div>
                   <div className="ml-auto">{data.totalPrice-subtotal}</div>
                 </div>
+                <div className="flex items-center">
+                  <div>Payment Method</div>
+                  <div className="ml-auto"><b>{data.paymentMethod}</b></div>
+                </div>
                 <Separator />
                 <div className="flex items-center font-medium">
                   <div>Total</div>

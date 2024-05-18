@@ -16,7 +16,7 @@ import { Textarea } from '../components/ui/textarea';
 export const SellerRegistration = () => {
     const preset_key = process.env.REACT_APP_CLOUDINARY_PRESET_KEY;
     const cloud_name =  process.env.REACT_APP_CLOUD_NAME; ;
-    const { user, ready } = useContext(UserContext);
+    const { user, ready,updateUserContext } = useContext(UserContext);
     const [phoneNo, setPhoneNum] = useState("");
     const [data, setData] = useState({
         email:'',
@@ -28,30 +28,37 @@ export const SellerRegistration = () => {
     const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append("file", image);
-        formData.append("upload_preset", preset_key);
-        formData.append("cloud_name", cloud_name);
-    
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, {
-          method: "POST",
-          body: formData,
-        });
-        const imgdata = await res.json();
-        setCoverPreview(null);
+      if(!!image && !!data.email && !!data.name && !!data.description && !!phoneNo)
+        {
         try {
+              const formData = new FormData();
+            formData.append("file", image);
+            formData.append("upload_preset", preset_key);
+            formData.append("cloud_name", cloud_name);
+        
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, {
+              method: "POST",
+              body: formData,
+            });
+            const imgdata = await res.json();
+            setCoverPreview(null);
             const response = await axios.post("/registerBrand", {
                 data,phoneNo,userid:user._id,urlImage:imgdata.url
             });
             if (response.data.success) {
                 toast.success(response.data.success);
-                navigate("/");
+                await updateUserContext();
+                navigate("/dash");
             } else {
                 toast.error(data.error.errors.email.properties.message);
             }
         } catch (error) {
-            toast.error(error);
+            toast.error(error.response.data.error.errors.email.message);
         }
+      }
+      else{
+        toast.error('Please Fill all the fields')
+      }
     }
     if (!ready) {
         return "Loading.....";

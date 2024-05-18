@@ -6,6 +6,8 @@ import { CartContext } from "../context/cart";
 import { PlusIcon, MinusIcon } from "@radix-ui/react-icons";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/userContext";
+import { Label } from "../components/ui/label";
+import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group"
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -15,6 +17,7 @@ export const Shoppingcart = () => {
   const { user } = useContext(UserContext);
   const [shipping, setshipping] = useState();
   const [total, setTotal] = useState();
+  const [payment, setPayment] = useState();
   useEffect(() => {
     const total = cart.reduce(
       (acc, item) =>
@@ -22,10 +25,10 @@ export const Shoppingcart = () => {
       0
     );
     setTotal(total);
-    if (total >= 1000) {
+    if (total >= 6000) {
       setshipping(0);
     } else {
-      setshipping(50);
+      setshipping(500);
     }
   }, [cart]);
   const removeFromCart = (product) => {
@@ -84,12 +87,31 @@ export const Shoppingcart = () => {
                 navigate('/profile')	
                 toast.error('Please add shipping address to place order')
             }
+            if(!user.phoneNo){
+                navigate('/profile')	
+                toast.error('Please add phone number to place order')
+            }
+            if(!payment){
+                toast.error('Please select payment method')
+            }
             else{
-                const response = await axios.post('/order', {cart, total: total + shipping,user: user._id})  
+              if(payment === 'Pay through Stripe'){
+                axios.post("/payment/create-checkout-session",
+                {cart, total: total + shipping,user: user._id, paymentMethod: payment}).then((res)=>{
+                    if(res.data.url){
+                        window.location.href=res.data.url
+                        setCart([])
+                        localStorage.removeItem('cart')
+                    }
+                }).catch((err)=>console.log(err.message))
+              }
+              else{
+                const response = await axios.post('/order', {cart, total: total + shipping,user: user._id, paymentMethod: payment})  
                 toast.success(response.data.success)
                 setCart([])
                 localStorage.removeItem('cart')
                 navigate('/orders/'+response.data.orderId)
+              }
             }
         }
         catch(err)
@@ -120,7 +142,11 @@ export const Shoppingcart = () => {
         ]} />
       <main className="container mx-auto my-8 grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr]">
         <div>
+<<<<<<< HEAD
           {console.log(cart)}
+=======
+        {console.log(cart)}
+>>>>>>> 05cb5b1ca0d0e346d4eb3d4bcf42739f20401060
           <h1 className="mb-4 text-2xl font-bold">Your Cart</h1>
           {cart.length === 0 ? (
             <p>Your cart is empty</p>
@@ -206,6 +232,19 @@ export const Shoppingcart = () => {
                 </span>
               </div>
             </div>
+            <Separator className="my-4" />
+            {/* add radio button */}
+            <RadioGroup
+              onValueChange={(value) => setPayment(value) }>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Cash on Delivery" id="COD" />
+                <Label htmlFor="COD">Cash on Delivery</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Pay through Stripe" id="Online" />
+                <Label htmlFor="Online">Pay through Stripe</Label>
+              </div>
+            </RadioGroup>
             <Button className="mt-6 w-full" onClick={() => placeOrder()}>
               Place Order
             </Button>
