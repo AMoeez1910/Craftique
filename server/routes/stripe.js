@@ -4,7 +4,8 @@ const Stripe = require('stripe')
 const stripe = Stripe('sk_test_51OT909JvFBCqm5cO3mOWVLKvR5cdT6eDnK05rYu0tGuuwfNa6xRHNsa0Mfny4NQPSe2Z0S57SXIqrNISCl7oDJ5M00b178UuU5')
 const {stripeIntegration}=require('../controllers/authControllers')
 const Order = require('../models/order')
-const User = require('../models/db')
+const User = require('../models/db') 
+const Product = require('../models/product')
 router.post('/create-checkout-session', stripeIntegration)
 
 let endpointSecret;
@@ -54,7 +55,17 @@ else{
             })
             const data = await newOrder.save()
             await User.updateOne({_id:user},{$push:{orders:data._id}})
-            
+            parsedCart.forEach(async (item) => {
+              await Product.updateOne(
+                  { _id: item.product._id },
+                  {
+                      $inc: {
+                          itemsSold: item.quantity, 
+                          quantity: -item.quantity 
+                      }
+                  }
+              );
+          });
         })
         .catch(err => console.log(err.message));
 }

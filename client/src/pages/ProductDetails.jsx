@@ -18,8 +18,9 @@ export default function Component() {
   const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [reviews, setReviews] = useState({ rating: 0, review: "" });
-  const navigate = useNavigate();
+  const [reviews, setReviews] = useState({ rating: 0, review: '' });
+  const navigate = useNavigate() 
+
 
   const fetchProducts = async () => {
     try {
@@ -29,33 +30,28 @@ export default function Component() {
     } catch (error) {
       console.error("Error fetching products:", error);
       setLoading(false);
-      navigate("/*");
+      navigate('/*')
     }
   };
-
+  
   useEffect(() => {
     fetchProducts();
   }, []);
-
+  
   const submitReview = async () => {
     if (reviews.rating === 0) {
       toast.error("Please fill all the fields");
     } else {
       try {
-        const totalRating =
-          data.reviews.reduce((acc, review) => acc + review.rating, 0) +
-          reviews.rating;
-        const totalReviews = data.reviews.length + 1;
-        const averageRating = totalRating / totalReviews;
-        const avgCount = Math.round(averageRating);
-        const response = await axios.post("/product-reviews", {
-          reviews,
-          id: user._id,
-          product: id,
-          avgRating: avgCount,
-        });
+        const totalRating = data.reviews.reduce((acc, review) => acc + review.rating, 0) + reviews.rating;
+      const totalReviews = data.reviews.length + 1;
+      const averageRating = totalRating / totalReviews;
+      const avgCount = Math.round(averageRating); 
+        const response = await axios.post('/product-reviews', { reviews, id: user._id, product: id ,avgRating:avgCount});
         toast.success(response.data.success);
-        setReviews({ rating: 0, review: "" });
+        setReviews({ rating: 0, review: '' });
+  
+        // Call fetchProducts to update product data after submitting a review
         fetchProducts();
       } catch (error) {
         console.error("Error submitting review:", error);
@@ -96,7 +92,6 @@ export default function Component() {
   if (loading) {
     return <div>Loading...</div>;
   }
-
   return (
     <>
       <NavBar
@@ -124,34 +119,29 @@ export default function Component() {
               </div>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-0.5">
-                  {(() => {
-                    const averageRating =
-                      data.reviews.reduce(
-                        (acc, review) => acc + review.rating,
-                        0
-                      ) / data.reviews.length;
-                    const starCount = Math.round(averageRating);
-                    const stars = [];
-
-                    for (let i = 0; i < 5; i++) {
-                      if (i < starCount) {
-                        stars.push(
-                          <StarIcon className="w-5 h-5 fill-primary" key={i} />
-                        );
-                      } else {
-                        stars.push(
-                          <StarIcon
-                            className="w-5 h-5 fill-muted stroke-muted-foreground"
-                            key={i}
-                          />
-                        );
-                      }
+                {
+                (() => {
+                  const averageRating = data.reviews.reduce((acc, review) => acc + review.rating, 0) / data.reviews.length;
+                  const starCount = Math.round(averageRating); 
+                  const stars = [];
+                  
+                  for (let i = 0; i < 5; i++) {
+                    if (i < starCount) {
+                      stars.push(<StarIcon className="w-5 h-5 fill-primary" key={i} />);
+                    } else {
+                      stars.push(<StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" key={i} />);
                     }
-                    return stars;
-                  })()}
-                  ({data.reviews.length})
+                  }
+                  
+                  return stars;
+                })()
+              }(
+               {data.reviews.length}
+              )
+              
                 </div>
-                <div className="text-4xl font-bold">Rs. {data.product.price}</div>
+                <div className="text-4xl font-bold">PKR {data.product.price}</div>
+
               </div>
             </div>
             <div className="grid gap-4 md:gap-10">
@@ -160,24 +150,14 @@ export default function Component() {
                   Quantity
                 </Label>
                 <div className="flex items-center gap-2">
-                  <Button
-                    className="h-8 w-8"
-                    size="icon"
-                    variant="outline"
-                    onClick={() =>
-                      quantity > 1 ? setQuantity(quantity - 1) : ""
-                    }
+                  <Button className="h-8 w-8" size="icon" variant="outline" 
+                  onClick={() => setQuantity(quantity-1)} disabled={quantity===1}
                   >
                     <MinusIcon className="h-4 w-4" />
                     <span className="sr-only">Decrease quantity</span>
                   </Button>
                   <span>{quantity}</span>
-                  <Button
-                    className="h-8 w-8"
-                    size="icon"
-                    variant="outline"
-                    onClick={() => setQuantity(quantity + 1)}
-                  >
+                  <Button className="h-8 w-8" size="icon" variant="outline" onClick={() => setQuantity(quantity+1)} disabled={quantity===data.product.quantity}>
                     <PlusIcon className="h-4 w-4" />
                     <span className="sr-only">Increase quantity</span>
                   </Button>
@@ -190,122 +170,105 @@ export default function Component() {
       </div>
       <Separator />
       <div className="mx-auto px-4 md:px-6 max-w-2xl grid gap-12">
-        <div className="flex flex-col mt-8 -mb-3">
-          <div className="flex gap-4 items-start">
-            <div className="grid gap-0.5 text-sm">
-              <h3 className="font-semibold">Write a review</h3>
-            </div>
-            <div className="flex items-center gap-0.5 ml-auto">
-              <StarIcon className="w-5 h-5 fill-primary cursor-pointer" />
-              <StarIcon className="w-5 h-5 fill-primary cursor-pointer" />
-              <StarIcon className="w-5 h-5 fill-primary cursor-pointer" />
-              <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground cursor-pointer" />
-              <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground cursor-pointer" />
-            </div>
-          </div>
-          <div className="text-sm leading-loose text-gray-500 dark:text-gray-400 flex justify-between pt-3">
-            <Input
-              className="p-4 w-4/5 focus:outline-none"
-              placeholder="Write your review..."
-            />
-            <Button className="w-1/5 ml-5">Submit Review</Button>
-          </div>
-        </div>
-        <Separator />
+
         <div className="flex gap-4">
-          <Avatar className="w-10 h-10 border">
-            <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
           <div className="grid gap-4">
             <div className="flex gap-4 items-start">
               <div className="grid gap-0.5 text-sm">
-                <h3 className="font-semibold">Sarah Johnson</h3>
-                <time className="text-sm text-gray-500 dark:text-gray-400">
-                  2 days ago
-                </time>
+                <h3 className="font-semibold">Write a review</h3>
               </div>
               <div className="flex items-center gap-0.5 ml-auto">
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+                <StarIcon className={reviews.rating>=1? `w-5 h-5 fill-primary cursor-pointer`:`w-5 h-5 fill-muted stroke-muted-foreground`} onClick={()=>{setReviews(
+                  {rating:1}
+                )}}/>
+                <StarIcon className={reviews.rating>=2? `w-5 h-5 fill-primary cursor-pointer`:`w-5 h-5 fill-muted stroke-muted-foreground`} onClick={()=>{setReviews(
+                  {rating:2}
+                )}}/>
+                <StarIcon className={reviews.rating>=3? `w-5 h-5 fill-primary cursor-pointer`:`w-5 h-5 fill-muted stroke-muted-foreground`}  onClick={()=>{setReviews(
+                  {rating:3}
+                )}}/>
+                <StarIcon className={reviews.rating>=4? `w-5 h-5 fill-primary cursor-pointer`:`w-5 h-5 fill-muted stroke-muted-foreground`}  onClick={()=>{setReviews(
+                  {rating:4}
+                )}}/>
+                <StarIcon className={reviews.rating>=5? `w-5 h-5 fill-primary cursor-pointer`:`w-5 h-5 fill-muted stroke-muted-foreground`}  onClick={()=>{setReviews(
+                  {rating:5}
+                )}}/>
               </div>
             </div>
             <div className="text-sm leading-loose text-gray-500 dark:text-gray-400">
-              <p>
-                I've been experimenting with my LuminaCook Multi-Function Air
-                Fryer for a few weeks now, and it's been a versatile addition to
-                my kitchen. It's great for making crispy fries, chicken wings,
-                and even some healthier options.
-              </p>
+              <Input
+                className="p-4 min-h-[200px]"
+                placeholder="Write your review..."
+                value={reviews.review}
+                 onChange={(e) => setReviews((prev) => ({ ...prev, review: e.target.value }))} 
+  
+              />
+              <Button className="mt-4" onClick ={submitReview}>Submit Review</Button>
+
             </div>
           </div>
         </div>
         <Separator />
-        <div className="flex gap-4">
-          <Avatar className="w-10 h-10 border">
-            <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <div className="grid gap-4">
-            <div className="flex gap-4 items-start">
-              <div className="grid gap-0.5 text-sm">
-                <h3 className="font-semibold">Alex Smith</h3>
-                <time className="text-sm text-gray-500 dark:text-gray-400">
-                  3 weeks ago
-                </time>
-              </div>
-              <div className="flex items-center gap-0.5 ml-auto">
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+        <h2 className="font-bold text-2xl">Reviews</h2>
+        {
+        data.reviews.map((review) => (
+          <>
+            <div className="flex gap-4">
+              {
+                review.user.image ? (
+                <Avatar className="w-10 h-10 border">
+                  <img src={review.user.image} alt={review.user.FirstName} className="w-10 h-10 rounded-full object-cover" />
+                  <AvatarFallback></AvatarFallback>
+                </Avatar>
+              ) : (
+                <Avatar className="w-10 h-10 border">
+                  <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
+                  <AvatarFallback>{review.user.FirstName[0]}</AvatarFallback>
+                </Avatar>
+              )}
+              <div className="grid gap-4 flex-1">
+                <div className="flex gap-4 items-start">
+                  <div className="grid gap-0.5 text-sm">
+                    <h3 className="font-semibold">{review.user.FirstName}</h3>
+                    <time className="text-sm text-gray-500 dark:text-gray-400">
+                    { 
+                      (() => {
+                        const reviewDate = new Date(review.createdAt);
+                        const today = new Date();
+                        const timeDifference = today - reviewDate;
+                        const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+                        if (daysDifference > 1) {
+                          return `${daysDifference} days ago`;
+                        } else if (daysDifference === 1) {
+                          return "1 day ago";
+                        } else {
+                          return "Today";
+                        }
+                      })()
+                    }
+                  </time>
+
+                  </div>
+                  <div className="flex items-center gap-0.5 ml-auto w-28 justify-end">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <StarIcon
+                        key={index}
+                        className={`w-5 h-5 ${index < review.rating ? 'fill-primary' : 'fill-muted stroke-muted-foreground'}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="text-sm leading-loose text-gray-500 dark:text-gray-400">
+                  <p>{review.review}</p>
+                </div>
               </div>
             </div>
-            <div className="text-sm leading-loose text-gray-500 dark:text-gray-400">
-              <p>
-                I recently purchased the SparkleShine Home Cleaning Robot, and
-                it has been a game-changer in my life. I used to spend hours
-                every weekend cleaning my house, but now I can simply turn on
-                this little robot and let it do the work.
-              </p>
-            </div>
-          </div>
-        </div>
-        <Separator />
-        <div className="flex gap-4 mb-10">
-          <Avatar className="w-10 h-10 border">
-            <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <div className="grid gap-4">
-            <div className="flex gap-4 items-start">
-              <div className="grid gap-0.5 text-sm">
-                <h3 className="font-semibold">Emily Parker</h3>
-                <time className="text-sm text-gray-500 dark:text-gray-400">
-                  2 days ago
-                </time>
-              </div>
-              <div className="flex items-center gap-0.5 ml-auto">
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-              </div>
-            </div>
-            <div className="text-sm leading-loose text-gray-500 dark:text-gray-400">
-              <p>
-                The battery life is impressive, lasting me for long-haul flights
-                without any issues. They are comfortable to wear for extended
-                periods, and I appreciate the sleek design. Worth every penny.
-              </p>
-            </div>
-          </div>
-        </div>
+            <Separator />
+          </>
+        ))
+      }
+
       </div>
     </>
   );

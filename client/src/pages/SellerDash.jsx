@@ -331,7 +331,7 @@ const SellerDash = ()=>  {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <Button onClick={logout}>Logout</Button>  
+              <Button onClick={()=>{}}>Logout</Button>  
               
             </DropdownMenuContent>
           </DropdownMenu>

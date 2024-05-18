@@ -21,47 +21,93 @@ import OrderInfo from "./pages/OrderInfo.jsx";
 import { SellerRegistration } from "./pages/SellerRegistration.jsx";
 import AddProduct from "./pages/AddProduct";
 import ProductInfo from "./pages/ProductInfo.jsx";
+import { Products } from "./pages/Products.jsx";
 axios.defaults.baseURL = `http://localhost:8000`;
 axios.defaults.withCredentials = true;
 
 function App() {
   return (
     <>
-      <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
-      <UserContextProvider>
-        <CartProvider>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/verify/:id/:expirationTimestamp"
-              element={<EmailVerify />}
-            />
-            <Route path="/ResetPassword" element={<ResetPassword />} />
-            <Route
-              path="/ForgotPassword/:id/:token"
-              element={<ForgotPassword />}
-            />
-            <Route
-              path="/google/auth/ValidationFailure"
-              element={<ValidationFailure />}
-            />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/shoppingcart" element={<Shoppingcart />} />
-            <Route path="/dash" element={<SellerDash />} />
-            <Route path="/products" element={<ProductCatalog />} />
-            <Route path="/sellerhome" element={<SellerHome />} />
-            <Route path="/order/:id" element={<OrderInfo />} />
-            <Route path="/seller-register" element={<SellerRegistration />} />
-            <Route path="/productdetail/:id" element={<ProductDetails />} />
-            <Route path="/orders/:id" element={<OrderInfo />} />
-            <Route path="/seller/products" element={<ProductInfo />} />
-            <Route path="/seller/add" element={<AddProduct />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </CartProvider>
-      </UserContextProvider>
+    <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
+    <UserContextProvider>
+    <CartProvider>
+    <Routes>
+    <Route path='/' element={<Landing/>}
+      />
+    <Route path='/home' element={<Products/>}
+      />
+      <Route path='/login' element={<Login/>}
+      />
+      <Route path='/register' element={<Register/>}
+      />
+      <Route
+            path="/verify/:id/:expirationTimestamp"
+            element={<EmailVerify />}
+          />
+      <Route 
+      path="/ResetPassword"
+       element={<ResetPassword />} />
+      <Route
+        path="/ForgotPassword/:id/:token"
+        element={<ForgotPassword />}
+      />
+      <Route
+        path="/google/auth/ValidationFailure"
+        element={<ValidationFailure />}
+      />
+      <Route
+        path="/profile"
+        element={<Profile />}
+      />
+      <Route
+        path="/shoppingcart"
+        element={<Shoppingcart />}
+        />
+        <Route
+        path="/dash"
+        element={<SellerDash />}
+      />
+      <Route
+        path="/products"
+        element={<ProductCatalog/>}
+      />
+      <Route
+        path="/sellerhome"
+        element={<SellerHome/>}
+      />
+      <Route
+        path="/order/:id"
+        element={<OrderInfo/>}
+        />
+        <Route
+        path="/seller-register"
+        element={<SellerRegistration/>}
+      />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route
+        path="/orders/:id"
+        element={<OrderInfo/>}
+      />
+        <Route
+        path="/seller/products"
+        element={<ProductInfo/>}
+      />
+      <Route
+        path="/seller/add"
+        element={<AddProduct/>}
+      />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+    
+
+    {/*  example 
+    <Route
+            path="/verify/:id/:expirationTimestamp"
+            element={<EmailVerify />}
+          /> */}
+          </CartProvider>
+    </UserContextProvider>
+
     </>
   );
 }

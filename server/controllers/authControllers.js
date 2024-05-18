@@ -179,7 +179,7 @@ const loginUser = async (req, res) => {
             FirstName: userDoc.FirstName,
             email: userDoc.email,
             id: userDoc._id
-        }, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+        }, process.env.JWT_SECRET, (err, token) => {
             if (err) {
                 console.error('Error signing JWT:', err);
                 return res.status(500).json({ error: 'Internal Server Error' });
@@ -385,6 +385,18 @@ const placeOrder = async (req,res)=>{
         })
         const data = await newOrder.save()
         await User.updateOne({_id:user},{$push:{orders:data._id}})
+        // add the quantity of product in cart to itemssold in product schema and decrease the quantity in product schema
+        cart.forEach(async (item) => {
+            await Product.updateOne(
+                { _id: item.product },
+                {
+                    $inc: {
+                        itemsSold: item.quantity, 
+                        quantity: -item.quantity 
+                    }
+                }
+            );
+        });
         return res.json({ success: "Order Placed Successfully" ,orderId:data._id});
     } catch (error) {
         console.error(error);
@@ -542,7 +554,43 @@ const updateStatus = async (req,res)=>{
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus}
+const getProductsDetails = async (req,res)=>{
+    const {id} = req.params
+    try {
+        const product = await Product.findById(id).populate('brand')
+        const reviews = await Review.find({product:id}).populate(
+            {
+                path:'user',
+                select:'FirstName image'
+            }
+        
+        ).sort({created:-1})
+            
+        res.json({product,reviews})
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+const addProductReview = async (req,res) =>{
+    const {reviews,id,product,avgRating} = req.body
+    try {
+        const newReview = new Review({
+            user:id,
+            product:product,
+            review:reviews.review,
+            rating:reviews.rating,
+            updated:Date.now()
+        })
+        await newReview.save()
+        await Product.updateOne({_id:product},{avgRating:avgRating})
+        res.json({success:'Review Added'})
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus,getProductsDetails,addProductReview}
 // const stripeIntegration = async (req, res) => {
 //     const {cart,total,user,payment} = req.body
 //     // 
