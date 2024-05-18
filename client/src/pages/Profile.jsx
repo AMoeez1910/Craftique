@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import Navbar from '../components/Navbar';
-import Sidebar from '../components/Sidebar';
-import Address from '../components/Address';
-import Orders from '../components/Orders';
-import UserProfile from '../components/UserProfile';
-import { UserContext } from '../context/userContext';
-import { Navigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useContext, useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import Address from "../components/Address";
+import Orders from "../components/Orders";
+import UserProfile from "../components/UserProfile";
+import { UserContext } from "../context/userContext";
+import { Navigate } from "react-router-dom";
+import axios from "axios";
 import { Separator } from "../components/ui/seperator";
 
 const Profile = () => {
@@ -33,12 +33,19 @@ const Profile = () => {
   ];
 
   useEffect(() => {
-
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`/user-profile/${user._id}`);
-        const { FirstName, LastName, email, orders, googleID, address,phoneNo,image } =
-          response.data;
+        const {
+          FirstName,
+          LastName,
+          email,
+          orders,
+          googleID,
+          address,
+          phoneNo,
+          image,
+        } = response.data;
         if (googleID)
           setData({
             email: email,
@@ -48,7 +55,7 @@ const Profile = () => {
             address: address,
             orders: orders,
             phoneNo: phoneNo,
-            image :user.image
+            image: user.image,
           });
         else
           setData({
@@ -59,7 +66,7 @@ const Profile = () => {
             googleID: null,
             orders: orders,
             phoneNo: phoneNo,
-            image :user.image
+            image: user.image,
           });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -72,7 +79,16 @@ const Profile = () => {
   }, [user]);
 
   if (!ready) {
-    return "Loading.....";
+      return (
+        <div className="flex h-screen w-full items-center justify-center">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="animate-spin rounded-full border-4 border-gray-300 border-t-gray-900 h-12 w-12 dark:border-gray-600 dark:border-t-gray-50" />
+            <p className="text-gray-500 dark:text-gray-400">
+              Loading content...
+            </p>
+          </div>
+        </div>
+      );
   }
   if (ready && !user) {
     return <Navigate to={"/login"} />;
@@ -104,14 +120,13 @@ const Profile = () => {
                 googleID={data.googleID}
                 id={user._id}
                 phoneNo={data.phoneNo}
-                image = {data.image}
+                image={data.image}
               />
             )}
             {render === "Orders" && <Orders orderData={data.orders} />}
             {render === "Address" && (
               <Address addressData={data.address} id={user._id} />
             )}
-
           </div>
         </div>
       </div>

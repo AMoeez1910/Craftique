@@ -5,6 +5,7 @@ import { Button } from "../components/ui/button"
 import { DropdownMenuTrigger, DropdownMenuRadioItem, DropdownMenuRadioGroup, DropdownMenuContent, DropdownMenu } from "../components/ui/dropdown-menu"
 import ProductCard from "../components/ProductCard"
 import axios from 'axios';
+import Navbar from "../components/Navbar";
 import { set } from 'date-fns';
 const ProductCatalog = () => {
     const [data, setData] = useState([]);
@@ -25,32 +26,44 @@ const ProductCatalog = () => {
         above1: false,
     });
 
-    useEffect(() => {
-        const fetchProductData = async () => {
-            const response = await axios.get(`/products`);
-            setData(response.data)
-            setFilterData(response.data)
-        }
-        fetchProductData()
-    }, [])
-    const handleSortChange = (value) => {
-        setSort(value);
-        switch (value) {
-            case 'price-low-high': setData(data.sort((a, b) => a.price - b.price));
-                break;
-            case 'price-high-low': setData(data.sort((a, b) => b.price - a.price));
-                break;
-            case 'newest':
-                setData(data.sort((a, b) => new Date(b.created) - new Date(a.created)));
-                break;
-            default:
-                break;
-        }
+const ProductCatalog = () => {
+  const [data, setData] = useState([]);
+  const [sort, setSort] = useState("");
+  const [filterData, setFilterData] = useState([]);
+  const [filters, setFilters] = useState({
+    under50: false,
+    between50And100: false,
+    between100And200: false,
+    over200: false,
+  });
 
+  useEffect(() => {
+    const fetchProductData = async () => {
+      const response = await axios.get(`/products`);
+      setData(response.data);
+      setFilterData(response.data);
     };
+    fetchProductData();
+  }, []);
+  const handleSortChange = (value) => {
+    setSort(value);
+    switch (value) {
+      case "price-low-high":
+        setData(data.sort((a, b) => a.price - b.price));
+        break;
+      case "price-high-low":
+        setData(data.sort((a, b) => b.price - a.price));
+        break;
+      case "newest":
+        setData(data.sort((a, b) => new Date(b.created) - new Date(a.created)));
+        break;
+      default:
+        break;
+    }
+  };
 
-    const updateFilteredData = (updatedFilters) => {
-        let finalDataSet = new Set();
+  const updateFilteredData = (updatedFilters) => {
+    let finalDataSet = new Set();
 
         if (updatedFilters.under50) {
             filterData
@@ -117,6 +130,12 @@ const ProductCatalog = () => {
     };
     return (
         <>
+      <Navbar
+        links={[
+          { button: true, path: "/login", btn_name: "Login" },
+          { button: true, path: "/register", btn_name: "Register" },
+        ]}
+      />
             <div className="container mx-auto px-4 md:px-6 py-8">
                 <div className="grid md:grid-cols-[280px_1fr] gap-8">
                     <div className="bg-white dark:bg-gray-950 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6 top-4">
@@ -334,12 +353,13 @@ const ProductCatalog = () => {
                         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
     
                                 {data?.map((product) => (
-                                <ProductCard name={product.name} image={product.images} price={product.price} key={product.id}
-                                    id={product.id} />
-                            ))}
+                <ProductCard product={product} />
+              ))}
                         </div>
                     </div>
+
                 </div>
+              </div>
             </div>
         </>
     )
@@ -348,23 +368,23 @@ export default ProductCatalog;
 
 
 function ArrowUpDownIcon(props) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <path d="m21 16-4 4-4-4" />
-            <path d="M17 20V4" />
-            <path d="m3 8 4-4 4 4" />
-            <path d="M7 4v16" />
-        </svg>
-    )
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m21 16-4 4-4-4" />
+      <path d="M17 20V4" />
+      <path d="m3 8 4-4 4 4" />
+      <path d="M7 4v16" />
+    </svg>
+  );
 }

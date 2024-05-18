@@ -6,6 +6,7 @@ import Login from "./pages/Login.jsx";
 import ResetPassword from "./pages/ResetPassword.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import Artisans from "./pages/Artisans.jsx";
 import { Toaster } from "react-hot-toast";
 import { UserContextProvider } from "./context/userContext.jsx";
 import { ValidationFailure } from "./pages/ValidationFailure.jsx";
@@ -21,12 +22,15 @@ import OrderInfo from "./pages/OrderInfo.jsx";
 import { SellerRegistration } from "./pages/SellerRegistration.jsx";
 import AddProduct from "./pages/AddProduct";
 import ProductInfo from "./pages/ProductInfo.jsx";
+import { ThreeDots } from "react-loader-spinner";
+import SellerCatalog from "./pages/SellerCatalog.jsx";
 axios.defaults.baseURL = `http://localhost:8000`;
 axios.defaults.withCredentials = true;
 
 function App() {
   return (
     <>
+
     
     <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
     <UserContextProvider>
@@ -91,6 +95,8 @@ function App() {
         path="/seller/add"
         element={<AddProduct/>}
       />
+      <Route path="/artisans" element={<Artisans />} />
+      <Route path="/product/seller/:id" element={<SellerCatalog />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
     
