@@ -67,7 +67,7 @@ router.get('/products',getProducts)
 router.get('/seller/:id',getSellerDetails)
 router.get('/sellers',getAllSellers)
 router.get('/orderinfo/:id',getOrderDetail)
-router.get('/seller/:id',sellerDetails)
+router.get('/seller-detail/:id',sellerDetails)
 router.get('/products/:id',getProductsDetails)
 router.get('/auth/google',passport.authenticate('google', { scope: ['profile','email'] }))
 
