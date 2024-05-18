@@ -63,8 +63,82 @@ import {
   TooltipTrigger,
   TooltipProvider
 } from "../components/ui/tooltip"
+import { useContext, useEffect, useState } from "react"
+import { UserContext } from "../context/userContext"
+import { Link,Navigate, useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
+import axios from "axios"
 
 const ProductInfo = () => {
+  const { user, ready,setUser } = useContext(UserContext);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [display, setDisplay] = useState()
+  const [status, setStatus] = useState()
+  const navigate = useNavigate()
+  const logout = () => {
+    axios
+      .get("/logout")
+      .then((res) => {
+        if (res.data && res.data.Status === "Success") {
+          setUser(null);
+          toast.success("Successfully logged out");
+          navigate("/");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // useEffect(()=>{
+  //   const fetchData = async () => {
+  //     if (status && status.id) {
+  //       try {
+  //         const response = await axios.patch(`/update-order-status/${status.id}`,{status:status.status});
+  //         toast.success(response.data.success)
+  //       } catch (error) {
+  //         console.error("error");
+  //       }
+  //     }
+  //   };
+  //   if (status) {
+  //     fetchData();
+  //   }
+  // },[status])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (ready && user && user._id) {
+        try {
+          const response = await axios.get(`/seller/${user._id}`);
+          console.log(response.data)
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+
+    if (ready) {
+      fetchData();
+    }
+  }, [ready, user]);
+
+  if (loading) {
+    return (<div className="flex h-screen w-full items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full border-4 border-gray-300 border-t-gray-900 h-12 w-12 dark:border-gray-600 dark:border-t-gray-50" />
+          <p className="text-gray-500 dark:text-gray-400">Loading content...</p>
+        </div>
+      </div>)
+  }
+
+  if (ready && (!user || !user.isSeller)) {
+    toast.error('Please log in to access or become a seller!');
+    return <Navigate to="/login" />;
+  }
   return (
     <TooltipProvider>
     <div className="flex min-h-screen w-full flex-col bg-muted/40">

@@ -129,7 +129,7 @@ const SellerDash = ()=>  {
     const fetchData = async () => {
       if (ready && user && user._id) {
         try {
-          const response = await axios.get(`/seller/${user._id}`);
+          const response = await axios.get(`/seller-detail/${user._id}`);
           setSeller(response.data.brand);
           setData(response.data.orders);
         } catch (error) {
@@ -155,9 +155,14 @@ const SellerDash = ()=>  {
     return total;
   };
   if (loading) {
-    return "Loading...";
+    return (
+    <div className="flex h-screen w-full items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full border-4 border-gray-300 border-t-gray-900 h-12 w-12 dark:border-gray-600 dark:border-t-gray-50" />
+          <p className="text-gray-500 dark:text-gray-400">Loading content...</p>
+        </div>
+      </div>)
   }
-
   if (ready && (!user || !user.isSeller)) {
     toast.error('Please log in to access or become a seller!');
     return <Navigate to="/login" />;
@@ -167,6 +172,7 @@ const SellerDash = ()=>  {
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+        {console.log(data)}
           <a
             href="#"
             className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
@@ -331,7 +337,7 @@ const SellerDash = ()=>  {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <Button onClick={()=>{}}>Logout</Button>  
+              <Button onClick={logout}>Logout</Button>  
               
             </DropdownMenuContent>
           </DropdownMenu>
