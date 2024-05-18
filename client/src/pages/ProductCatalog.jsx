@@ -75,25 +75,25 @@ const ProductCatalog = () => {
                                 <div className="flex items-center gap-2">
                                     <Checkbox id="price-under-50" />
                                     <Label className="text-sm font-medium" htmlFor="price-under-50">
-                                        Under $50
+                                        Under Rs. 50
                                     </Label>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Checkbox id="price-50-100" />
                                     <Label className="text-sm font-medium" htmlFor="price-50-100">
-                                        $50 - $100
+                                        Rs. 50 - Rs. 100
                                     </Label>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Checkbox id="price-100-200" />
                                     <Label className="text-sm font-medium" htmlFor="price-100-200">
-                                        $100 - $200
+                                        Rs. 100 - Rs. 200
                                     </Label>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Checkbox id="price-over-200" />
                                     <Label className="text-sm font-medium" htmlFor="price-over-200">
-                                        Over $200
+                                        Over Rs. 200
                                     </Label>
                                 </div>
                             </div>

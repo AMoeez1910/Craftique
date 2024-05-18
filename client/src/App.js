@@ -13,7 +13,6 @@ import Profile from "./pages/Profile.jsx";
 import { CartProvider } from "./context/cart";
 import { Shoppingcart } from "./pages/Shoppingcart";
 import ProductCatalog from "./pages/ProductCatalog";
-import Navbar from "./components/Navbar.jsx";
 import SellerDash from "./pages/SellerDash";
 import SellerHome from "./pages/SellerHome";
 import Landing from "./pages/Landing";

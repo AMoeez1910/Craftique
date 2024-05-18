@@ -308,7 +308,7 @@ const SellerDash = ()=>  {
               <Card x-chunk="dashboard-05-chunk-1">
                 <CardHeader className="pb-2">
                   <CardDescription>This Week</CardDescription>
-                  <CardTitle className="text-4xl">$1,329</CardTitle>
+                  <CardTitle className="text-4xl">Rs. 1,329</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-xs text-muted-foreground">
@@ -322,7 +322,7 @@ const SellerDash = ()=>  {
               <Card x-chunk="dashboard-05-chunk-2">
                 <CardHeader className="pb-2">
                   <CardDescription>This Month</CardDescription>
-                  <CardTitle className="text-4xl">$5,329</CardTitle>
+                  <CardTitle className="text-4xl">Rs. 5,329</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-xs text-muted-foreground">
@@ -422,7 +422,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-23
                           </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
+                          <TableCell className="text-right">Rs. 250.00</TableCell>
                         </TableRow>
                         <TableRow className="bg-accent">
                           <TableCell>
@@ -442,7 +442,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-23
                           </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
+                          <TableCell className="text-right">Rs. 250.00</TableCell>
                         </TableRow>
                         <TableRow className="bg-accent">
                           <TableCell>
@@ -462,7 +462,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-23
                           </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
+                          <TableCell className="text-right">Rs. 250.00</TableCell>
                         </TableRow>
                         <TableRow className="bg-accent">
                           <TableCell>
@@ -482,7 +482,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-23
                           </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
+                          <TableCell className="text-right">Rs. 250.00</TableCell>
                         </TableRow>
                         <TableRow className="bg-accent">
                           <TableCell>
@@ -502,7 +502,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-23
                           </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
+                          <TableCell className="text-right">Rs. 250.00</TableCell>
                         </TableRow>
                         <TableRow className="bg-accent">
                           <TableCell>
@@ -522,7 +522,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-23
                           </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
+                          <TableCell className="text-right">Rs. 250.00</TableCell>
                         </TableRow>
                         <TableRow className="bg-accent">
                           <TableCell>
@@ -542,7 +542,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-23
                           </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
+                          <TableCell className="text-right">Rs. 250.00</TableCell>
                         </TableRow>
                         <TableRow>
                         
@@ -563,7 +563,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-24
                           </TableCell>
-                          <TableCell className="text-right">$150.00</TableCell>
+                          <TableCell className="text-right">Rs. 150.00</TableCell>
                         </TableRow>
                         <TableRow>
                           <TableCell>
@@ -583,7 +583,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-25
                           </TableCell>
-                          <TableCell className="text-right">$350.00</TableCell>
+                          <TableCell className="text-right">Rs. 350.00</TableCell>
                         </TableRow>
                         <TableRow>
                           <TableCell>
@@ -603,7 +603,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-26
                           </TableCell>
-                          <TableCell className="text-right">$450.00</TableCell>
+                          <TableCell className="text-right">Rs. 450.00</TableCell>
                         </TableRow>
                         <TableRow>
                           <TableCell>
@@ -623,7 +623,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-23
                           </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
+                          <TableCell className="text-right">Rs. 250.00</TableCell>
                         </TableRow>
                         <TableRow>
                           <TableCell>
@@ -643,7 +643,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-23
                           </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
+                          <TableCell className="text-right">Rs. 250.00</TableCell>
                         </TableRow>
                         <TableRow>
                           <TableCell>
@@ -663,7 +663,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-24
                           </TableCell>
-                          <TableCell className="text-right">$150.00</TableCell>
+                          <TableCell className="text-right">Rs. 150.00</TableCell>
                         </TableRow>
                         <TableRow>
                           <TableCell>
@@ -683,7 +683,7 @@ const SellerDash = ()=>  {
                           <TableCell className="hidden md:table-cell">
                             2023-06-26
                           </TableCell>
-                          <TableCell className="text-right">$450.00</TableCell>
+                          <TableCell className="text-right">Rs. 450.00</TableCell>
                         </TableRow>
                       </TableBody>
                     </Table>
@@ -743,32 +743,32 @@ const SellerDash = ()=>  {
                       <span className="text-muted-foreground">
                         Glimmer Lamps x <span>2</span>
                       </span>
-                      <span>$250.00</span>
+                      <span>Rs. 250.00</span>
                     </li>
                     <li className="flex items-center justify-between">
                       <span className="text-muted-foreground">
                         Aqua Filters x <span>1</span>
                       </span>
-                      <span>$49.00</span>
+                      <span>Rs. 49.00</span>
                     </li>
                   </ul>
                   <Separator className="my-2" />
                   <ul className="grid gap-3">
                     <li className="flex items-center justify-between">
                       <span className="text-muted-foreground">Subtotal</span>
-                      <span>$299.00</span>
+                      <span>Rs. 299.00</span>
                     </li>
                     <li className="flex items-center justify-between">
                       <span className="text-muted-foreground">Shipping</span>
-                      <span>$5.00</span>
+                      <span>Rs. 5.00</span>
                     </li>
                     <li className="flex items-center justify-between">
                       <span className="text-muted-foreground">Tax</span>
-                      <span>$25.00</span>
+                      <span>Rs. 25.00</span>
                     </li>
                     <li className="flex items-center justify-between font-semibold">
                       <span className="text-muted-foreground">Total</span>
-                      <span>$329.00</span>
+                      <span>Rs. 329.00</span>
                     </li>
                   </ul>
                 </div>

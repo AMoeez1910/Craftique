@@ -358,7 +358,7 @@ const ProductInfo = () => {
                           <Badge variant="outline">Draft</Badge>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          $499.99
+                          Rs. 499.99
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
                           25
@@ -403,7 +403,7 @@ const ProductInfo = () => {
                           <Badge variant="outline">Active</Badge>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          $129.99
+                          Rs. 129.99
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
                           100
@@ -448,7 +448,7 @@ const ProductInfo = () => {
                           <Badge variant="outline">Active</Badge>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          $39.99
+                          Rs. 39.99
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
                           50
@@ -493,7 +493,7 @@ const ProductInfo = () => {
                           <Badge variant="secondary">Draft</Badge>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          $2.99
+                          Rs. 2.99
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
                           0
@@ -538,7 +538,7 @@ const ProductInfo = () => {
                           <Badge variant="outline">Active</Badge>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          $59.99
+                        Rs. 59.99
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
                           75
@@ -583,7 +583,7 @@ const ProductInfo = () => {
                           <Badge variant="outline">Active</Badge>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          $199.99
+                          Rs. 199.99
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
                           30

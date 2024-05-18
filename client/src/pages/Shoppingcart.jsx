@@ -162,7 +162,7 @@ export const Shoppingcart = () => {
                       <PlusIcon className="h-4 w-4" />
                     </Button>
                     <div className="text-lg font-medium">
-                      ${item.product.price * item.quantity}
+                      Rs. {item.product.price * item.quantity}
                     </div>
                     <Button
                       size="icon"
@@ -186,23 +186,23 @@ export const Shoppingcart = () => {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span>Subtotal</span>
-                <span className="font-medium">${subtotal()}</span>
+                <span className="font-medium">Rs. {subtotal()}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Discount</span>
                 <span className="font-medium text-green-500">
-                  -${discount()}
+                  -Rs. {discount()}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Shipping</span>
-                <span className="font-medium">${shipping}</span>
+                <span className="font-medium">Rs. {shipping}</span>
               </div>
               <Separator />
               <div className="flex items-center justify-between">
                 <span className="text-lg font-bold">Total</span>
                 <span className="text-lg font-bold">
-                  ${subtotal() + shipping - discount()}
+                  Rs. {subtotal() + shipping - discount()}
                 </span>
               </div>
             </div>

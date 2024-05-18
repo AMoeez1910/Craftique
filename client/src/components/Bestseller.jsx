@@ -112,8 +112,19 @@ const Bestseller = () => {
                   {product.name}
                 </h3>
                 <div className="flex items-center justify-between mt-auto">
-                  <span className="text-base font-medium">
-                    ${product.price}
+                  <span className="font-medium">
+                    {product.discount === 0 ? (
+                      <span className="text-lg">Rs. {product.price}</span>
+                    ) : (
+                      <div className="flex items-center">
+                        <span className="line-through text-sm">
+                          Rs. {product.price}
+                        </span>
+                        <span className="text-lg ml-3">
+                          Rs. {product.price - product.discount}
+                        </span>
+                      </div>
+                    )}
                   </span>
                   <Button
                     className="rounded-full px-2 py-2 bg-gray-900 text-gray-50 hover:bg-gray-900/90 focus-visible:ring-gray-950 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
