@@ -2,6 +2,7 @@
 import { useEffect, useState, Fragment } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import axios from "axios";
+import { Button } from "../components/ui/button"
 
 const TIMEOUT = 10000; // Timeout in milliseconds (e.g., 10 seconds)
 
@@ -16,46 +17,42 @@ const EmailVerify = () => {
         const { data } = await axios.get(`/verify/${id}/${expirationTimestamp}`, { timeout: TIMEOUT });
         if (data) {
           VerifyUrl(true);
-        }
-        else{
-          setLoading(false)
+        } else {
+          setLoading(false);
         }
       } catch (error) {
         VerifyUrl(false);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
     verifyEmail();
-  }, []);
+  }, [id, expirationTimestamp]);
 
   return (
     <Fragment>
       {loading ? (
-        <div className="text-center ">
-      <div className="loading-spinner"></div>
-  </div>
+        <div className="flex justify-center items-center h-screen">
+          <div className="loading-spinner"></div>
+        </div>
       ) : validUrl ? (
-        <section className="py-5 mt-5">
-          <div className="container py-5">
-            <div className="row">
-              <div className="col-md-8 col-xl-6 text-center mx-auto">
-                <h2 className="display-6 fw-bold mb-4">Email Verified</h2>
+        <section className="py-10 mt-10">
+          <div className="container mx-auto py-10">
+            <div className="flex justify-center">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold mb-4">Email Verified</h2>
               </div>
             </div>
-            <div className="row d-flex justify-content-center">
-              <div className="col-md-6">
+            <div className="flex justify-center">
+              <div className="w-full max-w-md">
                 <div>
-                  <form className="p-3 p-xl-4" method="post" data-bs-theme="light">
-                    <div>
+                  <form className="p-5 shadow-lg rounded-lg bg-white">
+                    <div className="flex justify-center">
                       <Link to="/login">
-                        <button
-                          className="btn btn-primary shadow d-block w-100"
-                          type="submit"
-                        >
+                        <Button className="w-full">
                           Login
-                        </button>
+                        </Button>
                       </Link>
                     </div>
                   </form>

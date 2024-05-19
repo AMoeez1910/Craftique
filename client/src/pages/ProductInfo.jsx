@@ -277,12 +277,7 @@ const handleSubmit =async (id)=>{
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <Button onClick={logout}>Logout</Button>  
+              <Button onClick={logout} className="w-full">Logout</Button>  
               
             </DropdownMenuContent>
           </DropdownMenu>
