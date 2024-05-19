@@ -7,12 +7,13 @@ import {
   PanelLeft,
   PlusCircle,
   Search,
+  Settings,
   ShoppingCart,
   Upload,
   Users2,
-} from "lucide-react";
+} from "lucide-react"
 
-import { Badge } from "../components/ui/badge";
+import { Badge } from "../components/ui/badge"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -20,8 +21,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../components/ui/breadcrumb";
-import { Button } from "../components/ui/button";
+} from "../components/ui/breadcrumb"
+import { Button } from "../components/ui/button"
 import {
   Card,
   CardContent,
@@ -29,22 +30,25 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
+} from "../components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../components/ui/dropdown-menu";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
+} from "../components/ui/dropdown-menu"
+import { Input } from "../components/ui/input"
+import { Label } from "../components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../components/ui/select";
-import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
+} from "../components/ui/select"
+import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet"
 import {
   Table,
   TableBody,
@@ -52,8 +56,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/ui/table";
-import { Textarea } from "../components/ui/textarea";
+} from "../components/ui/table"
+import { Textarea } from "../components/ui/textarea"
 import {
   Tooltip,
   TooltipContent,
@@ -84,6 +88,7 @@ const AddProduct =() =>{
     isActive:true
   });
   const navigate = useNavigate();
+  console.log(user)
   const logout = () => {
     axios
       .get("/logout")
@@ -509,7 +514,8 @@ const handleSubmit = async ()=>{
           </div>
         </main>
       </div>
+    </div>
     </TooltipProvider>
-  );
-};
-export default AddProduct;
+  )
+}
+export default AddProduct

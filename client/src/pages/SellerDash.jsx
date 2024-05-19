@@ -1,21 +1,25 @@
 import {
   Copy,
   CreditCard,
+  Home,
+  LineChart,
   Package,
+  Package2,
   PanelLeft,
+  Settings,
   ShoppingCart,
   Truck,
-} from "lucide-react";
-import { PlusIcon } from "@radix-ui/react-icons";
+  Users2,
+} from "lucide-react"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../components/ui/select";
-import { Button } from "../components/ui/button";
+} from "../components/ui/select"
 
+import { Button } from "../components/ui/button"
 import {
   Card,
   CardContent,
@@ -23,16 +27,18 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
+} from "../components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../components/ui/dropdown-menu";
-import { Separator } from "../components/ui/separator";
-import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
+} from "../components/ui/dropdown-menu"
+
+import { Separator } from "../components/ui/separator"
+import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet"
 import {
   Table,
   TableBody,
@@ -40,31 +46,32 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/ui/table";
-import { Tabs, TabsContent } from "../components/ui/tabs";
+} from "../components/ui/table"
+import {
+  Tabs,
+  TabsContent,
+} from "../components/ui/tabs"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  TooltipProvider,
-} from "../components/ui/tooltip";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../context/userContext";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { Money } from "@mui/icons-material";
-import Logo from "../assets/symvol_logo_transparent.svg";
+  TooltipProvider
+} from "../components/ui/tooltip"
+import { useContext, useEffect, useState } from "react"
+import { UserContext } from "../context/userContext"
+import { Link,Navigate, useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
+import axios from "axios"
+import { Money } from "@mui/icons-material"
 
-const SellerDash = () => {
-  const nagivate = useNavigate();
-  const { user, ready, setUser } = useContext(UserContext);
+const SellerDash = ()=>  {
+  const { user, ready,setUser } = useContext(UserContext);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [display, setDisplay] = useState();
-  const [status, setStatus] = useState();
-  const [seller, setSeller] = useState();
-  const navigate = useNavigate();
+  const [display, setDisplay] = useState()
+  const [status, setStatus] = useState()
+  const [seller, setSeller] = useState()
+  const navigate = useNavigate()
   const logout = () => {
     axios
       .get("/logout")
@@ -78,15 +85,12 @@ const SellerDash = () => {
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
+  useEffect(()=>{
     const fetchData = async () => {
       if (status && status.id) {
         try {
-          const response = await axios.patch(
-            `/update-order-status/${status.id}`,
-            { status: status.status }
-          );
-          toast.success(response.data.success);
+          const response = await axios.patch(`/update-order-status/${status.id}`,{status:status.status});
+          toast.success(response.data.success)
         } catch (error) {
           console.error("error");
         }
@@ -95,7 +99,7 @@ const SellerDash = () => {
     if (status) {
       fetchData();
     }
-  }, [status]);
+  },[status])
   useEffect(() => {
     const fetchData = async () => {
       if (ready && user && user._id) {
@@ -120,8 +124,8 @@ const SellerDash = () => {
   }, [ready, user]);
   const subtotal = () => {
     let total = 0;
-    display.products.map((item, index) => {
-      const productDetail = display.productDetails[index];
+    display.products.map((item,index) => {
+      const productDetail = display.productDetails[index]
       total += productDetail.price * item.quantity;
     });
     return total;
@@ -144,145 +148,237 @@ const SellerDash = () => {
   }
   if (loading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center">
+    <div className="flex h-screen w-full items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
           <div className="animate-spin rounded-full border-4 border-gray-300 border-t-gray-900 h-12 w-12 dark:border-gray-600 dark:border-t-gray-50" />
           <p className="text-gray-500 dark:text-gray-400">Loading content...</p>
         </div>
-      </div>
-    );
+      </div>)
   }
   if (ready && (!user || !user.isSeller)) {
-    toast.error("Please log in to access or become a seller!");
+    toast.error('Please log in to access or become a seller!');
     return <Navigate to="/login" />;
   }
   return (
     <TooltipProvider>
-      <div className="flex min-h-screen w-full flex-col bg-muted/40">
-        <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
-          <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-            <div
-              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base cursor-pointer"
-              onClick={() => navigate("/")}
-            >
-              <img
-                className="h-3 w-3 transition-all group-hover:scale-110"
-                src={Logo}
-              />
+    <div className="flex min-h-screen w-full flex-col bg-muted/40">
+      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+        <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+          <a
+            href="#"
+            className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+          >
+            <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
+            <span className="sr-only"></span>
+          </a>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href="#"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              >
+                <Home className="h-5 w-5" />
+                <span className="sr-only">Dashboard</span>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side="right">Dashboard</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href="#"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                <span className="sr-only">Orders</span>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side="right">Orders</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href="#"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              >
+                <Package className="h-5 w-5" />
+                <span className="sr-only">Products</span>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side="right">Products</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href="#"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              >
+                <Users2 className="h-5 w-5" />
+                <span className="sr-only">Customers</span>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side="right">Customers</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href="#"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              >
+                <LineChart className="h-5 w-5" />
+                <span className="sr-only">Analytics</span>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side="right">Analytics</TooltipContent>
+          </Tooltip>
+        </nav>
+        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href="#"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+              >
+                <Settings className="h-5 w-5" />
+                <span className="sr-only">Settings</span>
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side="right">Settings</TooltipContent>
+          </Tooltip>
+        </nav>
+      </aside>
+      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button size="icon" variant="outline" className="sm:hidden">
+              <PanelLeft className="h-5 w-5" />
+              <span className="sr-only">Toggle Menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="sm:max-w-xs">
+            <nav className="grid gap-6 text-lg font-medium">
+              <a
+                href="#"
+                className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+              >
+                <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
+                <span className="sr-only"></span>
+              </a>
+              <a
+                href="#"
+                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              >
+                <Home className="h-5 w-5" />
+                Dashboard
+              </a>
+              <a
+                href="#"
+                className="flex items-center gap-4 px-2.5 text-foreground"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                Orders
+              </a>
+              <a
+                href="#"
+                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              >
+                <Package className="h-5 w-5" />
+                Products
+              </a>
+              <a
+                href="#"
+                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              >
+                <Users2 className="h-5 w-5" />
+                Customers
+              </a>
+              <a
+                href="#"
+                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              >
+                <LineChart className="h-5 w-5" />
+                Settings
+              </a>
+            </nav>
+          </SheetContent>
+        </Sheet>
+
+        <div className="flex items-center gap-4 ml-auto">
+          <span>Hello, <b>{seller?.name}</b></span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="overflow-hidden rounded-full"
+              >
+                <img
+                  src={seller?.image}
+                  width={36}
+                  height={36}
+                  alt="ProfilePicture"
+                  className="overflow-hidden rounded-full"
+                />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <Button onClick={logout}>Logout</Button>  
+              
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </header>
+        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
+          <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2 ">
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+              <Card
+                className="sm:col-span-2" x-chunk="dashboard-05-chunk-0"
+
+              >
+                <CardHeader className="pb-3">
+                  <CardTitle>Your Orders</CardTitle>
+                  <CardDescription className="max-w-lg text-balance leading-relaxed">
+                    Introducing Our Dynamic Orders Dashboard for Seamless
+                    Management and Insightful Analysis.
+                  </CardDescription>
+                </CardHeader>
+                <CardFooter>
+                  <Button>Create New Order</Button>
+                </CardFooter>
+              </Card>
+              <Card x-chunk="dashboard-05-chunk-1">
+                <CardHeader className="pb-2 pad2x">
+                  <CardDescription>Total Earnings</CardDescription>
+                  <CardTitle className="text-4xl">
+                  Rs,{
+                    data?.reduce((acc, order) => acc + order.totalPrice, 0)
+                  }</CardTitle>
+                </CardHeader>
+                <CardContent>
+                </CardContent>
+              </Card>
+              <Card x-chunk="dashboard-05-chunk-2 ">
+                <CardHeader className="pb-2 pad1">
+                  <CardDescription>Total Orders</CardDescription>
+                  <CardTitle className="text-4xl">{data?.length}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                </CardContent>
+              </Card>
             </div>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8 cursor-pointer">
-                  <ShoppingCart className="h-5 w-5" />
-                  <span className="sr-only">Orders</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="right">Orders</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 cursor-pointer"
-                  onClick={() => navigate("/seller/products")}
-                >
-                  <Package className="h-5 w-5" />
-                  <span className="sr-only">Products</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="right">Products</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 cursor-pointer"
-                  onClick={() => nagivate("/seller/add")}
-                >
-                  <PlusIcon className="h-5 w-5" />
-                  <span className="sr-only">Add Product</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="right">Add Product</TooltipContent>
-            </Tooltip>
-          </nav>
-        </aside>
-        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-          <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button size="icon" variant="outline" className="sm:hidden">
-                  <PanelLeft className="h-5 w-5" />
-                  <span className="sr-only">Toggle Menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="sm:max-w-xs">
-                <nav className="grid gap-6 text-lg font-medium">
-                  <div
-                    className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                    onClick={() => nagivate("/")}
-                  >
-                    <img
-                      className="h-3 w-3 transition-all group-hover:scale-110"
-                      src={Logo}
-                    />
-                  </div>
-                  <div className="flex items-center gap-4 px-2.5 text-foreground">
-                    <ShoppingCart className="h-5 w-5" />
-                    Orders
-                  </div>
-                  <div
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                    onClick={() => nagivate("/seller/products")}
-                  >
-                    <Package className="h-5 w-5" />
-                    Products
-                  </div>
-                  <div
-                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                    onClick={() => nagivate("/seller/add")}
-                  >
-                    <PlusIcon className="h-5 w-5" />
-                    Add Product
-                  </div>
-                </nav>
-              </SheetContent>
-            </Sheet>
-            <div className="flex items-center gap-4 ml-auto">
-              <span>
-                Hello, <b>{seller?.name}</b>
-              </span>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="overflow-hidden rounded-full"
-                  >
-                    <img
-                      src={seller?.image}
-                      width={36}
-                      height={36}
-                      alt="ProfilePicture"
-                      className="overflow-hidden rounded-full"
-                    />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <Button className="w-full" onClick={logout}>
-                    Logout
-                  </Button>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </header>
-          <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
-            <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2 ">
-              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
-                <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
-                  <CardHeader className="pb-3">
-                    <CardTitle>Your Orders</CardTitle>
-                    <CardDescription className="max-w-lg text-balance leading-relaxed">
-                      Introducing Our Dynamic Orders Dashboard for Seamless
-                      Management and Insightful Analysis.
+            <Tabs defaultValue="">
+              <TabsContent value="">
+                <Card x-chunk="dashboard-05-chunk-3" >
+                  <CardHeader className="px-7">
+                    <CardTitle>Orders</CardTitle>
+                    <CardDescription>
+                      Recent orders from your store.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -425,77 +521,67 @@ const SellerDash = () => {
                       <span>{display?.buyerDetails.address.shippingAddress.address}</span>
                       <span>{display?.buyerDetails.address.shippingAddress.city}, {display?.buyerDetails.address.shippingAddress.country}</span>
                     </address>
-                    </div>
-                    <div className="grid auto-rows-max gap-3">
-                      <div className="font-semibold">Billing Information</div>
-                      <div className="text-muted-foreground">
-                        <span>
-                          {display?.buyerDetails.address.billingAddress.address}
-                        </span>
-                        <br />
-                        <span>
-                          {display?.buyerDetails.address.billingAddress.city},{" "}
-                          {display?.buyerDetails.address.billingAddress.country}
-                        </span>
-                      </div>
+                  </div>
+                  <div className="grid auto-rows-max gap-3">
+                    <div className="font-semibold">Billing Information</div>
+                    <div className="text-muted-foreground">
+                      <span>{display?.buyerDetails.address.billingAddress.address}</span><br/>
+                      <span>{display?.buyerDetails.address.billingAddress.city}, {display?.buyerDetails.address.billingAddress.country}</span>
                     </div>
                   </div>
-                  <Separator className="my-4" />
-                  <div className="grid gap-3">
-                    <div className="font-semibold">Customer Information</div>
-                    <dl className="grid gap-3">
-                      <div className="flex items-center justify-between">
-                        <dt className="text-muted-foreground">Customer</dt>
-                        <dd>
-                          <span>{display?.buyerDetails.FirstName}</span>
-                        </dd>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <dt className="text-muted-foreground">Email</dt>
-                        <dd>
-                          <a href="mailto:">
-                            <span>{display?.buyerDetails.email}</span>
-                          </a>
-                        </dd>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <dt className="text-muted-foreground">Phone</dt>
-                        <dd>
-                          <a href="tel:">
-                            <span>{display?.buyerDetails.phoneNo}</span>
-                          </a>
-                        </dd>
-                      </div>
-                    </dl>
-                  </div>
-                  <Separator className="my-4" />
-                  <div className="grid gap-3">
-                    <div className="font-semibold">Payment Information</div>
-                    <dl className="grid gap-3">
-                      <div className="flex items-center justify-between">
-                        <dt className="flex items-center gap-1 text-muted-foreground">
-                          {display?.paymentMethod === "Pay through Stripe" ? (
+                </div>
+                <Separator className="my-4" />
+                <div className="grid gap-3">
+                  <div className="font-semibold">Customer Information</div>
+                  <dl className="grid gap-3">
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Customer</dt>
+                      <dd><span>{display?.buyerDetails.FirstName}</span></dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Email</dt>
+                      <dd>
+                        <a href="mailto:"><span>{display?.buyerDetails.email}</span>
+</a>
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="text-muted-foreground">Phone</dt>
+                      <dd>
+                        <a href="tel:"><span>{display?.buyerDetails.phoneNo}</span></a>
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+                <Separator className="my-4" />
+                <div className="grid gap-3">
+                  <div className="font-semibold">Payment Information</div>
+                  <dl className="grid gap-3">
+                    <div className="flex items-center justify-between">
+                      <dt className="flex items-center gap-1 text-muted-foreground">
+                        {
+                          display?.paymentMethod === "Pay through Stripe" ? (
                             <CreditCard className="h-4 w-4" />
                           ) : (
                             <Money className="h-4 w-4" />
-                          )}
-                          {display?.paymentMethod}
-                        </dt>
-                      </div>
-                    </dl>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </main>
-        </div>
+                          )
+                        }
+                        {display?.paymentMethod}
+                      </dt>
+                    </div>
+                  </dl>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
       </div>
+    </div>
     </TooltipProvider>
-  );
-};
+  )
+}
 export default SellerDash;
-{
-  /* <TableCell>
+{/* <TableCell>
                             <div className="font-medium">Liam Johnson</div>
                             <div className="hidden text-sm text-muted-foreground md:inline">
                               liam@example.com
@@ -533,5 +619,4 @@ export default SellerDash;
                           <TableCell className="hidden md:table-cell">
                             2023-06-26
                           </TableCell>
-                          <TableCell className="text-right">$450.00</TableCell> */
-}
+                          <TableCell className="text-right">$450.00</TableCell> */}
