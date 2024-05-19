@@ -83,11 +83,13 @@ const createOrder = async (req, res) => {
 const sendVerifyEmail = async (name, email, id) => {
     try {
         const transporter = nodemailer.createTransport({
-            service:"gmail",
+            port: 465,
+            host: "smtp.gmail.com",
             auth: {
                 user: 'needaspeed639@gmail.com',
-                pass: 'qsws dzzd gokz uytu',
+                pass: 'qsws dzzd gokz uytu'
             },
+            secure: true,
         });
         const expirationTimestamp = Math.floor(new Date().getTime() / 1000)
 

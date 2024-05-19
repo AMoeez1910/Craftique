@@ -11,6 +11,7 @@ import { Toaster } from "react-hot-toast";
 import { UserContextProvider } from "./context/userContext.jsx";
 import ValidationFailure from "./pages/ValidationFailure.jsx";
 import Profile from "./pages/Profile.jsx";
+import Checkout from "./pages/Checkout.jsx";
 import { CartProvider } from "./context/cart";
 import { Shoppingcart } from "./pages/Shoppingcart";
 import ProductCatalog from "./pages/ProductCatalog";
@@ -96,6 +97,7 @@ function App() {
       />
       <Route path="/artisans" element={<Artisans />} />
       <Route path="/product/seller/:id" element={<SellerCatalog />} />
+      <Route path="/checkout-success" element={<Checkout />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
     
