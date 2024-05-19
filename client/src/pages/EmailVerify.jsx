@@ -2,12 +2,10 @@
 import { useEffect, useState, Fragment } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const TIMEOUT = 10000; // Timeout in milliseconds (e.g., 10 seconds)
 
 const EmailVerify = () => {
-  const navigate = useNavigate();
   const { id, expirationTimestamp } = useParams();
   const [validUrl, VerifyUrl] = useState(null);
   const [loading, setLoading] = useState(true);

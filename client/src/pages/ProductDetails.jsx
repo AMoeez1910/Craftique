@@ -42,9 +42,6 @@ export default function Component() {
       toast.error("Please fill all the fields");
     } else {
       try {
-        {
-          console.log(reviews);
-        }
         const totalRating =
           data.reviews.reduce((acc, review) => acc + review.rating, 0) +
           reviews.rating;
@@ -67,37 +64,78 @@ export default function Component() {
   };
 
   const addToCart = (product) => {
-    const productInCart = cart.find((item) => item.product._id === product._id);
-    if (productInCart) {
-      setCart(
-        cart.map((item) =>
-          item.product._id === product._id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        )
-      );
-      localStorage.setItem(
-        "cart",
-        JSON.stringify(
-          cart.map((item) =>
-            item.product._id === product._id
-              ? { ...item, quantity: item.quantity + quantity }
-              : item
-          )
-        )
-      );
-    } else {
-      setCart([...cart, { product, quantity: quantity }]);
-      localStorage.setItem(
-        "cart",
-        JSON.stringify([...cart, { product, quantity: quantity }])
-      );
+    if(user){
+      if(user.brand._id===product.brand._id || user.brand === product.brand._id){
+        toast.error("You can't add your own product to cart");
+      }
+      else{
+        const productInCart = cart.find((item) => item.product._id === product._id);
+        if (productInCart) {
+          setCart(
+            cart.map((item) =>
+              item.product._id === product._id
+                ? { ...item, quantity: item.quantity + quantity }
+                : item
+            )
+          );
+          localStorage.setItem(
+            "cart",
+            JSON.stringify(
+              cart.map((item) =>
+                item.product._id === product._id
+                  ? { ...item, quantity: item.quantity + quantity }
+                  : item
+              )
+            )
+          );
+        } else {
+          setCart([...cart, { product, quantity: quantity }]);
+          localStorage.setItem(
+            "cart",
+            JSON.stringify([...cart, { product, quantity: quantity }])
+          );
+        }
+        toast.success("Added to cart");
+      }
     }
-    toast.success("Added to cart");
+      else{
+        const productInCart = cart.find((item) => item.product._id === product._id);
+        if (productInCart) {
+          setCart(
+            cart.map((item) =>
+              item.product._id === product._id
+                ? { ...item, quantity: item.quantity + quantity }
+                : item
+            )
+          );
+          localStorage.setItem(
+            "cart",
+            JSON.stringify(
+              cart.map((item) =>
+                item.product._id === product._id
+                  ? { ...item, quantity: item.quantity + quantity }
+                  : item
+              )
+            )
+          );
+        } else {
+          setCart([...cart, { product, quantity: quantity }]);
+          localStorage.setItem(
+            "cart",
+            JSON.stringify([...cart, { product, quantity: quantity }])
+          );
+        }
+        toast.success("Added to cart");
+      }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (<div className="flex h-screen w-full items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full border-4 border-gray-300 border-t-gray-900 h-12 w-12 dark:border-gray-600 dark:border-t-gray-50" />
+          <p className="text-gray-500 dark:text-gray-400">Loading content...</p>
+        </div>
+      </div>)
   }
   return (
     <>
@@ -212,9 +250,13 @@ export default function Component() {
                     </Button>
                   </div>
                 </div>
-                <Button size="lg" onClick={() => addToCart(data.product)}>
+                {data.product.isActive?
+                  (<Button size="lg" onClick={() => addToCart(data.product)}>
                   Add to cart
-                </Button>
+                </Button>):(<Button size="lg" disabled>
+                  Out of Stock
+                  </Button>)
+                  }
               </div>
             </div>
           </div>
@@ -294,13 +336,11 @@ export default function Component() {
                     <h3 className="font-semibold">{review.user.FirstName}</h3>
                     <time className="text-sm text-gray-500 dark:text-gray-400">
                       {(() => {
-                        const reviewDate = new Date(review.createdAt);
+                        const reviewDate = new Date(review.created);
                         const today = new Date();
                         const timeDifference = today - reviewDate;
-                        const daysDifference = Math.floor(
-                          timeDifference / (1000 * 60 * 60 * 24)
-                        );
-
+                        const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                        console.log(daysDifference)
                         if (daysDifference > 1) {
                           return `${daysDifference} days ago`;
                         } else if (daysDifference === 1) {

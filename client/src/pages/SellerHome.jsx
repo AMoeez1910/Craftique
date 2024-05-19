@@ -2,22 +2,46 @@ import { useState, useEffect } from "react";
 import { AvatarImage, AvatarFallback, Avatar } from "../components/ui/avatar"
 import { Button } from "../components/ui/button"
 import axios from "axios";
-import { useParams } from 'react-router-dom';
-import { set } from "date-fns";
+import { useNavigate, useParams } from 'react-router-dom';
 const SellerHome = () => {
   const { id } = useParams();
   const [seller, setSeller] = useState([]);
+  const [reviews, setReviews] = useState(); 
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
   useEffect(() => {
-    const fetchProductData = async (id) => {
-      const response = await axios.get(`/seller/${id}`);
-      setSeller(response.data);
-    }
-    fetchProductData(id)
+    const fetchSeller = async () => {
+      try {
+        const response = await axios.get(`/seller/${id}`);
+        if(response.data.products === undefined || response.data.products.length === 0) {
+          setSeller(response.data);
+        }
+        else{
+          setSeller(response.data.products);
+          setReviews(response.data.reviews);
+        }
+      } catch (error) {
+        console.error("Error fetching seller:", error);
+        navigate('/*')
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSeller();
   }, [])
+  if (loading) {
+    return (<div className="flex h-screen w-full items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full border-4 border-gray-300 border-t-gray-900 h-12 w-12 dark:border-gray-600 dark:border-t-gray-50" />
+          <p className="text-gray-500 dark:text-gray-400">Loading content...</p>
+        </div>
+      </div>)
+  }
   return (
-    <>
-      {console.log(seller)}
-      <div className="relative h-[50vh] w-full overflow-hidden">
+    <>{
+      seller[0]? 
+      (<div>
+        <div className="relative h-[50vh] w-full overflow-hidden">
         <img
           alt="Backdrop"
           className="h-full w-full object-cover"
@@ -106,54 +130,114 @@ const SellerHome = () => {
           <div>
             <h3 className="text-xl font-bold mb-4">Reviews</h3>
             <div className="space-y-6">
-              <div className="flex gap-4">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage alt="Reviewer 1" src="/placeholder-user.jpg" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="flex items-center gap-0.5">
-                      <StarIcon className="w-5 h-5 fill-primary" />
-                      <StarIcon className="w-5 h-5 fill-primary" />
-                      <StarIcon className="w-5 h-5 fill-primary" />
-                      <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                      <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+            {/* first 2 with rating more than 1 */}
+            {
+              reviews.slice(0,2).map((review, index) => (
+                <div key={index} className="flex gap-4">
+                  <img
+                    alt="Reviewer 1"
+                    className="h-10 w-10 rounded-full"
+                    src={review.user.image}
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-0.5">
+                        <h3 className="font-semibold">{review.user.FirstName}</h3>
+                        {Array.from({ length: 5 }).map((_, index) => (
+                          <StarIcon
+                            key={index}
+                            className={`w-5 h-5 ${
+                              index < review.rating
+                                ? "fill-primary"
+                                : "fill-muted stroke-muted-foreground"
+                            }`}
+                          />
+                        ))}
+                      </div>
                     </div>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">2 days ago</span>
+                    <time className="text-sm text-gray-500 dark:text-gray-400 mb-2 block">
+                      {(() => {
+                        const reviewDate = new Date(review.createdAt);
+                        const today = new Date();
+                        const timeDifference = today - reviewDate;
+                        const daysDifference = Math.floor(
+                          timeDifference / (1000 * 60 * 60 * 24)
+                        );
+
+                        if (daysDifference > 1) {
+                          return `${daysDifference} days ago`;
+                        } else if (daysDifference === 1) {
+                          return "1 day ago";
+                        } else {
+                          return "Today";
+                        }
+                      })()}
+                    </time>
+                    <p className="text-gray-500 dark:text-gray-400 mt-2">
+                      {review.review}
+                    </p>
                   </div>
-                  <p className="text-gray-500 dark:text-gray-400">
-                    I recently purchased a beautiful vase from John's shop and I'm absolutely in love with it. The
-                    craftsmanship is impeccable and the quality is top-notch. Highly recommended!
-                  </p>
                 </div>
-              </div>
-              <div className="flex gap-4">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage alt="Reviewer 2" src="/placeholder-user.jpg" />
-                  <AvatarFallback>SA</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="flex items-center gap-0.5">
-                      <StarIcon className="w-5 h-5 fill-primary" />
-                      <StarIcon className="w-5 h-5 fill-primary" />
-                      <StarIcon className="w-5 h-5 fill-primary" />
-                      <StarIcon className="w-5 h-5 fill-primary" />
-                      <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                    </div>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">1 week ago</span>
-                  </div>
-                  <p className="text-gray-500 dark:text-gray-400">
-                    I'm so impressed with the quality of the products from John's shop. The attention to detail and the
-                    care put into each item is truly remarkable. I'll definitely be a repeat customer.
-                  </p>
-                </div>
-              </div>
+
+              ))
+            }
             </div>
           </div>
         </div>
       </div>
+      </div>) : (
+        <div>
+        <div className="relative h-[50vh] w-full overflow-hidden">
+        <img
+          alt="Backdrop"
+          className="h-full w-full object-cover"
+          height={1080}
+          src={seller.image}
+          style={{
+            aspectRatio: "1920/1080",
+            objectFit: "cover",
+          }}
+          width={1920}
+        />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <Avatar className="h-24 w-24 border-4 border-white dark:border-gray-950">
+            <AvatarImage alt="Seller Avatar" src="/placeholder-user.jpg" />
+            <AvatarFallback>JS</AvatarFallback>
+          </Avatar>
+        </div>
+      </div>
+      <div className="container px-4 md:px-6 py-12">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 mb-10">
+          <h2 className="text-2xl font-bold tracking-tight md:text-3xl">Featured Products</h2>
+          <p className="text-gray-500 dark:text-gray-400">
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="relative group overflow-hidden rounded-lg">
+            <a className="absolute inset-0 z-10" href="#">
+              <span className="sr-only">View</span>
+            </a>
+            <p>No items to show</p>
+          </div>
+        </div>
+        <div className="mt-12 grid md:grid-cols-2 gap-8">
+          <div>
+            <h3 className="text-xl font-bold mb-2">{seller.name}</h3>
+            <div className="flex items-center gap-2 mb-4">
+              <MailIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+              <p className="text-gray-500 dark:text-gray-400">
+                {seller.email}
+              </p>
+            </div>
+            <p className="text-gray-500 dark:text-gray-400">{seller.description}</p>
+
+          </div>
+        </div>
+      </div>
+      </div>
+      )
+    }
+      
     </>
   )
 }

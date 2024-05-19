@@ -78,47 +78,60 @@ export const Shoppingcart = () => {
   };
  
   const placeOrder = async ()=>{
-        try{
-            if(!user){
-                navigate('/login')	
-                toast.error('Please login to place order')
-            }
-            if(!user.address.shippingAddress){
-                navigate('/profile')	
-                toast.error('Please add shipping address to place order')
-            }
-            if(!user.phoneNo){
-                navigate('/profile')	
-                toast.error('Please add phone number to place order')
-            }
-            if(!payment){
-                toast.error('Please select payment method')
-            }
-            else{
-              if(payment === 'Pay through Stripe'){
-                axios.post("/payment/create-checkout-session",
-                {cart, total: total + shipping,user: user._id, paymentMethod: payment}).then((res)=>{
-                    if(res.data.url){
-                        window.location.href=res.data.url
-                        setCart([])
-                        localStorage.removeItem('cart')
-                    }
-                }).catch((err)=>console.log(err.message))
-              }
-              else{
-                const response = await axios.post('/order', {cart, total: total + shipping,user: user._id, paymentMethod: payment})  
-                toast.success(response.data.success)
-                setCart([])
-                localStorage.removeItem('cart')
-                navigate('/orders/'+response.data.orderId)
-              }
-            }
+    if (user) {
+      for (const item of cart) {
+        if (item.product.brand._id === user.brand._id || item.product.brand._id === user.brand) {
+          toast.error("You can't add your own product to the cart");
+          return; 
         }
-        catch(err)
-        {
-          console.log('Error')
-        }
+      }
+    } else {
+      navigate('/login');
+      toast.error('Please login to place order');
+      return;
     }
+  
+    try {
+      if (user.address.shippingAddress.city === '' ||
+          user.address.shippingAddress.address === '' ||
+          user.address.shippingAddress.country === '') {
+        navigate('/profile');
+        toast.error('Please add shipping address to place order');
+      } else if (!user.phoneNo) {
+        navigate('/profile');
+        toast.error('Please add phone number to place order');
+      } else if (!payment) {
+        toast.error('Please select payment method');
+      } else {
+        if (payment === 'Pay through Stripe') {
+          const res = await axios.post("/payment/create-checkout-session", {
+            cart,
+            total: total + shipping,
+            user: user._id,
+            paymentMethod: payment
+          });
+          if (res.data.url) {
+            window.location.href = res.data.url;
+            setCart([]);
+            localStorage.removeItem('cart');
+          }
+        } else {
+          const response = await axios.post('/order', {
+            cart,
+            total: total + shipping,
+            user: user._id,
+            paymentMethod: payment
+          });
+          toast.success(response.data.success);
+          setCart([]);
+          localStorage.removeItem('cart');
+          navigate('/orders/' + response.data.orderId);
+        }
+      }
+    } catch (err) {
+      console.log('Error:', err.message);
+    }
+  }
   const subtotal = () => {
     let total = 0;
     cart.map((item) => {
@@ -142,7 +155,6 @@ export const Shoppingcart = () => {
         ]} />
       <main className="container mx-auto my-8 grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr]">
         <div>
-        {console.log(cart)}
           <h1 className="mb-4 text-2xl font-bold">Your Cart</h1>
           {cart.length === 0 ? (
             <p>Your cart is empty</p>

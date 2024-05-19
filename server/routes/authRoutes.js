@@ -4,7 +4,7 @@ const cors = require('cors')
 const passport = require("passport")
 const User = require('../models/db')
 const OAuth2Strategy = require("passport-google-oauth20").Strategy
-const {registerUser,getProfile,loginUser,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress, getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus,getProductsDetails,addProductReview,getSellerDetails,getAllSellers} = require('../controllers/authControllers')
+const {registerUser,getProfile,loginUser,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress, getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus,getProductsDetails,addProductReview,getSellerDetails,getAllSellers,updateProductDetails,addNewProduct} = require('../controllers/authControllers')
 router.use(
     cors({
         credentials:true,
@@ -53,11 +53,13 @@ router.post('/order',placeOrder	)
 router.post('/registerBrand',registerBrand)
 router.post('/create-checkout-session', stripeIntegration)
 router.post('/product-reviews',addProductReview)
+router.post('/addnewproduct/:id',addNewProduct)
 // patch 
 router.patch('/ForgotPassword/:id/:token', NewPassword)
 router.patch('/update-user-profile/:id',updateUserProfile)
 router.patch('/update-user-address/:id',updateUserAddress)
 router.patch('/update-order-status/:id',updateStatus)
+router.patch('/update-product/:id',updateProductDetails)
 // get 
 router.get("/profile",getProfile);
 router.get('/logout',logOut)
