@@ -49,7 +49,7 @@ const FeaturedArtisan = () => {
                 navigate(`/sellerhome/${item.brand._id}`);
               }}
             >
-              <a className="absolute inset-0 z-10" href="#">
+              <a className="absolute inset-0 z-10" href="">
                 <span className="sr-only">View</span>
               </a>
               <img

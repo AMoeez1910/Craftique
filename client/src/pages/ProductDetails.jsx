@@ -38,6 +38,10 @@ export default function Component() {
   }, []);
 
   const submitReview = async () => {
+    if(!user){
+      toast.error("Please login to submit review");
+      return;
+    }
     if (reviews.rating === 0) {
       toast.error("Please fill all the fields");
     } else {
@@ -352,7 +356,6 @@ export default function Component() {
                         const today = new Date();
                         const timeDifference = today - reviewDate;
                         const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-                        console.log(daysDifference)
                         if (daysDifference > 1) {
                           return `${daysDifference} days ago`;
                         } else if (daysDifference === 1) {

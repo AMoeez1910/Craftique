@@ -349,7 +349,7 @@ const SellerDash = ()=>  {
                   </CardDescription>
                 </CardHeader>
                 <CardFooter>
-                  <Button>Create New Order</Button>
+                  <Button onClick={()=>{navigate('/seller/products')}}>View All Products</Button>
                 </CardFooter>
               </Card>
               <Card x-chunk="dashboard-05-chunk-1">
