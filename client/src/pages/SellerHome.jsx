@@ -210,7 +210,7 @@ const SellerHome = () => {
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                 <Avatar className="h-24 w-24 border-4 border-white dark:border-gray-950">
                   <AvatarImage alt="Seller Avatar" src="/placeholder-user.jpg" />
-                  <AvatarFallback>{extractInitials(seller[0].brand.name)}</AvatarFallback>
+                  <AvatarFallback>{extractInitials(seller.name)}</AvatarFallback>
                 </Avatar>
               </div>
             </div>
