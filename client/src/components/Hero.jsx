@@ -3,7 +3,7 @@ import HeroImg from '../assets/hero_img.png';
 const Hero = () => {
   const navigate = useNavigate();
   return (
-    <section className="flex w-full items-center justify-center">
+    <section className="flex w-full items-center justify-center ">
       <div className="container grid grid-cols-1 items-center gap-6 md:grid-cols-2 mt-8">
         <div className="space-y-4">
           <div className="space-y-4 text-center z-10">
@@ -23,12 +23,11 @@ const Hero = () => {
           </div>
         </div>
         <img
-          alt="Hero Image"
-          className="mx-auto aspect-[4/3] rounded-xl object-cover"
-          height={600}
-          src={HeroImg}
-          width={800}
-        />
+  alt="Hero Image"
+  className="mx-auto w-full h-full rounded-xl object-cover bg-primary"
+  src={HeroImg}
+/>
+
       </div>
     </section>
   );
