@@ -3,7 +3,7 @@ import { Card } from "../components/ui/card";
 
 const Testimonial = () => {
   return (
-    <div className="container mx-auto py-12">
+    <div className="container mx-auto py-12" id="testimonial">
       <div className="space-y-8">
         <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
           What our customers say

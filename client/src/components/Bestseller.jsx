@@ -58,8 +58,7 @@ const Bestseller = () => {
     toast.success("Added to cart");
   };
   return (
-    <section className="w-full py-12 md:py-10 lg:py-10">
-      {console.log(products)}
+    <section className="w-full py-12 md:py-10 lg:py-10" id ="top">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
           <div className="grid gap-2">
@@ -84,13 +83,13 @@ const Bestseller = () => {
           {products.slice(0, 8).map((product) => (
             <div
               key={product._id}
-              className="bg-white transition-colors h-full"
+              className="bg-white transition-colors h-full transform transition-transform duration-300 hover:scale-105 cursor-pointer"
               onClick={() => { navigate(`/product/${product._id}`) }}
             >
-              <div className="aspect-[4/3] bg-gray-100 overflow-hidden">
+              <div className="aspect-[4/3] bg-gray-100 overflow-hidden ">
                 <img
                   alt="Product Image"
-                  className="object-cover w-full h-full cursor-pointer"
+                  className="object-cover w-full h-full"
                   height={300}
                   src={product.images}
                   style={{

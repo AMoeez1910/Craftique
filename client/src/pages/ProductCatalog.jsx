@@ -148,6 +148,7 @@ const ProductCatalog = () => {
                 links={[
                     { button: true, path: "/login", btn_name: "Login" },
                     { button: true, path: "/register", btn_name: "Register" },
+                    { button: false, category:true}
                 ]}
             />
             <div className="container mx-auto px-4 md:px-6 py-8">
