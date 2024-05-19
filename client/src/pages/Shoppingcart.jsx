@@ -78,13 +78,16 @@ export const Shoppingcart = () => {
   };
  
   const placeOrder = async ()=>{
-    if (user) {
-      for (const item of cart) {
-        if (item.product.brand._id === user.brand._id || item.product.brand._id === user.brand) {
-          toast.error("You can't add your own product to the cart");
-          return; 
+    if (user ) {
+      if(user.brand){
+        for (const item of cart) {
+          if (item.product.brand._id === user.brand._id || item.product.brand._id === user.brand) {
+            toast.error("You can't add your own product to the cart");
+            return; 
+          }
         }
       }
+      
     } else {
       navigate('/login');
       toast.error('Please login to place order');

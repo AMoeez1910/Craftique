@@ -34,7 +34,7 @@ const Bestseller = (props) => {
     fetchProducts();
   }, []);
   const addToCart = (product) => {
-    if(props.user){
+    if(props.user && props.user.brand){
     if(props.user.brand._id===product.brand._id){
       toast.error("You can't add your own product to cart");
     }

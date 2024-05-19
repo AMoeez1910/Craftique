@@ -64,7 +64,7 @@ export default function Component() {
   };
 
   const addToCart = (product) => {
-    if(user){
+    if(user && user.brand){
       if(user.brand._id===product.brand._id || user.brand === product.brand._id){
         toast.error("You can't add your own product to cart");
       }
