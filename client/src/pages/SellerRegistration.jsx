@@ -137,7 +137,7 @@ export const SellerRegistration = () => {
           </Form>
         </div>
         <div className="w-1/3 flex flex-col items-center">
-          <Label>Brand Logo</Label>
+          <Label>Add banner for the store homepage</Label>
           <Label htmlFor="picture" className="block cursor-pointer">
             <img
               id="preview"

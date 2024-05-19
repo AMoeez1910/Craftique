@@ -71,4 +71,5 @@ const FeaturedArtisan = () => {
     </section>
   );
 };
+
 export default FeaturedArtisan;
