@@ -1,9 +1,6 @@
 import {
-  File,
   Home,
   LineChart,
-  ListFilter,
-  MoreHorizontal,
   Package,
   Package2,
   PanelLeft,
@@ -13,27 +10,16 @@ import {
   Users2,
 } from "lucide-react";
 
-import { Badge } from "../components/ui/badge";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "../components/ui/breadcrumb";
-import { Button } from "../components/ui/button";
+import { Button } from "../components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -49,6 +35,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+
 } from "../components/ui/table";
 import {
   Tabs,
@@ -74,8 +61,8 @@ const ProductInfo = () => {
   const { user, ready, setUser } = useContext(UserContext);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [display, setDisplay] = useState();
-  const [status, setStatus] = useState();
+  const [productStates, setProductStates] = useState({});
+
   const navigate = useNavigate();
   const logout = () => {
     axios
@@ -91,10 +78,25 @@ const ProductInfo = () => {
   };
   useEffect(() => {
     const fetchData = async () => {
-      if (ready && user && user._id) {
+      if (ready && user && user._id && user.brand) {
         try {
-          const response = await axios.get(`/seller/${user._id}`);
-          console.log(response.data);
+          const response = await axios.get(`/seller/${user.brand._id}`);
+          const fetchedData = response.data.products;
+          console.log(fetchedData)
+          setData(fetchedData);
+          //object with product id as key and isActive, price, quantity as value
+          const initialProductStates = fetchedData.reduce((acc, product) => {
+            acc[product._id] = {
+              isActive: product.isActive,
+              price: product.price,
+              quantity: product.quantity,
+              discount: product.discount,
+            };
+            return acc;
+          }, {});
+          console.log()
+          setProductStates(initialProductStates);
+
         } catch (error) {
           console.error(error);
         } finally {
@@ -110,6 +112,45 @@ const ProductInfo = () => {
     }
   }, [ready, user]);
 
+  const handleSwitchChange = (productId, checked) => {
+    setProductStates((prevState) => ({
+      ...prevState,
+      [productId]: {
+        ...prevState[productId],
+        isActive: checked,
+      },
+    }));
+  };
+
+const handleSubmit =async (id)=>{
+  if(productStates[id].quantity<0 || productStates[id].price<0 || productStates[id].discount<0){
+    toast.error('Please enter valid values')
+  }
+  else{
+    try{
+      await axios.patch(`/update-product/${id}`,productStates[id]);
+      toast.success('Product Updated Successfully')
+    }
+    catch(error){
+      console.error(error);
+    }
+  }
+}
+  // useEffect(()=>{
+  //   const fetchData = async () => {
+  //     if (status && status.id) {
+  //       try {
+  //         const response = await axios.patch(`/update-order-status/${status.id}`,{status:status.status});
+  //         toast.success(response.data.success)
+  //       } catch (error) {
+  //         console.error("error");
+  //       }
+  //     }
+  //   };
+  //   if (status) {
+  //     fetchData();
+  //   }
+  // },[status])
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -126,7 +167,7 @@ const ProductInfo = () => {
   }
   return (
     <TooltipProvider>
-      <div className="flex min-h-screen w-full flex-col bg-muted/40">
+    <div className="flex min-h-screen w-full flex-col bg-muted/40">
         <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
           <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
             <div
@@ -232,34 +273,13 @@ const ProductInfo = () => {
                 </nav>
               </SheetContent>
             </Sheet>
-            <Breadcrumb className="hidden md:flex">
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <a href="#">Dashboard</a>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <a href="#">Products</a>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>All Products</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-            <div className="relative ml-auto flex-1 md:grow-0">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search..."
-                className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-              />
-            </div>
-            <DropdownMenu>
+
+        <div className="flex items-center gap-4 ml-auto">
+          <span>
+          
+          
+          , <b>{user.brand.name}</b></span>
+           <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
@@ -278,6 +298,7 @@ const ProductInfo = () => {
               <DropdownMenuContent align="end">
                 <Button className="w-full" onClick={logout}>
                   Logout
+
                 </Button>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -329,322 +350,118 @@ const ProductInfo = () => {
                   </Button>
                 </div>
               </div>
-              <TabsContent value="all">
-                <Card x-chunk="dashboard-06-chunk-0">
-                  <CardHeader>
-                    <CardTitle>Products</CardTitle>
-                    <CardDescription>
-                      Manage your products and view their sales performance.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="hidden w-[100px] sm:table-cell">
-                            <span className="sr-only">img</span>
-                          </TableHead>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Price
-                          </TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Total Sales
-                          </TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Created at
-                          </TableHead>
-                          <TableHead>
-                            <span className="sr-only">Actions</span>
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell className="hidden sm:table-cell">
-                            <img
-                              alt="Product img"
-                              className="aspect-square rounded-md object-cover"
-                              height="64"
-                              src="/placeholder.svg"
-                              width="64"
-                            />
-                          </TableCell>
-                          <TableCell className="font-medium">
-                            Laser Lemonade Machine
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline">Draft</Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            Rs. 499.99
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            25
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-07-12 10:42 AM
-                          </TableCell>
-                          <TableCell>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  aria-haspopup="true"
-                                  size="icon"
-                                  variant="ghost"
-                                >
-                                  <MoreHorizontal className="h-4 w-4" />
-                                  <span className="sr-only">Toggle menu</span>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem>Archive</DropdownMenuItem>
-                                <DropdownMenuItem>Delete</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="hidden sm:table-cell">
-                            <img
-                              alt="Product img"
-                              className="aspect-square rounded-md object-cover"
-                              height="64"
-                              src="/placeholder.svg"
-                              width="64"
-                            />
-                          </TableCell>
-                          <TableCell className="font-medium">
-                            Hypernova Headphones
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline">Active</Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            Rs. 129.99
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            100
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-10-18 03:21 PM
-                          </TableCell>
-                          <TableCell>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  aria-haspopup="true"
-                                  size="icon"
-                                  variant="ghost"
-                                >
-                                  <MoreHorizontal className="h-4 w-4" />
-                                  <span className="sr-only">Toggle menu</span>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem>Archive</DropdownMenuItem>
-                                <DropdownMenuItem>Delete</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="hidden sm:table-cell">
-                            <img
-                              alt="Product img"
-                              className="aspect-square rounded-md object-cover"
-                              height="64"
-                              src="/placeholder.svg"
-                              width="64"
-                            />
-                          </TableCell>
-                          <TableCell className="font-medium">
-                            AeroGlow Desk Lamp
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline">Active</Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            Rs. 39.99
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            50
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-11-29 08:15 AM
-                          </TableCell>
-                          <TableCell>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  aria-haspopup="true"
-                                  size="icon"
-                                  variant="ghost"
-                                >
-                                  <MoreHorizontal className="h-4 w-4" />
-                                  <span className="sr-only">Toggle menu</span>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem>Archive</DropdownMenuItem>
-                                <DropdownMenuItem>Delete</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="hidden sm:table-cell">
-                            <img
-                              alt="Product img"
-                              className="aspect-square rounded-md object-cover"
-                              height="64"
-                              src="/placeholder.svg"
-                              width="64"
-                            />
-                          </TableCell>
-                          <TableCell className="font-medium">
-                            TechTonic Energy Drink
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="secondary">Draft</Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            Rs. 2.99
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            0
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-12-25 11:59 PM
-                          </TableCell>
-                          <TableCell>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  aria-haspopup="true"
-                                  size="icon"
-                                  variant="ghost"
-                                >
-                                  <MoreHorizontal className="h-4 w-4" />
-                                  <span className="sr-only">Toggle menu</span>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem>Archive</DropdownMenuItem>
-                                <DropdownMenuItem>Delete</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="hidden sm:table-cell">
-                            <img
-                              alt="Product img"
-                              className="aspect-square rounded-md object-cover"
-                              height="64"
-                              src="/placeholder.svg"
-                              width="64"
-                            />
-                          </TableCell>
-                          <TableCell className="font-medium">
-                            Gamer Gear Pro Controller
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline">Active</Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            Rs. 59.99
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            75
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2024-01-01 12:00 AM
-                          </TableCell>
-                          <TableCell>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  aria-haspopup="true"
-                                  size="icon"
-                                  variant="ghost"
-                                >
-                                  <MoreHorizontal className="h-4 w-4" />
-                                  <span className="sr-only">Toggle menu</span>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem>Archive</DropdownMenuItem>
-                                <DropdownMenuItem>Delete</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="hidden sm:table-cell">
-                            <img
-                              alt="Product img"
-                              className="aspect-square rounded-md object-cover"
-                              height="64"
-                              src="/placeholder.svg"
-                              width="64"
-                            />
-                          </TableCell>
-                          <TableCell className="font-medium">
-                            Luminous VR Headset
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline">Active</Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            Rs. 199.99
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            30
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2024-02-14 02:14 PM
-                          </TableCell>
-                          <TableCell>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  aria-haspopup="true"
-                                  size="icon"
-                                  variant="ghost"
-                                >
-                                  <MoreHorizontal className="h-4 w-4" />
-                                  <span className="sr-only">Toggle menu</span>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem>Archive</DropdownMenuItem>
-                                <DropdownMenuItem>Delete</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </CardContent>
-                  <CardFooter>
-                    <div className="text-xs text-muted-foreground">
-                      Showing <strong>1-10</strong> of <strong>32</strong>{" "}
-                      products
-                    </div>
-                  </CardFooter>
+            </div>
+            <TabsContent value="all">
+              <Card x-chunk="dashboard-06-chunk-0">
+                <CardHeader>
+                  <CardTitle>Products</CardTitle>
+                  <CardDescription>
+                    Manage your products and view their sales performance.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                    <TableRow>
+                  <TableHead className="p-2">
+                    <span className="sr-only">img</span>
+                  </TableHead>
+                  <TableHead className="p-2">Name</TableHead>
+                  <TableHead className="p-2">Status</TableHead>
+                  <TableHead className="p-2 md:table-cell">Price</TableHead>
+                  <TableHead className="p-2 ">Quantity</TableHead>
+                  <TableHead className="p-2">Items Sold</TableHead>
+                  <TableHead className="p-2">Discount</TableHead>
+                  <TableHead className="p-2">Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+              {
+                data ? (
+                  data.map((product) => (
+                    <TableRow key={product._id}>
+                      <TableCell className="p-2">
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          className="h-10 w-10 rounded-md"
+                        />
+                      </TableCell>
+                      <TableCell className="p-2">{product.name}</TableCell>
+                      <TableCell className="p-2">
+                        <Switch
+                          checked={productStates[product._id].isActive}
+                          onCheckedChange={(checked) =>
+                            handleSwitchChange(product._id, checked)
+                          }
+                        />
+                      </TableCell>
+                      <TableCell className="p-2">
+                        <Input
+                          type="number"
+                          value={productStates[product._id].price}
+                          onChange={(e) =>
+                            setProductStates((prevState) => ({
+                              ...prevState,
+                              [product._id]: {
+                                ...prevState[product._id],
+                                price: e.target.value,
+                              },
+                            }))
+                          }
+                        />
+                      </TableCell>
+                      <TableCell className="p-2">
+                        <Input
+                          type="number"
+                          value={productStates[product._id].quantity}
+                          onChange={(e) =>
+                            setProductStates((prevState) => ({
+                              ...prevState,
+                              [product._id]: {
+                                ...prevState[product._id],
+                                quantity: e.target.value,
+                              },
+                            }))
+                          }
+                        />
+                      </TableCell>
+                      <TableCell className="p-2">{product.itemsSold}</TableCell>
+                      <TableCell className="p-2">
+                        <Input
+                          type="number"
+                          value={productStates[product._id].discount}
+                          onChange={(e) =>
+                            setProductStates((prevState) => ({
+                              ...prevState,
+                              [product._id]: {
+                                ...prevState[product._id],
+                                discount: e.target.value,
+                              },
+                            }))
+                          }
+                        />
+                      </TableCell>
+                      <TableCell className="p-2">
+                        <Button
+                          size="sm"
+                          onClick={() => handleSubmit(product._id)}
+                        >
+                          Save
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ):(<></>)
+                }
+                
+                    </TableBody>
+                  </Table>
+                </CardContent>
                 </Card>
-              </TabsContent>
-            </Tabs>
-          </main>
-        </div>
+            </TabsContent>
+          </Tabs>
+        </main>
       </div>
     </TooltipProvider>
   );

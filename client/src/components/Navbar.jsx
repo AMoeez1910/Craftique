@@ -61,7 +61,7 @@ export default function NavBar({ links }) {
       <NavigationMenu className="mx-auto">
         <NavigationMenuList className="container h-14 px-4 w-screen flex justify-between">
           <NavigationMenuItem className="font-bold flex">
-            <a rel="" href="" className="ml-2 font-bold text-xl flex">
+            <a rel="" href="/" className="ml-2 font-bold text-xl flex">
               <img src={Logo} alt="logo" width="150vw" />
             </a>
           </NavigationMenuItem>

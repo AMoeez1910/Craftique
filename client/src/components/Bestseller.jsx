@@ -4,8 +4,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/cart";
 import toast from "react-hot-toast";
 import { Button } from "../components/ui/button";
+import { UserContext } from '../context/userContext';
 
-const Bestseller = () => {
+const Bestseller = (props) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([
     {
@@ -29,33 +30,73 @@ const Bestseller = () => {
   }, []);
 
   const addToCart = (product) => {
-    const productInCart = cart.find((item) => item.product._id === product._id);
-    if (productInCart) {
-      setCart(
-        cart.map((item) =>
-          item.product._id === product._id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      );
-      localStorage.setItem(
-        "cart",
-        JSON.stringify(
+    if(props.user && props.user.brand){
+    if(props.user.brand._id===product.brand._id){
+      toast.error("You can't add your own product to cart");
+    }
+    else if(props.user.brand === product.brand._id){
+      toast.error("You can't add your own product to cart");
+    }
+    else{
+      const productInCart = cart.find((item) => item.product._id === product._id);
+      if (productInCart) {
+        setCart(
           cart.map((item) =>
             item.product._id === product._id
               ? { ...item, quantity: item.quantity + 1 }
               : item
           )
-        )
-      );
-    } else {
-      setCart([...cart, { product, quantity: 1 }]);
-      localStorage.setItem(
-        "cart",
-        JSON.stringify([...cart, { product, quantity: 1 }])
-      );
+        );
+        localStorage.setItem(
+          "cart",
+          JSON.stringify(
+            cart.map((item) =>
+              item.product._id === product._id
+                ? { ...item, quantity: item.quantity + 1 }
+                : item
+            )
+          )
+        );
+      } else {
+        setCart([...cart, { product, quantity: 1 }]);
+        localStorage.setItem(
+          "cart",
+          JSON.stringify([...cart, { product, quantity: 1 }])
+        );
+      }
+      toast.success("Added to cart");
     }
-    toast.success("Added to cart");
+  }
+    else{
+      const productInCart = cart.find((item) => item.product._id === product._id);
+      if (productInCart) {
+        setCart(
+          cart.map((item) =>
+            item.product._id === product._id
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          )
+        );
+        localStorage.setItem(
+          "cart",
+          JSON.stringify(
+            cart.map((item) =>
+              item.product._id === product._id
+                ? { ...item, quantity: item.quantity + 1 }
+                : item
+            )
+          )
+        );
+      } else {
+        setCart([...cart, { product, quantity: 1 }]);
+        localStorage.setItem(
+          "cart",
+          JSON.stringify([...cart, { product, quantity: 1 }])
+        );
+      }
+      toast.success("Added to cart");
+    }
+    
   };
   return (
     <section className="w-full py-12 md:py-10 lg:py-10" id ="top">

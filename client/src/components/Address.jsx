@@ -62,7 +62,8 @@ export default function Address(props) {
                   id="shipAddress"
                   type="text"
                   className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
-                  value={props.addressData.shippingAddress.address}
+                    placeholder={props.addressData.shippingAddress.address}
+                  value={data.shippingAddress}
                   onChange={(e) =>
                     setData({ ...data, shippingAddress: e.target.value })
                   }
@@ -77,7 +78,8 @@ export default function Address(props) {
                     id="shipCity"
                     type="text"
                     className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
-                    value={props.addressData.shippingAddress.city}
+                    placeholder={props.addressData.shippingAddress.city}
+                    value={data.shippingCity}
                     onChange={(e) =>
                       setData({ ...data, shippingCity: e.target.value })
                     }
@@ -91,7 +93,8 @@ export default function Address(props) {
                     id="shipCountry"
                     type="text"
                     className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
-                    value={props.addressData.shippingAddress.country}
+                    placeholder={props.addressData.shippingAddress.country}
+                    value={data.shippingCountry}
                     onChange={(e) =>
                       setData({ ...data, shippingCountry: e.target.value })
                     }
@@ -111,7 +114,8 @@ export default function Address(props) {
                   id="billAddress"
                   type="text"
                   className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
-                  value={props.addressData.billingAddress.address}
+                    placeholder={props.addressData.billingAddress.address}
+                  value={data.billingAddress}
                   onChange={(e) =>
                     setData({ ...data, billingAddress: e.target.value })
                   }
@@ -126,7 +130,8 @@ export default function Address(props) {
                     id="billCity"
                     type="text"
                     className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
-                    value={props.addressData.billingAddress.city}
+                    placeholder={props.addressData.billingAddress.city}
+                    value={data.billingCity}
                     onChange={(e) =>
                       setData({ ...data, billingCity: e.target.value })
                     }
@@ -140,7 +145,8 @@ export default function Address(props) {
                     id="billCountry"
                     type="text"
                     className="border-2 border-gray-100 rounded-sm h-10 shadow-sm"
-                    value={props.addressData.billingAddress.country}
+                    placeholder={props.addressData.billingAddress.country}
+                    value={data.billingCountry}
                     onChange={(e) =>
                       setData({ ...data, billingCountry: e.target.value })
                     }

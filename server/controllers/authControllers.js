@@ -26,7 +26,6 @@ const createBrand = async (req, res) => {
         try {
             const data = await newBrand.save();
             const user = await User.updateOne({_id:id},{brand:data._id})
-            console.log(data,user)
         } catch (error) {
             console.error('Error creating brand:', error);
             res.status(500).send({ error: 'Internal Server Error' });
@@ -174,11 +173,12 @@ const loginUser = async (req, res) => {
         // };
         // userDoc.orders.push(orderData);
         // await userDoc.save();
-
+        
         jwt.sign({
             FirstName: userDoc.FirstName,
             email: userDoc.email,
-            id: userDoc._id
+            id: userDoc._id,
+            isSeller:userDoc.isSeller
         }, process.env.JWT_SECRET, (err, token) => {
             if (err) {
                 console.error('Error signing JWT:', err);
@@ -198,8 +198,20 @@ const getProfile= async (req,res)=>{
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userData) => {
       if (err) throw err;
-      const {FirstName,email,_id,address,isSeller,image,phoneNo} = await User.findById(userData.id);
-      res.json({FirstName,email,_id,address,isSeller,image,phoneNo});
+      if(userData.isSeller){
+        const {FirstName,email,_id,address,isSeller,image,phoneNo,brand} = await User.findById(userData.id).populate(
+            {
+                path:'brand',
+                select:'name image'
+            }
+        );
+        res.json({FirstName,email,_id,address,isSeller,image,phoneNo,brand});
+      }
+      else{
+        const {FirstName,email,_id,address,isSeller,image,phoneNo} = await User.findById(userData.id);
+        res.json({FirstName,email,_id,address,isSeller,image,phoneNo});
+      }
+      
       
     });
   } else {
@@ -295,7 +307,7 @@ const NewPassword = (req, res) => {
 }
 
 function generateToken(user){
-    return jwt.sign({ FirstName:user.FirstName,email:user.email,id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign({ FirstName:user.FirstName,email:user.email,id: user._id,isSeller:user.isSeller }, process.env.JWT_SECRET, { expiresIn: '1h' });
   }
 const getUserProfileData = async (req,res)=>{
     const {id}=req.params
@@ -365,7 +377,7 @@ const updateUserAddress = async (req,res)=>{
 }
 const getProducts = async (req,res)=>{
     try {
-        const products = await Product.find().populate(path='brand',select='name')
+        const products = await Product.find({isActive:true}).populate(path='brand',select='name')
         res.json(products)
     } catch (error) {
         console.error(error);
@@ -452,14 +464,22 @@ const getSellerDetails = async (req,res)=>{
         });
         
         if (!products || products.length === 0) {
-          return res.status(404).json({ error: 'No products found for this brand' });
+            const brand = await Brand.findById(id);
+          return res.json(brand);
         }
-    
+        const brand = products[0].brand;
+        const reviews = await Review.find({ product: { $in: products.map(p => p._id) } }).populate(
+            {
+                path:'user',
+                select:'FirstName image'
+            }
+        ).sort({ rating: -1 });
+        brand.reviews = reviews;
         // Since all products should have the same brand, we can take the brand from the first product
     
     
-        // Respond with the brand details
-        res.json(products)
+        // Respond with the brand details and all products
+        res.json({ reviews: brand.reviews, products });
       } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -576,7 +596,6 @@ const sellerDetails = async (req,res)=>{
 const updateStatus = async (req,res)=>{
     const {id} = req.params
     const {status} = req.body
-    console.log(id,status)
     try{
         const data = await Order.updateOne({_id:id},{status:status})
         if(data){
@@ -606,7 +625,6 @@ const getProductsDetails = async (req,res)=>{
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-
 const addProductReview = async (req,res) =>{
     const {reviews,id,product,avgRating} = req.body
     try {
@@ -625,4 +643,44 @@ const addProductReview = async (req,res) =>{
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus,getProductsDetails,addProductReview, getSellerDetails, getAllSellers}
+const updateProductDetails = async (req,res) =>{
+    const {id} = req.params
+    const {isActive,price,quantity,discount}  = req.body
+    try {
+        const data = await Product.updateOne({_id:id},{isActive:isActive,price:price,quantity:quantity,discount:discount})
+        if(data){
+            res.json({success:'Product Updated'})
+        }
+    }
+    catch(err){
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+const addNewProduct = async (req,res)=>{
+    const {data} = req.body
+    const {id} = req.params
+    const {name,description,longDescription,quantity,price,discount,category,isActive,image} = data
+    // in product schema
+    const newProduct = new Product({
+        name:name,
+        description:description,
+        images:[image],
+        quantity:quantity,
+        price:price,
+        longDescription:longDescription,
+        discount:discount,
+        category:category,
+        brand:id,
+        isActive:isActive
+    })
+    try {
+        const data = await newProduct.save()
+        res.json({success:'Product Added'})
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+}
+module.exports = {registerUser,loginUser,getProfile,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress,getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus,getProductsDetails,addProductReview, getSellerDetails, getAllSellers,updateProductDetails,addNewProduct}

@@ -6,7 +6,10 @@ import FeaturedArtisan from "../components/FeaturedArtisan";
 import Socials from "../components/Socials";
 import Testimonial from "../components/Testimonial";
 import Footer from "../components/Footer";
+import { useContext } from "react";
+import { UserContext } from "../context/userContext";
 const Landing = () => {
+  const {user} = useContext(UserContext)
   return (
     <div>
       <Navbar
@@ -21,7 +24,7 @@ const Landing = () => {
       />
       <Hero/>
       <Categories />
-      <Bestseller />
+      <Bestseller user={user} />
       <FeaturedArtisan />
       <Socials />
       <Testimonial />

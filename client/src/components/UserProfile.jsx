@@ -6,11 +6,9 @@ import { Form, FormItem } from "../components/ui/form";
 import { Input } from "../components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "../components/ui/button";
-import pfp from "../assets/user_pfp.png";
 import { PhoneInput } from "./PhoneInput";
 
-export default function UserProfile(props) {
-  const navigate = useNavigate();
+export default function  UserProfile(props) {
   const preset_key = process.env.REACT_APP_CLOUDINARY_PRESET_KEY;
   const cloud_name = process.env.REACT_APP_CLOUD_NAME;
   const [phoneNo, setPhoneNum] = useState("");
@@ -70,7 +68,7 @@ export default function UserProfile(props) {
       toast.error(error);
     }
   };
-  const fullName = `${props.FirstName} ${props.LastName}`;
+  const fullName = `${props.FirstName}`;
   const previewImage = (event) => {
     const input = event.target;
     const preview = document.getElementById("preview");
@@ -122,8 +120,7 @@ export default function UserProfile(props) {
                 <PhoneInput
                   id="contact"
                   setPhoneNum={setPhoneNum}
-                  value={phoneNo?.toString().substring(1)}
-                  className=""
+                  phoneNo={phoneNo}
                 />
               </div>
             </FormItem>

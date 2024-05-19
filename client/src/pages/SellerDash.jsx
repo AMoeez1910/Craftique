@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { Button } from "../components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -102,6 +103,7 @@ const SellerDash = () => {
           const response = await axios.get(`/seller-detail/${user._id}`);
           setSeller(response.data.brand);
           setData(response.data.orders);
+          console.log(response.data.orders)
         } catch (error) {
           console.error(error);
         } finally {
@@ -124,6 +126,22 @@ const SellerDash = () => {
     });
     return total;
   };
+  const handledisplay = (order) => { 
+    const newProductDetails = order.products.map(orderProduct => {
+      const detail = order.productDetails.find(detail => detail._id === orderProduct.product);
+      return {
+        ...orderProduct,
+        ...(detail ? detail : {})
+      };
+    }).filter(product => product._id); // Filter out products without corresponding details
+  
+    const newOrder = {
+      ...order,
+      productDetails: newProductDetails
+    };
+  
+    setDisplay(newOrder)
+  }
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -228,7 +246,6 @@ const SellerDash = () => {
                 </nav>
               </SheetContent>
             </Sheet>
-
             <div className="flex items-center gap-4 ml-auto">
               <span>
                 Hello, <b>{seller?.name}</b>
@@ -268,226 +285,146 @@ const SellerDash = () => {
                       Management and Insightful Analysis.
                     </CardDescription>
                   </CardHeader>
-                  <CardFooter>
-                    <Button>Create New Order</Button>
-                  </CardFooter>
-                </Card>
-                <Card x-chunk="dashboard-05-chunk-1">
-                  <CardHeader className="pb-2 pad2x">
-                    <CardDescription>Total Earnings</CardDescription>
-                    <CardTitle className="text-4xl">
-                      Rs,
-                      {data?.reduce((acc, order) => acc + order.totalPrice, 0)}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent></CardContent>
-                </Card>
-                <Card x-chunk="dashboard-05-chunk-2 ">
-                  <CardHeader className="pb-2 pad1">
-                    <CardDescription>Total Orders</CardDescription>
-                    <CardTitle className="text-4xl">{data?.length}</CardTitle>
-                  </CardHeader>
-                  <CardContent></CardContent>
-                </Card>
-              </div>
-              <Tabs defaultValue="">
-                <TabsContent value="">
-                  <Card x-chunk="dashboard-05-chunk-3">
-                    <CardHeader className="px-7">
-                      <CardTitle>Orders</CardTitle>
-                      <CardDescription>
-                        Recent orders from your store.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div
-                        className="table-container"
-                        style={{ overflowY: "scroll", maxHeight: "400px" }}
-                      >
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Customer</TableHead>
-                              <TableHead className="hidden sm:table-cell">
-                                Payment Method
-                              </TableHead>
-                              <TableHead className="hidden sm:table-cell">
-                                Status
-                              </TableHead>
-                              <TableHead className="hidden md:table-cell">
-                                Date
-                              </TableHead>
-                              <TableHead className="text-right">
-                                Amount
-                              </TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {data?.map((order) => (
-                              <TableRow
-                                key={order._id}
-                                onClick={() => {
-                                  setDisplay(order);
-                                }}
-                                className={
-                                  display && display._id === order._id
-                                    ? "bg-accent"
-                                    : ""
-                                }
-                              >
-                                <TableCell>
-                                  <div className="font-medium">
-                                    {order.buyerDetails.FirstName}
-                                  </div>
-                                  <div className="hidden text-sm text-muted-foreground md:inline">
-                                    {order.buyerDetails.email}
-                                  </div>
-                                </TableCell>
-                                <TableCell className="hidden sm:table-cell">
-                                  {order.paymentMethod}
-                                </TableCell>
-                                <TableCell className="hidden sm:table-cell">
-                                  <Select
-                                    onValueChange={(value) =>
-                                      setStatus({
-                                        id: order._id,
-                                        status: value,
-                                      })
-                                    }
-                                    defaultValue={order.status}
-                                  >
-                                    <SelectTrigger>
-                                      <SelectValue placeholder={order.status} />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="Processing">
-                                        Processing
-                                      </SelectItem>
-                                      <SelectItem value="Shipped">
-                                        Shipped
-                                      </SelectItem>
-                                      <SelectItem value="Delivered">
-                                        Delivered
-                                      </SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                </TableCell>
-                                <TableCell className="hidden md:table-cell">
-                                  {
-                                    new Date(order.placedAt)
-                                      .toISOString()
-                                      .split("T")[0]
-                                  }
-                                </TableCell>
-                                <TableCell className="text-right">
-                                  {order.totalPrice}
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              </Tabs>
-            </div>
-            <div>
-              <Card className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
-                <CardHeader className="flex flex-row items-start bg-muted/50">
-                  <div className="grid gap-0.5">
-                    <CardTitle className="group flex items-center gap-2 text-lg">
-                      Order {display?._id}
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                      >
-                        <Copy className="h-3 w-3" />
-                        <span className="sr-only">Copy Order ID</span>
-                      </Button>
-                    </CardTitle>
-                    <CardDescription>
-                      Date:{" "}
-                      {display?.placedAt ? display.placedAt.split("T")[0] : ""}
-                    </CardDescription>
-                  </div>
-                  <div className="ml-auto flex  gap-1">
-                    {display ? (
-                      <Button size="sm" variant="outline" className="h-8 gap-1">
-                        <Link
-                          to={"/orders/" + display?._id}
-                          className="flex items-center gap-2"
-                        >
-                          <Truck className="h-3.5 w-3.5" />
-                          <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
-                            Track Order
-                          </span>
-                        </Link>
-                      </Button>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent className="p-6 text-sm">
-                  <div className="grid gap-3">
-                    <div className="font-semibold">Order Details</div>
-                    <ul className="grid gap-3">
-                      {display?.products.map((product, index) => {
-                        const productDetail = display.productDetails[index];
-                        return (
-                          <li
-                            key={product._id}
-                            className="flex items-center justify-between"
+                  <CardContent>
+                  <div className="table-container" style={{ overflowY: 'scroll', maxHeight: '400px' }}>
+                    <Table >
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Customer</TableHead>
+                          <TableHead className="hidden sm:table-cell">
+                            Payment Method
+                          </TableHead>
+                          <TableHead className="hidden sm:table-cell">
+                            Status
+                          </TableHead>
+                          <TableHead className="hidden md:table-cell">
+                            Date
+                          </TableHead>
+                          <TableHead className="text-right">Amount</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                      {
+                        data?.map((order) => (
+                          <TableRow key={order._id}
+                          onClick={()=> {handledisplay(order) 
+                          }}
+                          className={display && display._id === order._id ? "bg-accent" : ""}
                           >
-                            <div>
-                              <span>{productDetail.name}</span>
-                            </div>
-                            <span>{product.quantity}</span>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                    <Separator className="my-2" />
-                    <ul className="grid gap-3">
-                      <li className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Subtotal</span>
-                        <span>{display ? `Rs ${subtotal()}` : ""}</span>
+                            <TableCell>
+                              <div className="font-medium">{order.buyerDetails.FirstName}</div>
+                              <div className="hidden text-sm text-muted-foreground md:inline">
+                                {order.buyerDetails.email}
+                              </div>
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                              {order.paymentMethod}
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell">
+                            <Select onValueChange={(value) => setStatus({id:order._id,status:value})} defaultValue={order.status}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder={order.status} />
+                                </SelectTrigger>
+                              <SelectContent >
+                                <SelectItem value="Processing">Processing</SelectItem>
+                                <SelectItem value="Shipped">Shipped</SelectItem>
+                                <SelectItem value="Delivered">Delivered</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {new Date(order.placedAt).toISOString().split("T")[0]}
+                            </TableCell>
+                            <TableCell className="text-right">{order.totalPrice}</TableCell>
+                          </TableRow>
+                        ))
+                      }
+                      </TableBody>
+                    </Table>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+          <div>
+            <Card
+              className="overflow-hidden" x-chunk="dashboard-05-chunk-4"
+            >
+              <CardHeader className="flex flex-row items-start bg-muted/50">
+                <div className="grid gap-0.5">
+                  <CardTitle className="group flex items-center gap-2 text-lg">
+                    Order {display?._id}
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                    >
+                      <Copy className="h-3 w-3" />
+                      <span className="sr-only">Copy Order ID</span>
+                    </Button>
+                  </CardTitle>
+                  <CardDescription>Date: { 
+                    display?.placedAt ? display.placedAt.split("T")[0] : ""
+                  }</CardDescription>
+                </div>
+                
+                <div className="ml-auto flex  gap-1">
+                  { display? (
+                <Link to={'/orders/'+display?._id} className="flex items-center gap-2">
+                    <Button size="sm" variant="outline" className="h-8 gap-1">
+                    <Truck className="h-3.5 w-3.5" />
+                    <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
+                        Track Order
+                    </span>
+            </Button>
+            </Link>
+            ):(<></>)}
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 text-sm">
+                <div className="grid gap-3">
+                  <div className="font-semibold">Order Details</div>
+                  <ul className="grid gap-3">
+                  {
+                  display?.products.map((product, index) => {
+                    const productDetail = display.productDetails[index];
+                    return (
+                      <li key={product._id} className="flex items-center justify-between">
+                        <div>
+                          <span>{productDetail.name}</span>
+                        </div>
+                        <span>{product.quantity}</span>
                       </li>
-                      <li className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Shipping</span>
-                        <span>
-                          {display
-                            ? `Rs ${display.totalPrice - subtotal()}`
-                            : ""}
-                        </span>
-                      </li>
-                      <li className="flex items-center justify-between font-semibold">
-                        <span className="text-muted-foreground">Total</span>
-                        <span>Rs {display?.totalPrice}</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <Separator className="my-4" />
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid gap-3">
-                      <div className="font-semibold">Shipping Information</div>
-                      <address className="grid gap-0.5 not-italic text-muted-foreground">
-                        <span>
-                          {
-                            display?.buyerDetails.address.shippingAddress
-                              .address
-                          }
-                        </span>
-                        <span>
-                          {display?.buyerDetails.address.shippingAddress.city},{" "}
-                          {
-                            display?.buyerDetails.address.shippingAddress
-                              .country
-                          }
-                        </span>
-                      </address>
+                    );
+                  })
+                }
+                  </ul>
+                  <Separator className="my-2" />
+                  <ul className="grid gap-3">
+                    <li className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Subtotal</span>
+                      <span>{display? `Rs ${subtotal()}`:""}</span>
+                    </li>
+                    <li className="flex items-center justify-between">
+                      <span className="text-muted-foreground">Shipping</span>
+                      <span>{display? `Rs ${display.totalPrice-subtotal()}`:""}</span>
+                    </li>
+                    <li className="flex items-center justify-between font-semibold">
+                      <span className="text-muted-foreground">Total</span>
+                      <span>Rs {display?.totalPrice}</span>
+                    </li>
+                  </ul>
+                </div>
+                <Separator className="my-4" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-3">
+                    <div className="font-semibold">Shipping Information</div>
+                    <address className="grid gap-0.5 not-italic text-muted-foreground">
+                
+                      <span>{display?.buyerDetails.address.shippingAddress.address}</span>
+                      <span>{display?.buyerDetails.address.shippingAddress.city}, {display?.buyerDetails.address.shippingAddress.country}</span>
+                    </address>
                     </div>
                     <div className="grid auto-rows-max gap-3">
                       <div className="font-semibold">Billing Information</div>

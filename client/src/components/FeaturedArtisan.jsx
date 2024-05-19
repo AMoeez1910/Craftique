@@ -9,6 +9,7 @@ const FeaturedArtisan = () => {
     const fetchProductData = async () => {
       try {
         const response = await axios.get(`/sellers`);
+        console.log(response.data);
         // Sort the response data by the number of items sold in descending order
         const sortedArtisan = response.data.sort(
           (a, b) => b.itemsSold - a.itemsSold
