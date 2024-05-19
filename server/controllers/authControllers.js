@@ -185,10 +185,8 @@ const loginUser = async (req, res) => {
                 return res.status(500).json({ error: 'Internal Server Error' });
             }
             res.cookie('token', token, {
+                path: '/',  
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'None', // Important for cross-site cookies
-                domain: 'vercel.app', // Set the domain to allow subdomain sharing
                 maxAge: 24 * 60 * 60 * 1000 // 1 day
             });
             res.json({ success: 'Successfully Login', user: userDoc });
