@@ -68,7 +68,8 @@ const SellerHome = () => {
               <Button
                 className="ml-auto shrink-0 bg-gray-900 text-gray-50 hover:bg-gray-900/90 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90"
                 variant="outline"
-              >
+                onClick={() => navigate(`/products?seller=${seller[0]?.brand._id}`)}
+               >
                 View all products
               </Button>
             </div>
