@@ -80,8 +80,10 @@ const createOrder = async (req, res) => {
     }
 }
 /////
+
 const sendVerifyEmail = async (name, email, id) => {
     try {
+        // Create transporter
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             auth: {
@@ -91,20 +93,11 @@ const sendVerifyEmail = async (name, email, id) => {
             secure: true,
         });
 
-        await new Promise((resolve, reject) => {
-            transporter.verify(function (error, success) {
-                if (error) {
-                    console.error(error);
-                    reject(error);
-                } else {
-                    console.log("Server is ready to take our messages");
-                    resolve(success);
-                }
-            });
-        });
+        // Verify transporter
+        await transporter.verify();
 
+        // Prepare email content
         const expirationTimestamp = Math.floor(new Date().getTime() / 1000);
-
         const mailOptions = {
             from: process.env.USEREMAIL,
             to: email,
@@ -118,23 +111,17 @@ const sendVerifyEmail = async (name, email, id) => {
         </div>`,
         };
 
-        const data = await new Promise((resolve, reject) => {
-            transporter.sendMail(mailOptions, (err, info) => {
-                if (err) {
-                    console.error(err);
-                    reject(err);
-                } else {
-                    console.log(info);
-                    resolve(info);
-                }
-            });
-        });
+        // Send email and await completion
+        const info = await transporter.sendMail(mailOptions);
 
-        console.log('EMAIL SENT ', email, data.response);
+        // Log success
+        console.log('EMAIL SENT ', email, info.response);
     } catch (error) {
+        // Handle errors
         console.error('Error sending verification email:', error.message);
     }
 };
+
 
 const verifyMail = async (req, res) => {
     const { id, expirationTimestamp } = req.params;
