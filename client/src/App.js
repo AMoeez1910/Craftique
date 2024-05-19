@@ -23,7 +23,7 @@ import { SellerRegistration } from "./pages/SellerRegistration.jsx";
 import AddProduct from "./pages/AddProduct";
 import ProductInfo from "./pages/ProductInfo.jsx";
 import SellerCatalog from "./pages/SellerCatalog.jsx";
-axios.defaults.baseURL = `http://localhost:8000`;
+axios.defaults.baseURL = `https://funoonserver.vercel.app`;
 axios.defaults.withCredentials = true;
 
 function App() {
