@@ -9,7 +9,7 @@ const {mongoose} = require ('mongoose')
 const stripe = require ("./routes/stripe")
 //middleware
 const corsOptions ={
-    origin:'https://funoon.vercel.app/', 
+    origin:'https://funoon.vercel.app', 
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200
 }
