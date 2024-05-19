@@ -83,7 +83,6 @@ const createOrder = async (req, res) => {
 const sendVerifyEmail = async (name, email, id) => {
     try {
         const transporter = nodemailer.createTransport({
-            port: 465,
             host: "smtp.gmail.com",
             auth: {
                 user: 'needaspeed639@gmail.com',
