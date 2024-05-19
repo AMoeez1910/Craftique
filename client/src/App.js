@@ -9,7 +9,7 @@ import NotFound from "./pages/NotFound.jsx";
 import Artisans from "./pages/Artisans.jsx";
 import { Toaster } from "react-hot-toast";
 import { UserContextProvider } from "./context/userContext.jsx";
-import { ValidationFailure } from "./pages/ValidationFailure.jsx";
+import ValidationFailure from "./pages/ValidationFailure.jsx";
 import Profile from "./pages/Profile.jsx";
 import { CartProvider } from "./context/cart";
 import { Shoppingcart } from "./pages/Shoppingcart";

@@ -10,7 +10,9 @@ import {
   ShoppingCart,
   Truck,
   Users2,
+  PackagePlus
 } from "lucide-react"
+
 import {
   Select,
   SelectContent,
@@ -36,7 +38,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu"
-
+import Logo from "../assets/symvol_logo_transparent.svg";
 import { Separator } from "../components/ui/separator"
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet"
 import {
@@ -165,24 +167,13 @@ const SellerDash = ()=>  {
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
           <a
-            href="#"
+            href="/"
             className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
           >
-            <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
+            <img src={Logo} className="h-3 w-3 transition-all group-hover:scale-110" />
             <span className="sr-only"></span>
           </a>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <a
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-              >
-                <Home className="h-5 w-5" />
-                <span className="sr-only">Dashboard</span>
-              </a>
-            </TooltipTrigger>
-            <TooltipContent side="right">Dashboard</TooltipContent>
-          </Tooltip>
+          
           <Tooltip>
             <TooltipTrigger asChild>
               <a
@@ -198,7 +189,7 @@ const SellerDash = ()=>  {
           <Tooltip>
             <TooltipTrigger asChild>
               <a
-                href="#"
+                href="seller/products"
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <Package className="h-5 w-5" />
@@ -210,41 +201,16 @@ const SellerDash = ()=>  {
           <Tooltip>
             <TooltipTrigger asChild>
               <a
-                href="#"
+                href="seller/add"
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
-                <Users2 className="h-5 w-5" />
-                <span className="sr-only">Customers</span>
+                <PackagePlus className="h-5 w-5" />
+                <span className="sr-only">Add Product</span>
               </a>
             </TooltipTrigger>
-            <TooltipContent side="right">Customers</TooltipContent>
+            <TooltipContent side="right">Add Product</TooltipContent>
           </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <a
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-              >
-                <LineChart className="h-5 w-5" />
-                <span className="sr-only">Analytics</span>
-              </a>
-            </TooltipTrigger>
-            <TooltipContent side="right">Analytics</TooltipContent>
-          </Tooltip>
-        </nav>
-        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <a
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-              >
-                <Settings className="h-5 w-5" />
-                <span className="sr-only">Settings</span>
-              </a>
-            </TooltipTrigger>
-            <TooltipContent side="right">Settings</TooltipContent>
-          </Tooltip>
+          
         </nav>
       </aside>
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
@@ -259,18 +225,11 @@ const SellerDash = ()=>  {
           <SheetContent side="left" className="sm:max-w-xs">
             <nav className="grid gap-6 text-lg font-medium">
               <a
-                href="#"
+                href="/"
                 className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
               >
-                <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
+                <img src={Logo} className="h-4 w-4 transition-all group-hover:scale-110" />
                 <span className="sr-only"></span>
-              </a>
-              <a
-                href="#"
-                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-              >
-                <Home className="h-5 w-5" />
-                Dashboard
               </a>
               <a
                 href="#"
@@ -280,25 +239,18 @@ const SellerDash = ()=>  {
                 Orders
               </a>
               <a
-                href="#"
+                href="/seller/products"
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
                 <Package className="h-5 w-5" />
                 Products
               </a>
               <a
-                href="#"
+                href="seller/add"
                 className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               >
-                <Users2 className="h-5 w-5" />
-                Customers
-              </a>
-              <a
-                href="#"
-                className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-              >
-                <LineChart className="h-5 w-5" />
-                Settings
+                <PackagePlus className="h-5 w-5" />
+                Add Product
               </a>
             </nav>
           </SheetContent>
@@ -323,12 +275,7 @@ const SellerDash = ()=>  {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <Button onClick={logout}>Logout</Button>  
+              <Button onClick={logout} className ="w-full">Logout</Button>  
               
             </DropdownMenuContent>
           </DropdownMenu>
@@ -342,14 +289,13 @@ const SellerDash = ()=>  {
 
               >
                 <CardHeader className="pb-3">
-                  <CardTitle>Your Orders</CardTitle>
+                  <CardTitle>Your Products</CardTitle>
                   <CardDescription className="max-w-lg text-balance leading-relaxed">
-                    Introducing Our Dynamic Orders Dashboard for Seamless
-                    Management and Insightful Analysis.
+                    Your products are the items you have listed for sale in your store.
                   </CardDescription>
                 </CardHeader>
                 <CardFooter>
-                  <Button onClick={()=>{navigate('/seller/products')}}>View All Products</Button>
+                  <Button onClick={()=> navigate("/seller/products")}>View All</Button>
                 </CardFooter>
               </Card>
               <Card x-chunk="dashboard-05-chunk-1">
