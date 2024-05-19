@@ -185,9 +185,11 @@ const loginUser = async (req, res) => {
                 return res.status(500).json({ error: 'Internal Server Error' });
             }
             res.cookie('token', token, {
-                path: '/',  
+                path: '/',
                 httpOnly: true,
-                maxAge: 24 * 60 * 60 * 1000 // 1 day
+                secure: true,  // Ensure this is true for HTTPS
+                sameSite: 'None',  // Required for cross-site cookie sharing
+                maxAge: 24 * 60 * 60 * 1000  // 1 day
             });
             res.json({ success: 'Successfully Login', user: userDoc });
         });

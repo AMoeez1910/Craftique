@@ -7,8 +7,9 @@ const OAuth2Strategy = require("passport-google-oauth20").Strategy
 const {registerUser,getProfile,loginUser,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress, getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus,getProductsDetails,addProductReview,getSellerDetails,getAllSellers,updateProductDetails,addNewProduct} = require('../controllers/authControllers')
 router.use(
     cors({
-        credentials:true,
-        origin:'https://funoon.vercel.app'
+        origin: 'https://funoon.vercel.app',
+        credentials: true,  // This is necessary for sending cookies
+        optionSuccessStatus: 200
     })
 )
 passport.use(

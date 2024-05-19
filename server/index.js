@@ -9,9 +9,9 @@ const {mongoose} = require ('mongoose')
 const stripe = require ("./routes/stripe")
 //middleware
 const corsOptions ={
-    origin:'https://funoon.vercel.app', 
-    credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200
+  origin: 'https://funoon.vercel.app',
+  credentials: true,  // This is necessary for sending cookies
+  optionSuccessStatus: 200
 }
 app.use(cors(corsOptions))
 app.use(express.json())
