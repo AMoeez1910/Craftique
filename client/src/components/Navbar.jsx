@@ -44,17 +44,21 @@ export default function NavBar({ links }) {
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
   const [cart] = useContext(CartContext);
-  const logout = () => {
-    axios
-      .get("/logout")
-      .then((res) => {
-        if (res.data && res.data.Status === "Success") {
-          setUser(null);
-          toast.success("Successfully logged out");
-          navigate("/");
-        }
-      })
-      .catch((err) => console.log(err));
+  const logout = async () => {
+    try {
+      const response = await fetch("/logout", {
+        method: "GET",
+        credentials: "include", // Include cookies in the request
+      });
+      const data = await response.json();
+      if (data && data.Status === "Success") {
+        setUser(null);
+        toast.success("Successfully logged out");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
   return (
     <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white">
