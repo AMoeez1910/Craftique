@@ -187,9 +187,10 @@ const loginUser = async (req, res) => {
             res.cookie('token', token, {
                 path: '/',
                 httpOnly: true,
-                secure: true,  // Ensure this is true for HTTPS
-                sameSite: 'None',  // Required for cross-site cookie sharing
-                maxAge: 24 * 60 * 60 * 1000  // 1 day
+                secure: true,
+                sameSite: 'None',
+                maxAge: 24 * 60 * 60 * 1000,
+                domain: '.vercel.app' // Specify the common domain
             });
             res.json({ success: 'Successfully Login', user: userDoc });
         });
@@ -225,8 +226,8 @@ const getProfile= async (req,res)=>{
   }
 }
 const logOut =(req,res) =>{
-    res.clearCookie('token', { path: '/' });
-    res.clearCookie('connect.sid', { path: '/' });
+    res.clearCookie('token', { path: '/', domain: '.vercel.app' });
+    res.clearCookie('connect.sid', { path: '/', domain: '.vercel.app' });
     return res.json({Status:"Success"})
 }
 const PasswordReset = async (req, res) => {
