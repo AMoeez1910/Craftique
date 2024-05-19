@@ -33,11 +33,20 @@ const ProductCatalog = () => {
         const fetchProductData = async () => {
             const params = new URLSearchParams(location.search);
             const category = params.get('category');
+            const sellerId = params.get('seller')
+            if(sellerId){
+                const response = await axios.get(`/seller/${sellerId}`);
+                const fetchedData = response.data.products;
+                setData(fetchedData);
+                setFilterData(fetchedData);
+
+            }
+           else 
+           { 
             const response = await axios.get(`/products`);
             const fetchedData = response.data;
             setData(fetchedData);
             setFilterData(fetchedData);
-
             if (category) {
                 const newFilters = { ...filters };
                 if (category === 'ceramic') newFilters.ceramic = true;
@@ -46,7 +55,7 @@ const ProductCatalog = () => {
                 else if (category === 'leather') newFilters.leather = true;
                 setFilters(newFilters);
                 updateFilteredData(newFilters, fetchedData);
-            }
+            }}
         };
 
         fetchProductData();
