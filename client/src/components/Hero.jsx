@@ -8,7 +8,7 @@ const Hero = () => {
         <div className="space-y-4">
           <div className="space-y-4 text-center z-10">
             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl lg:text-6xl">
-              Made with ♥️ by Local Artisans
+              Made with ❤️ by Local Artisans
             </h1>
             <p className="mx-auto max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
               Discover unique, handcrafted products made by local artisans in
