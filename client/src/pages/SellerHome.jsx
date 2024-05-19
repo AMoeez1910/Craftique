@@ -16,7 +16,6 @@ const SellerHome = () => {
   }, [])
   return (
     <>
-      {console.log(seller)}
       <div className="relative h-[50vh] w-full overflow-hidden">
         <img
           alt="Backdrop"

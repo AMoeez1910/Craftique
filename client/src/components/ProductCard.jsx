@@ -1,6 +1,8 @@
+import {useNavigate} from 'react-router-dom';
 const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
   return (
-    <div className="relative group">
+    <div className="relative group" onClick={() => { navigate(`/product/${product._id}`) }}>
       <a className="absolute inset-0 z-10" href="#">
         <span className="sr-only">View</span>
       </a>
