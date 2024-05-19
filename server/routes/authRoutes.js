@@ -80,7 +80,13 @@ function(req, res) {
      
   const token = generateToken(req.user);
   // Set the token as a cookie
-  res.cookie('token', token, { maxAge: 3600000, httpOnly: true }); 
+  res.cookie('token', token, {
+    path: '/',
+    httpOnly: true,
+    secure: true,  // Ensure this is true for HTTPS
+    sameSite: 'None',  // Required for cross-site cookie sharing
+    maxAge: 24 * 60 * 60 * 1000  // 1 day
+});
   res.redirect('https://funoon.vercel.app/')
 })
 module.exports = router
