@@ -91,7 +91,20 @@ const sendVerifyEmail = async (name, email, id) => {
             },
             secure: true,
         });
-        const expirationTimestamp = Math.floor(new Date().getTime() / 1000)
+
+        await new Promise((resolve, reject) => {
+            transporter.verify(function (error, success) {
+                if (error) {
+                    console.error(error);
+                    reject(error);
+                } else {
+                    console.log("Server is ready to take our messages");
+                    resolve(success);
+                }
+            });
+        });
+
+        const expirationTimestamp = Math.floor(new Date().getTime() / 1000);
 
         const mailOptions = {
             from: 'needaspeed639@gmail.com',
@@ -106,12 +119,24 @@ const sendVerifyEmail = async (name, email, id) => {
         </div>`,
         };
 
-        const data = await transporter.sendMail(mailOptions);
+        const data = await new Promise((resolve, reject) => {
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    console.log(info);
+                    resolve(info);
+                }
+            });
+        });
+
         console.log('EMAIL SENT ', email, data.response);
     } catch (error) {
         console.error('Error sending verification email:', error.message);
     }
 };
+
 const verifyMail = async (req, res) => {
     const { id, expirationTimestamp } = req.params;
     const currentTimestamp = Math.floor(new Date().getTime() / 1000);
