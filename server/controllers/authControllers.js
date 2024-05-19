@@ -225,11 +225,10 @@ const getProfile= async (req,res)=>{
   }
 }
 const logOut =(req,res) =>{
-    res.clearCookie('token', { sameSite: "none",
-    secure: true, });
-    res.clearCookie('connect.sid', { sameSite: "none",
-    secure: true, });
-    console.log('Logged Out')
+    
+    console.log(res.clearCookie('token'))
+    res.clearCookie('token');
+    res.clearCookie('connect.sid');
     return res.json({Status:"Success"})
 }
 const PasswordReset = async (req, res) => {
