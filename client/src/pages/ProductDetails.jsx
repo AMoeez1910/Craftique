@@ -131,11 +131,13 @@ export default function Component() {
 
   if (loading) {
     return (<div className="flex h-screen w-full items-center justify-center">
+
         <div className="flex flex-col items-center space-y-4">
           <div className="animate-spin rounded-full border-4 border-gray-300 border-t-gray-900 h-12 w-12 dark:border-gray-600 dark:border-t-gray-50" />
           <p className="text-gray-500 dark:text-gray-400">Loading content...</p>
         </div>
       </div>)
+
   }
   return (
     <>
@@ -274,26 +276,36 @@ export default function Component() {
               <h3 className="font-semibold">Write a review</h3>
             </div>
             <div className="flex items-center gap-0.5 ml-auto">
-            <StarIcon className={reviews.rating>=1? `w-5 h-5 fill-primary cursor-pointer`:`w-5 h-5 fill-muted stroke-muted-foreground`} onClick={()=>{setReviews((prev)=>(
-                    { ...prev, rating:1 }
+              <StarIcon className={reviews.rating >= 1 ? `w-5 h-5 fill-primary cursor-pointer` : `w-5 h-5 fill-muted stroke-muted-foreground`} onClick={() => {
+                setReviews((prev) => (
+                  { ...prev, rating: 1 }
                 )
-                )}}/>
-                <StarIcon className={reviews.rating>=2? `w-5 h-5 fill-primary cursor-pointer`:`w-5 h-5 fill-muted stroke-muted-foreground`} onClick={()=>{setReviews((prev)=>(
-                    { ...prev, rating:2 }
                 )
-                )}}/>
-                <StarIcon className={reviews.rating>=3? `w-5 h-5 fill-primary cursor-pointer`:`w-5 h-5 fill-muted stroke-muted-foreground`}  onClick={()=>{setReviews((prev)=>(
-                    { ...prev, rating:3 }
+              }} />
+              <StarIcon className={reviews.rating >= 2 ? `w-5 h-5 fill-primary cursor-pointer` : `w-5 h-5 fill-muted stroke-muted-foreground`} onClick={() => {
+                setReviews((prev) => (
+                  { ...prev, rating: 2 }
                 )
-                )}}/>
-                <StarIcon className={reviews.rating>=4? `w-5 h-5 fill-primary cursor-pointer`:`w-5 h-5 fill-muted stroke-muted-foreground`}  onClick={()=>{setReviews((prev)=>(
-                    { ...prev, rating:4 }
                 )
-                )}}/>
-                <StarIcon className={reviews.rating>=5? `w-5 h-5 fill-primary cursor-pointer`:`w-5 h-5 fill-muted stroke-muted-foreground`}  onClick={()=>{setReviews((prev)=>(
-                    { ...prev, rating:5 }
+              }} />
+              <StarIcon className={reviews.rating >= 3 ? `w-5 h-5 fill-primary cursor-pointer` : `w-5 h-5 fill-muted stroke-muted-foreground`} onClick={() => {
+                setReviews((prev) => (
+                  { ...prev, rating: 3 }
                 )
-                )}}/>
+                )
+              }} />
+              <StarIcon className={reviews.rating >= 4 ? `w-5 h-5 fill-primary cursor-pointer` : `w-5 h-5 fill-muted stroke-muted-foreground`} onClick={() => {
+                setReviews((prev) => (
+                  { ...prev, rating: 4 }
+                )
+                )
+              }} />
+              <StarIcon className={reviews.rating >= 5 ? `w-5 h-5 fill-primary cursor-pointer` : `w-5 h-5 fill-muted stroke-muted-foreground`} onClick={() => {
+                setReviews((prev) => (
+                  { ...prev, rating: 5 }
+                )
+                )
+              }} />
             </div>
           </div>
           <div className="text-sm leading-loose text-gray-500 dark:text-gray-400 flex justify-between pt-3">
@@ -311,7 +323,7 @@ export default function Component() {
           </div>
         </div>
         <Separator />
-        <h2 className="font-bold text-2xl">Reviews</h2>
+        <h2 className="font-bold text-2xl mb-5">Reviews</h2>
         {data.reviews.map((review) => (
           <>
             <div className="flex gap-4">
@@ -355,11 +367,10 @@ export default function Component() {
                     {Array.from({ length: 5 }).map((_, index) => (
                       <StarIcon
                         key={index}
-                        className={`w-5 h-5 ${
-                          index < review.rating
+                        className={`w-5 h-5 ${index < review.rating
                             ? "fill-primary"
                             : "fill-muted stroke-muted-foreground"
-                        }`}
+                          }`}
                       />
                     ))}
                   </div>

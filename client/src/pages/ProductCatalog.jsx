@@ -5,98 +5,210 @@ import { Button } from "../components/ui/button"
 import { DropdownMenuTrigger, DropdownMenuRadioItem, DropdownMenuRadioGroup, DropdownMenuContent, DropdownMenu } from "../components/ui/dropdown-menu"
 import ProductCard from "../components/ProductCard"
 import axios from 'axios';
+import Navbar from "../components/Navbar";
+import { useLocation } from 'react-router-dom';
+
 const ProductCatalog = () => {
     const [data, setData] = useState([]);
-    const [sort, setSort] = useState("")
-    const [filterData, setFilterData] = useState([])
+    const [sort, setSort] = useState("");
+    const [filterData, setFilterData] = useState([]);
+    const location = useLocation();
+    
     const [filters, setFilters] = useState({
         under50: false,
         between50And100: false,
         between100And200: false,
         over200: false,
+        ceramic: false,
+        textile: false,
+        wood: false,
+        leather: false,
+        above4: false,
+        above3: false,
+        above2: false,
+        above1: false,
     });
 
     useEffect(() => {
         const fetchProductData = async () => {
+            const params = new URLSearchParams(location.search);
+            const category = params.get('category');
             const response = await axios.get(`/products`);
-            setData(response.data)
-            setFilterData(response.data)
-        }
-        fetchProductData()
-    }, [])
+            const fetchedData = response.data;
+            setData(fetchedData);
+            setFilterData(fetchedData);
+
+            if (category) {
+                const newFilters = { ...filters };
+                if (category === 'ceramic') newFilters.ceramic = true;
+                else if (category === 'textile') newFilters.textile = true;
+                else if (category === 'wood') newFilters.wood = true;
+                else if (category === 'leather') newFilters.leather = true;
+                setFilters(newFilters);
+                updateFilteredData(newFilters, fetchedData);
+            }
+        };
+
+        fetchProductData();
+
+    }, [location.search]);
+
     const handleSortChange = (value) => {
         setSort(value);
+        let sortedData = [...data];
         switch (value) {
-            case 'price-low-high': setData(data.sort((a, b) => a.price - b.price));
+            case "price-low-high":
+                sortedData.sort((a, b) => a.price - b.price);
                 break;
-            case 'price-high-low': setData(data.sort((a, b) => b.price - a.price));
+            case "price-high-low":
+                sortedData.sort((a, b) => b.price - a.price);
                 break;
-            case 'newest':
-                setData(data.sort((a, b) => new Date(b.created) - new Date(a.created)));
+            case "newest":
+                sortedData.sort((a, b) => new Date(b.created) - new Date(a.created));
                 break;
             default:
                 break;
         }
-
+        setData(sortedData);
     };
 
-    const updateFilteredData = (updatedFilters) => {
+    const updateFilteredData = (updatedFilters, productsData = filterData) => {
         let finalDataSet = new Set();
-
         if (updatedFilters.under50) {
-            filterData
-                .filter((product) => product.price < 50)
+            productsData
+                .filter((product) => product.price < 500)
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.between50And100) {
-            filterData
-                .filter((product) => product.price >= 50 && product.price < 100)
+            productsData
+                .filter((product) => product.price >= 500 && product.price < 1000)
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.between100And200) {
-            filterData
-                .filter((product) => product.price >= 100 && product.price < 200)
+            productsData
+                .filter((product) => product.price >= 1000 && product.price < 2000)
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.over200) {
-            filterData
-                .filter((product) => product.price >= 200)
+            productsData
+                .filter((product) => product.price >= 2000)
                 .forEach((product) => finalDataSet.add(product));
+        }
+        if (updatedFilters.ceramic) {
+            productsData
+                .filter((product) => product.category === "ceramic")
+                .forEach((product) => finalDataSet.add(product));
+        }
+        if (updatedFilters.textile) {
+            productsData
+                .filter((product) => product.category === "textile")
+                .forEach((product) => finalDataSet.add(product));
+        }
+        if (updatedFilters.wood) {
+            productsData
+                .filter((product) => product.category === "wood")
+                .forEach((product) => finalDataSet.add(product));
+        }
+        if (updatedFilters.leather) {
+            productsData
+                .filter((product) => product.category === "leather")
+                .forEach((product) => finalDataSet.add(product));
+        }
+        if (updatedFilters.above4) {
+            productsData
+                .filter((product) => product.avgRating >= 4)
+                .forEach((product) => finalDataSet.add(product));
+        }
+        if (updatedFilters.above3) {
+            productsData
+                .filter((product) => product.avgRating >= 3)
+                .forEach((product) => finalDataSet.add(product));
+        }
+        if (updatedFilters.above2) {
+            productsData
+                .filter((product) => product.avgRating >= 2)
+                .forEach((product) => finalDataSet.add(product));
+        }
+        if (updatedFilters.above1) {
+            productsData
+                .filter((product) => product.avgRating >= 1)
+                .forEach((product) => finalDataSet.add(product));
+        }
+        const noFiltersSelected = Object.values(updatedFilters).every((val) => val === false);
+        if (noFiltersSelected) {
+            finalDataSet = new Set(productsData);
         }
 
         setData(Array.from(finalDataSet));
     };
+
     return (
         <>
+            <Navbar
+                links={[
+                    { button: true, path: "/login", btn_name: "Login" },
+                    { button: true, path: "/register", btn_name: "Register" },
+                    { button: false, category:true}
+                ]}
+            />
             <div className="container mx-auto px-4 md:px-6 py-8">
                 <div className="grid md:grid-cols-[280px_1fr] gap-8">
                     <div className="bg-white dark:bg-gray-950 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6 top-4">
                         <h2 className="text-lg font-semibold mb-4">Filters</h2>
                         <div className="space-y-6">
-
                             <div>
                                 <h3 className="text-sm font-semibold mb-2">Category</h3>
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-2">
-                                        <Checkbox id="category-ceramic" />
+                                        <Checkbox
+                                            id="category-ceramic"
+                                            checked={filters.ceramic}
+                                            onCheckedChange={(e) => {
+                                                const newFilters = { ...filters, ceramic: e };
+                                                setFilters(newFilters);
+                                                updateFilteredData(newFilters);
+                                            }}
+                                        />
                                         <Label className="text-sm font-medium" htmlFor="category-ceramic">
-                                            Ceramics
+                                            Ceramic
                                         </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Checkbox id="category-textiles" />
-                                        <Label className="text-sm font-medium" htmlFor="category-textiles">
-                                            Textiles
+                                        <Checkbox
+                                            id="category-textile"
+                                            checked={filters.textile}
+                                            onCheckedChange={(e) => {
+                                                const newFilters = { ...filters, textile: e };
+                                                setFilters(newFilters);
+                                                updateFilteredData(newFilters);
+                                            }}
+                                        />
+                                        <Label className="text-sm font-medium" htmlFor="category-textile">
+                                            Textile
                                         </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Checkbox id="category-woodwork" />
-                                        <Label className="text-sm font-medium" htmlFor="category-woodwork">
-                                            Woodworks
+                                        <Checkbox id="category-wood"
+                                            checked={filters.wood}
+                                            onCheckedChange={(e) => {
+                                                const newFilters = { ...filters, wood: e };
+                                                setFilters(newFilters);
+                                                updateFilteredData(newFilters);
+                                            }}
+                                        />
+                                        <Label className="text-sm font-medium" htmlFor="category-wood">
+                                            Woods
                                         </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Checkbox id="category-leather" />
+                                        <Checkbox id="category-leather"
+                                            checked={filters.leather}
+                                            onCheckedChange={(e) => {
+                                                const newFilters = { ...filters, leather: e };
+                                                setFilters(newFilters);
+                                                updateFilteredData(newFilters);
+                                            }}
+                                        />
                                         <Label className="text-sm font-medium" htmlFor="category-leather">
                                             Leatherworks
                                         </Label>
@@ -107,25 +219,53 @@ const ProductCatalog = () => {
                                 <h3 className="text-sm font-semibold mb-2">Rating</h3>
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-2">
-                                        <Checkbox id="rating-4-up" />
+                                        <Checkbox id="rating-4-up"
+                                            checked={filters.above4}
+                                            onCheckedChange={(e) => {
+                                                const newFilters = { ...filters, above4: e };
+                                                setFilters(newFilters);
+                                                updateFilteredData(newFilters);
+                                            }}
+                                        />
                                         <Label className="text-sm font-medium" htmlFor="rating-4-up">
                                             4 stars & up
                                         </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Checkbox id="rating-3-up" />
+                                        <Checkbox id="rating-3-up"
+                                            checked={filters.above3}
+                                            onCheckedChange={(e) => {
+                                                const newFilters = { ...filters, above3: e };
+                                                setFilters(newFilters);
+                                                updateFilteredData(newFilters);
+                                            }}
+                                        />
                                         <Label className="text-sm font-medium" htmlFor="rating-3-up">
                                             3 stars & up
                                         </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Checkbox id="rating-2-up" />
+                                        <Checkbox id="rating-2-up"
+                                            checked={filters.above2}
+                                            onCheckedChange={(e) => {
+                                                const newFilters = { ...filters, above2: e };
+                                                setFilters(newFilters);
+                                                updateFilteredData(newFilters);
+                                            }}
+                                        />
                                         <Label className="text-sm font-medium" htmlFor="rating-2-up">
                                             2 stars & up
                                         </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <Checkbox id="rating-1-up" />
+                                        <Checkbox id="rating-1-up"
+                                            checked={filters.above1}
+                                            onCheckedChange={(e) => {
+                                                const newFilters = { ...filters, above1: e };
+                                                setFilters(newFilters);
+                                                updateFilteredData(newFilters);
+                                            }}
+                                        />
                                         <Label className="text-sm font-medium" htmlFor="rating-1-up">
                                             1 star & up
                                         </Label>
@@ -146,7 +286,7 @@ const ProductCatalog = () => {
                                             }}
                                         />
                                         <Label className="text-sm font-medium" htmlFor="under50">
-                                            Under Rs. 50
+                                            Under Rs. 500
                                         </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -160,7 +300,7 @@ const ProductCatalog = () => {
                                             }}
                                         />
                                         <Label className="text-sm font-medium" htmlFor="between50And100">
-                                            Rs. 50 - Rs. 100
+                                            Rs. 500 - Rs. 1000
                                         </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -174,7 +314,7 @@ const ProductCatalog = () => {
                                             }}
                                         />
                                         <Label className="text-sm font-medium" htmlFor="between100And200">
-                                            Rs. 100 - Rs. 200
+                                            Rs. 1000 - Rs. 2000
                                         </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -188,7 +328,7 @@ const ProductCatalog = () => {
                                             }}
                                         />
                                         <Label className="text-sm font-medium" htmlFor="over200">
-                                            Over Rs. 200
+                                            Over Rs. 2000
                                         </Label>
                                     </div>
 
@@ -220,24 +360,21 @@ const ProductCatalog = () => {
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>
-                        {!(data.length) && <p className ="text-lg font-bold text-center">No items found</p>}
+                        {!(data.length) && <p className="text-lg font-bold text-center">No items found</p>}
                         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-    
-                                {data?.map((product) => (
-                                <ProductCard name={product.name} image={product.images} price={product.price} key={product.id}
-                                    id={product.id} />
+
+                            {data?.map((product) => (
+                                <ProductCard key={product.id} product={product} />
                             ))}
                         </div>
                     </div>
+
                 </div>
             </div>
         </>
     )
 }
-export default ProductCatalog
-
-
-
+export default ProductCatalog;
 
 function ArrowUpDownIcon(props) {
     return (
@@ -258,5 +395,5 @@ function ArrowUpDownIcon(props) {
             <path d="m3 8 4-4 4 4" />
             <path d="M7 4v16" />
         </svg>
-    )
+    );
 }

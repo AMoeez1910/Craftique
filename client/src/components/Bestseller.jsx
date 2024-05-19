@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/cart";
@@ -9,7 +8,6 @@ import { UserContext } from '../context/userContext';
 
 const Bestseller = (props) => {
   const navigate = useNavigate();
-  const [cartProduct, setCartProduct] = useState();
   const [products, setProducts] = useState([
     {
       products: "",
@@ -17,22 +15,20 @@ const Bestseller = (props) => {
     },
   ]);
   const [cart, setCart] = useContext(CartContext);
-  const processCart = (value) => {
-    setCartProduct(value);
-    addToCart(value);
-  };
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProductData = async () => {
       try {
-        const response = await axios.get("/products");
-        setProducts(response.data);
+        const response = await axios.get(`/products`);
+        const sortedProducts = response.data.sort((a, b) => b.itemsSold - a.itemsSold);
+        setProducts(sortedProducts);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching product data:", error);
       }
     };
 
-    fetchProducts();
+    fetchProductData();
   }, []);
+
   const addToCart = (product) => {
     if(props.user && props.user.brand){
     if(props.user.brand._id===product.brand._id){
@@ -103,30 +99,18 @@ const Bestseller = (props) => {
     
   };
   return (
-    <section className="w-full py-12 md:py-10 lg:py-10">
+    <section className="w-full py-12 md:py-10 lg:py-10" id ="top">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
           <div className="grid gap-2">
             <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
-              Featured Products
+              Bestsellers
             </h2>
             <p className="text-gray-500 dark:text-gray-400">
               Discover our top-selling items
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <a
-              className="inline-flex h-10 items-center justify-center rounded-md bg-transparent px-6 text-sm font-medium text-gray-900 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:text-gray-50 dark:hover:underline dark:focus-visible:ring-gray-300"
-              href="#"
-            >
-              Bestsellers
-            </a>
-            <a
-              className="inline-flex h-10 items-center justify-center rounded-md bg-transparent px-6 text-sm font-medium text-gray-900 transition-colors hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:text-gray-50 dark:hover:underline dark:focus-visible:ring-gray-300"
-              href="#"
-            >
-              Flash Deals 🔥
-            </a>
             <Button
               className="inline-flex h-10 items-center justify-center rounded-md"
               onClick={() => navigate("/products")}
@@ -136,9 +120,14 @@ const Bestseller = (props) => {
           </div>
         </div>
         <div className="mt-8 md:mt-12 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {products.map((product) => (
-            <div className="bg-white transition-colors h-full">
-              <div className="aspect-[4/3] bg-gray-100 overflow-hidden">
+
+          {products.slice(0, 8).map((product) => (
+            <div
+              key={product._id}
+              className="bg-white transition-colors h-full transform transition-transform duration-300 hover:scale-105 cursor-pointer"
+              onClick={() => { navigate(`/product/${product._id}`) }}
+            >
+              <div className="aspect-[4/3] bg-gray-100 overflow-hidden ">
                 <img
                   alt="Product Image"
                   className="object-cover w-full h-full"
@@ -174,7 +163,10 @@ const Bestseller = (props) => {
                     className="rounded-full px-2 py-2 bg-gray-900 text-gray-50 hover:bg-gray-900/90 focus-visible:ring-gray-950 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
                     size="icon"
                     variant="ghost"
-                    onClick={() => addToCart(product)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent the click from bubbling up to the parent div
+                      addToCart(product);
+                    }}
                   >
                     <ShoppingCartIcon className="w-5 h-5" />
                   </Button>
