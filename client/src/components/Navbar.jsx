@@ -45,22 +45,32 @@ export default function NavBar({ links }) {
   const { user, setUser } = useContext(UserContext);
   const [cart] = useContext(CartContext);
   const logout = () => {
-    axios
-        .get("/logout", { withCredentials: true })
-        .then((res) => {
-            if (res.data && res.data.Status === "Success") {
-                setUser(null);
-                toast.success("Successfully logged out");
-                navigate("/");
-            } else {
-                console.error("Logout failed:", res.data);
-                toast.error("Failed to log out");
-            }
-        })
-        .catch((err) => {
-            console.error("Error logging out:", err);
-            toast.error("Failed to log out");
-        });
+    fetch("https://funoonserver.vercel.app/logout", {
+      method: "GET",
+      credentials: "include" // This is equivalent to withCredentials: true in Axios
+  })
+  .then((res) => {
+      if (res.ok) {
+          return res.json();
+      } else {
+          throw new Error("Logout failed");
+      }
+  })
+  .then((data) => {
+      if (data && data.Status === "Success") {
+          setUser(null);
+          toast.success("Successfully logged out");
+          navigate("/");
+      } else {
+          console.error("Logout failed:", data);
+          toast.error("Failed to log out");
+      }
+  })
+  .catch((err) => {
+      console.error("Error logging out:", err);
+      toast.error("Failed to log out");
+  });
+  
 };
 
 

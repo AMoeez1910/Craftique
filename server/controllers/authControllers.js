@@ -225,14 +225,8 @@ const getProfile= async (req,res)=>{
   }
 }
 const logOut =(req,res) =>{
-    res.cookie('token', '', {
-        path: '/',
-        httpOnly: true,
-        secure: true,  // Ensure this is true for HTTPS
-        sameSite: 'None',  // Required for cross-site cookie sharing
-        maxAge: 0  // Set maxAge to 0 to expire the cookie immediately
-    });
-    res.clearCookie('connect.sid');
+    res.clearCookie('token', { path: '/' });
+    res.clearCookie('connect.sid', { path: '/' });
     return res.json({Status:"Success"})
 }
 const PasswordReset = async (req, res) => {
