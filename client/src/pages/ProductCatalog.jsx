@@ -8,13 +8,12 @@ import axios from 'axios';
 import Navbar from "../components/Navbar";
 import { useLocation } from 'react-router-dom';
 
-import { set } from 'date-fns';
 const ProductCatalog = () => {
-    
     const [data, setData] = useState([]);
-    const [sort, setSort] = useState("")
-    const [filterData, setFilterData] = useState([])
+    const [sort, setSort] = useState("");
+    const [filterData, setFilterData] = useState([]);
     const location = useLocation();
+    
     const [filters, setFilters] = useState({
         under50: false,
         between50And100: false,
@@ -29,112 +28,120 @@ const ProductCatalog = () => {
         above2: false,
         above1: false,
     });
-    const params = new URLSearchParams(location.search);
-    const category = params.get('category');
+
     useEffect(() => {
         const fetchProductData = async () => {
+            const params = new URLSearchParams(location.search);
+            const category = params.get('category');
             const response = await axios.get(`/products`);
-            setData(response.data);
-            setFilterData(response.data);
+            const fetchedData = response.data;
+            setData(fetchedData);
+            setFilterData(fetchedData);
+
+            if (category) {
+                const newFilters = { ...filters };
+                if (category === 'ceramic') newFilters.ceramic = true;
+                else if (category === 'textile') newFilters.textile = true;
+                else if (category === 'wood') newFilters.wood = true;
+                else if (category === 'leather') newFilters.leather = true;
+                setFilters(newFilters);
+                updateFilteredData(newFilters, fetchedData);
+            }
         };
+
         fetchProductData();
-    }, []);
-    
+
+    }, [location.search]);
+
     const handleSortChange = (value) => {
         setSort(value);
+        let sortedData = [...data];
         switch (value) {
             case "price-low-high":
-                setData(data.sort((a, b) => a.price - b.price));
+                sortedData.sort((a, b) => a.price - b.price);
                 break;
             case "price-high-low":
-                setData(data.sort((a, b) => b.price - a.price));
+                sortedData.sort((a, b) => b.price - a.price);
                 break;
             case "newest":
-                setData(data.sort((a, b) => new Date(b.created) - new Date(a.created)));
+                sortedData.sort((a, b) => new Date(b.created) - new Date(a.created));
                 break;
             default:
                 break;
         }
+        setData(sortedData);
     };
-    useEffect(() => {
-        console.log(category)
-        if (category) {
-          setFilters(prevFilters => ({
-            ...prevFilters,
-            [category]: true,
-          }));
-        }
-      }, [category]);
-    const updateFilteredData = (updatedFilters) => {
-        let finalDataSet = new Set();
 
+    const updateFilteredData = (updatedFilters, productsData = filterData) => {
+        let finalDataSet = new Set();
         if (updatedFilters.under50) {
-            filterData
+            productsData
                 .filter((product) => product.price < 500)
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.between50And100) {
-            filterData
+            productsData
                 .filter((product) => product.price >= 500 && product.price < 1000)
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.between100And200) {
-            filterData
+            productsData
                 .filter((product) => product.price >= 1000 && product.price < 2000)
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.over200) {
-            filterData
+            productsData
                 .filter((product) => product.price >= 2000)
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.ceramic) {
-            filterData
+            productsData
                 .filter((product) => product.category === "ceramic")
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.textile) {
-            filterData
+            productsData
                 .filter((product) => product.category === "textile")
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.wood) {
-            filterData
+            productsData
                 .filter((product) => product.category === "wood")
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.leather) {
-            filterData
+            productsData
                 .filter((product) => product.category === "leather")
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.above4) {
-            filterData
+            productsData
                 .filter((product) => product.avgRating >= 4)
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.above3) {
-            filterData
+            productsData
                 .filter((product) => product.avgRating >= 3)
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.above2) {
-            filterData
+            productsData
                 .filter((product) => product.avgRating >= 2)
                 .forEach((product) => finalDataSet.add(product));
         }
         if (updatedFilters.above1) {
-            filterData
+            productsData
                 .filter((product) => product.avgRating >= 1)
                 .forEach((product) => finalDataSet.add(product));
         }
         const noFiltersSelected = Object.values(updatedFilters).every((val) => val === false);
         if (noFiltersSelected) {
-            finalDataSet = filterData;
+            finalDataSet = new Set(productsData);
         }
 
         setData(Array.from(finalDataSet));
     };
+
     return (
         <>
             <Navbar
@@ -143,13 +150,11 @@ const ProductCatalog = () => {
                     { button: true, path: "/register", btn_name: "Register" },
                 ]}
             />
-            {console.log(category)}
             <div className="container mx-auto px-4 md:px-6 py-8">
                 <div className="grid md:grid-cols-[280px_1fr] gap-8">
                     <div className="bg-white dark:bg-gray-950 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6 top-4">
                         <h2 className="text-lg font-semibold mb-4">Filters</h2>
                         <div className="space-y-6">
-
                             <div>
                                 <h3 className="text-sm font-semibold mb-2">Category</h3>
                                 <div className="space-y-2">
@@ -190,7 +195,6 @@ const ProductCatalog = () => {
                                                 updateFilteredData(newFilters);
                                             }}
                                         />
-
                                         <Label className="text-sm font-medium" htmlFor="category-wood">
                                             Woods
                                         </Label>
@@ -235,7 +239,6 @@ const ProductCatalog = () => {
                                                 updateFilteredData(newFilters);
                                             }}
                                         />
-
                                         <Label className="text-sm font-medium" htmlFor="rating-3-up">
                                             3 stars & up
                                         </Label>
@@ -249,7 +252,6 @@ const ProductCatalog = () => {
                                                 updateFilteredData(newFilters);
                                             }}
                                         />
-
                                         <Label className="text-sm font-medium" htmlFor="rating-2-up">
                                             2 stars & up
                                         </Label>
@@ -361,7 +363,7 @@ const ProductCatalog = () => {
                         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
 
                             {data?.map((product) => (
-                                <ProductCard product={product} />
+                                <ProductCard key={product.id} product={product} />
                             ))}
                         </div>
                     </div>
@@ -372,7 +374,6 @@ const ProductCatalog = () => {
     )
 }
 export default ProductCatalog;
-
 
 function ArrowUpDownIcon(props) {
     return (
