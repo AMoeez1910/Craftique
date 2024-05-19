@@ -157,7 +157,7 @@ const registerUser = async (req, res) => {
             password: hashedPassword,
             phoneNo:phoneNo
         });
-        sendVerifyEmail(FirstName,email,user._id)
+        await sendVerifyEmail(FirstName,email,user._id)
         res.json(user);
     } catch (e) {
         res.json({ error: e });
