@@ -107,6 +107,7 @@ const SellerDash = ()=>  {
           const response = await axios.get(`/seller-detail/${user._id}`);
           setSeller(response.data.brand);
           setData(response.data.orders);
+          console.log(response.data.orders)
         } catch (error) {
           console.error(error);
         } finally {
@@ -129,6 +130,22 @@ const SellerDash = ()=>  {
     });
     return total;
   };
+  const handledisplay = (order) => { 
+    const newProductDetails = order.products.map(orderProduct => {
+      const detail = order.productDetails.find(detail => detail._id === orderProduct.product);
+      return {
+        ...orderProduct,
+        ...(detail ? detail : {})
+      };
+    }).filter(product => product._id); // Filter out products without corresponding details
+  
+    const newOrder = {
+      ...order,
+      productDetails: newProductDetails
+    };
+  
+    setDisplay(newOrder)
+  }
   if (loading) {
     return (
     <div className="flex h-screen w-full items-center justify-center">
@@ -386,7 +403,7 @@ const SellerDash = ()=>  {
                       {
                         data?.map((order) => (
                           <TableRow key={order._id}
-                          onClick={()=> {setDisplay(order) 
+                          onClick={()=> {handledisplay(order) 
                           }}
                           className={display && display._id === order._id ? "bg-accent" : ""}
                           >
@@ -447,15 +464,18 @@ const SellerDash = ()=>  {
                     display?.placedAt ? display.placedAt.split("T")[0] : ""
                   }</CardDescription>
                 </div>
+                
                 <div className="ml-auto flex  gap-1">
-                  { display? (<Button size="sm" variant="outline" className="h-8 gap-1">
+                  { display? (
                 <Link to={'/orders/'+display?._id} className="flex items-center gap-2">
+                    <Button size="sm" variant="outline" className="h-8 gap-1">
                     <Truck className="h-3.5 w-3.5" />
                     <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
                         Track Order
                     </span>
-                </Link>
-            </Button>):(<></>)}
+            </Button>
+            </Link>
+            ):(<></>)}
                 </div>
               </CardHeader>
               <CardContent className="p-6 text-sm">
