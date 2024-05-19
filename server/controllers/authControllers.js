@@ -225,7 +225,13 @@ const getProfile= async (req,res)=>{
   }
 }
 const logOut =(req,res) =>{
-    res.clearCookie('token', { path: '/' });
+    res.clearCookie('token', { domain:'funoonserver.vercel.app',
+    path: '/',
+    httpOnly: true,
+    secure: true,  // Ensure this is true for HTTPS
+    sameSite: 'None',  // Required for cross-site cookie sharing
+    maxAge: 24 * 60 * 60 * 1000  // 1 day
+    });
     res.clearCookie('connect.sid', { path: '/' });
     return res.json({Status:"Success"})
 }
