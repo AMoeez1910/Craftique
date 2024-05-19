@@ -83,31 +83,39 @@ export default function NavBar({ links }) {
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col justify-start items-start gap-4 mt-4">
-                  <Link className="pt-3">
-                    <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="item-1">
-                        <AccordionTrigger className="py-3">
-                          Categories
-                        </AccordionTrigger>
-                        <AccordionContent className="pt-2 pl-3">
-                          <Link>Ceramics</Link>
-                        </AccordionContent>
-                        <AccordionContent className="pt-2 pl-3">
-                          <Link>Textiles</Link>
-                        </AccordionContent>
-                        <AccordionContent className="pt-2 pl-3">
-                          <Link>Woodworks</Link>
-                        </AccordionContent>
-                        <AccordionContent className="pt-2 pl-3">
-                          <Link>Leatherworks</Link>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-                  </Link>
                   
-                  <Link className="pt-3">Top Picks</Link>
-                  <Link className="pt-3">Featured Artisans</Link>
-                  <Link className="pt-3">Testimonials</Link>
+                      <Link className="pt-3">
+                      <Accordion type="single" collapsible className="w-full">
+                        <AccordionItem value="item-1">
+                          <AccordionTrigger className="py-3">
+                            Categories
+                          </AccordionTrigger>
+                          <AccordionContent className="pt-2 pl-3">
+                            <Link to={"/products?category=ceramic"}>Ceramics</Link>
+                          </AccordionContent>
+                          <AccordionContent className="pt-2 pl-3">
+                            <Link to={"/products?category=textile"}>Textiles</Link>
+                          </AccordionContent>
+                          <AccordionContent className="pt-2 pl-3">
+                            <Link to={"/products?category=wood"}>Woodworks</Link>
+                          </AccordionContent>
+                          <AccordionContent className="pt-2 pl-3">
+                            <Link to={"/products?category=leather"}>Leatherworks</Link>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    </Link>
+                  {
+                    links.map((link, index) => {
+                      if (!link.button) {
+                        return (
+                          <a key={index} className="pt-3" href={link.path}>
+                            {link.name}
+                          </a>
+                        );
+                      }
+                    })
+                  }
                   <SheetFooter>
                     {user ? (
                       <div className="mt-6">
@@ -223,15 +231,18 @@ export default function NavBar({ links }) {
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              <NavigationMenuItem className="pr-3">
-                <Link>Top Picks</Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem className="pr-3">
-                <Link>Featured Artisans</Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem className="pr-3">
-                <Link>Testimonials</Link>
-              </NavigationMenuItem>
+              {
+                    links.map((link, index) => {
+                      if (!link.button) {
+                        return (
+                            <NavigationMenuItem className="pr-3">
+                              <a href={link.path}>{link.name}</a>
+                            </NavigationMenuItem>
+                        );
+                      }
+                    })
+                  }
+                  
             </NavigationMenuList>
           </NavigationMenu>
           <div className="hidden lg:flex gap-2">

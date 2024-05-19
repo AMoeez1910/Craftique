@@ -11,8 +11,12 @@ const Landing = () => {
     <div>
       <Navbar
         links={[
+          {button: false, path: "#top", name: "Top Picks"},
+          {button: false, path: "#artisan", name: "Featured Artisans"},
+          {button: false, path: "#testimonial", name: "Testimonials"},
           { button: true, path: "/login", btn_name: "Login" },
           { button: true, path: "/register", btn_name: "Register" },
+
         ]}
       />
       <Hero/>

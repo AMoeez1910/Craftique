@@ -6,7 +6,7 @@ export default function ArtisanCard({ artisan }) {
   const navigate = useNavigate();
   return (
     <div onClick={() => navigate(`/sellerhome/${artisan.brand._id}`)}>
-      <div className="bg-white rounded-lg overflow-hidden shadow-sm dark:bg-gray-950 cursor-pointer hover:shadow-lg transition duration-300">
+      <div className="bg-white rounded-lg overflow-hidden shadow-sm dark:bg-gray-950 cursor-pointer transform transition-transform duration-300 hover:scale-105 cursor-pointer">
         <div className="relative h-48 w-full">
           <img
             alt="Artisan Image"
