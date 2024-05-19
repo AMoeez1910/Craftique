@@ -46,7 +46,7 @@ export default function NavBar({ links }) {
   const [cart] = useContext(CartContext);
   const logout = () => {
     axios
-        .post("/logout", {}, { withCredentials: true })
+        .get("/logout", {}, { withCredentials: true })
         .then((res) => {
             if (res.data && res.data.Status === "Success") {
                 setUser(null);
