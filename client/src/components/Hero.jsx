@@ -24,7 +24,7 @@ const Hero = () => {
         </div>
         <img
   alt="Hero Image"
-  className="mx-auto w-full h-full rounded-xl object-cover bg-primary"
+  className="mx-auto w-full rounded-xl object-cover bg-primary p-1"
   src={HeroImg}
 />
 
