@@ -179,12 +179,18 @@ const loginUser = async (req, res) => {
             email: userDoc.email,
             id: userDoc._id,
             isSeller:userDoc.isSeller
-        }, process.env.JWT_SECRET, (err, token) => {
+        }, process.env.JWT_SECRET,{expiresIn:'1d'}, (err, token) => {
             if (err) {
                 console.error('Error signing JWT:', err);
                 return res.status(500).json({ error: 'Internal Server Error' });
             }
-            res.cookie('token', token);
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'None', // Important for cross-site cookies
+                domain: 'vercel.app', // Set the domain to allow subdomain sharing
+                maxAge: 24 * 60 * 60 * 1000 // 1 day
+            });
             res.json({ success: 'Successfully Login', user: userDoc });
         });
     } catch (error) {
