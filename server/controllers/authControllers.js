@@ -83,30 +83,53 @@ const createOrder = async (req, res) => {
 const sendVerifyEmail = async (name, email, id) => {
     try {
         const transporter = nodemailer.createTransport({
-            port: 465,
             host: "smtp.gmail.com",
             auth: {
-                user: 'needaspeed639@gmail.com',
-                pass: 'qsws dzzd gokz uytu'
+                user: process.env.USEREMAIL,
+                pass: process.env.USERPASS
             },
             secure: true,
         });
-        const expirationTimestamp = Math.floor(new Date().getTime() / 1000)
+
+        await new Promise((resolve, reject) => {
+            transporter.verify(function (error, success) {
+                if (error) {
+                    console.error(error);
+                    reject(error);
+                } else {
+                    console.log("Server is ready to take our messages");
+                    resolve(success);
+                }
+            });
+        });
+
+        const expirationTimestamp = Math.floor(new Date().getTime() / 1000);
 
         const mailOptions = {
-            from: 'needaspeed639@gmail.com',
+            from: process.env.USEREMAIL,
             to: email,
             subject: 'Email Verification',
             html: `<div style="font-family: Arial, sans-serif; margin: 0 auto; max-width: 600px; padding: 20px;">
             <h2 style="color: #333;">Hi ${name},</h2>
             <p style="color: #555;">Please verify your email address by clicking the button below:</p>
             <div style="text-align: center; margin-top: 20px;">
-                <a href="http://localhost:3000/verify/${id}/${expirationTimestamp}" style="display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Verify Email</a>
+                <a href="https://funoon.vercel.app/verify/${id}/${expirationTimestamp}" style="display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Verify Email</a>
             </div>
         </div>`,
         };
 
-        const data = await transporter.sendMail(mailOptions);
+        const data = await new Promise((resolve, reject) => {
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    console.log(info);
+                    resolve(info);
+                }
+            });
+        });
+
         console.log('EMAIL SENT ', email, data.response);
     } catch (error) {
         console.error('Error sending verification email:', error.message);
