@@ -46,7 +46,7 @@ export default function NavBar({ links }) {
   const [cart] = useContext(CartContext);
   const logout = () => {
     axios
-        .get("/logout", {}, { withCredentials: true })
+        .get("/logout", { withCredentials: true })
         .then((res) => {
             if (res.data && res.data.Status === "Success") {
                 setUser(null);
@@ -62,6 +62,7 @@ export default function NavBar({ links }) {
             toast.error("Failed to log out");
         });
 };
+
 
   return (
     <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white">
