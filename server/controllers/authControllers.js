@@ -83,14 +83,15 @@ const createOrder = async (req, res) => {
 
 const sendVerifyEmail = async (name, email, id) => {
     try {
-        // Create transporter
+        // Configure the transporter with basic SMTP settings
         const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true, // true for 465, false for other ports like 587
             auth: {
-                user: process.env.USEREMAIL,
-                pass: process.env.USERPASS
-            },
-            secure: true,
+                user: process.env.USEREMAIL, // Your SMTP user (email address)
+                pass: process.env.USERPASS  // Your SMTP password or app-specific password
+            }
         });
 
         // Verify transporter
@@ -99,16 +100,16 @@ const sendVerifyEmail = async (name, email, id) => {
         // Prepare email content
         const expirationTimestamp = Math.floor(new Date().getTime() / 1000);
         const mailOptions = {
-            from: process.env.USEREMAIL,
+            from: process.env.USEREMAIL, // Your verified sender email
             to: email,
             subject: 'Email Verification',
             html: `<div style="font-family: Arial, sans-serif; margin: 0 auto; max-width: 600px; padding: 20px;">
-            <h2 style="color: #333;">Hi ${name},</h2>
-            <p style="color: #555;">Please verify your email address by clicking the button below:</p>
-            <div style="text-align: center; margin-top: 20px;">
-                <a href="https://funoon.vercel.app/verify/${id}/${expirationTimestamp}" style="display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Verify Email</a>
-            </div>
-        </div>`,
+                <h2 style="color: #333;">Hi ${name},</h2>
+                <p style="color: #555;">Please verify your email address by clicking the button below:</p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="https://funoon.vercel.app/verify/${id}/${expirationTimestamp}" style="display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Verify Email</a>
+                </div>
+            </div>`
         };
 
         // Send email and await completion
@@ -121,7 +122,6 @@ const sendVerifyEmail = async (name, email, id) => {
         console.error('Error sending verification email:', error.message);
     }
 };
-
 
 const verifyMail = async (req, res) => {
     const { id, expirationTimestamp } = req.params;
