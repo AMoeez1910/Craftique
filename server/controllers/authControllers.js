@@ -226,8 +226,8 @@ const getProfile= async (req,res)=>{
 }
 const logOut =(req,res) =>{
     
-    res.clearCookie('token',{path:'/'});
-    res.clearCookie('connect.sid',{path:'/'})
+    res.clearCookie('token');
+    res.clearCookie('connect.sid')
     return res.json({Status:"Success"})
 }
 const PasswordReset = async (req, res) => {
