@@ -151,7 +151,7 @@ export default function Register() {
                     <p className="m-auto text-sm">OR</p>
                   </div>
                   <div className="w-full mt-3">
-                    <Link to="http://localhost:8000/auth/google/callback">
+                    <Link to="https://funoonserver.vercel.app/auth/google/callback">
                       <Button className="w-full bg-white text-black border-1 rounded-sm h-10 border-2 border-gray-100 shadow-md">
                         <img src={google} alt="Google" className="h-7 mr-2" />
                         Register with Google
@@ -243,7 +243,7 @@ export default function Register() {
                 <p className="m-auto text-sm">OR</p>
               </div>
               <div className="w-full mt-3">
-                <Link to="http://localhost:8000/auth/google/callback">
+                <Link to="https://funoonserver.vercel.app/auth/google/callback">
                   <Button className="w-full bg-white text-black border-1 rounded-sm h-10">
                     <img src={google} alt="Google" className="h-7 mr-2" />
                     Register with Google

@@ -7,8 +7,9 @@ const OAuth2Strategy = require("passport-google-oauth20").Strategy
 const {registerUser,getProfile,loginUser,logOut,verifyMail,NewPassword,PasswordReset,generateToken,getUserProfileData,updateUserProfile,updateUserAddress, getProducts,placeOrder,registerBrand,getOrderDetail,stripeIntegration,sellerDetails,updateStatus,getProductsDetails,addProductReview,getSellerDetails,getAllSellers,updateProductDetails,addNewProduct} = require('../controllers/authControllers')
 router.use(
     cors({
-        credentials:true,
-        origin:'http://localhost:3000'
+        origin: 'https://funoon.vercel.app',
+        credentials: true,  // This is necessary for sending cookies
+        optionSuccessStatus: 200
     })
 )
 passport.use(
@@ -73,13 +74,19 @@ router.get('/seller-detail/:id',sellerDetails)
 router.get('/products/:id',getProductsDetails)
 router.get('/auth/google',passport.authenticate('google', { scope: ['profile','email'] }))
 
-router.get('/auth/google/callback',passport.authenticate('google', { failureRedirect: 'http://localhost:3000/google/auth/ValidationFailure' }),
+router.get('/auth/google/callback',passport.authenticate('google', { failureRedirect: 'https://funoon.vercel.app/google/auth/ValidationFailure' }),
 function(req, res) {
     // const {id,FirstName,email} = await User.findOne({googleID:req.user.googleID})   
      
   const token = generateToken(req.user);
   // Set the token as a cookie
-  res.cookie('token', token, { maxAge: 3600000, httpOnly: true }); 
-  res.redirect('http://localhost:3000')
+  res.cookie('token', token, {
+    path: '/',
+    httpOnly: true,
+    secure: true,  // Ensure this is true for HTTPS
+    sameSite: 'None',  // Required for cross-site cookie sharing
+    maxAge: 24 * 60 * 60 * 1000  // 1 day
+});
+  res.redirect('https://funoon.vercel.app/')
 })
 module.exports = router
