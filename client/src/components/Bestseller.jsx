@@ -124,7 +124,7 @@ const Bestseller = (props) => {
           {products.slice(0, 8).map((product) => (
             <div
               key={product._id}
-              className="bg-white transition-colors h-full transform transition-transform duration-300 hover:scale-105 cursor-pointer"
+              className="bg-white h-full transform transition-transform duration-300 hover:scale-105 cursor-pointer"
               onClick={() => { navigate(`/product/${product._id}`) }}
             >
               <div className="aspect-[4/3] bg-gray-100 overflow-hidden ">
