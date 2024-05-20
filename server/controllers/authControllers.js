@@ -227,8 +227,13 @@ const getProfile= async (req,res)=>{
         res.json({FirstName,email,_id,address,isSeller,image,phoneNo,brand});
       }
       else{
-        const {FirstName,email,_id,address,isSeller,image,phoneNo} = await User.findById(userData.id);
-        res.json({FirstName,email,_id,address,isSeller,image,phoneNo});
+        const {FirstName,email,_id,address,isSeller,image,phoneNo,brand} = await  User.findById(userData.id).populate(
+            {
+                path:'brand',
+                select:'name image'
+            }
+        );
+        res.json({FirstName,email,_id,address,isSeller,image,phoneNo,brand});
       }
       
       
