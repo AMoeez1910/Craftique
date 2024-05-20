@@ -53,7 +53,7 @@ const user = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Order'
   }],
-    verified: { type: Boolean, default: false },
+    verified: { type: Boolean, default: true },
     expireAt: {
     type: Date,
     default: Date.now,
