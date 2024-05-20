@@ -67,7 +67,7 @@ import axios from "axios"
 import { Money } from "@mui/icons-material"
 
 const SellerDash = ()=>  {
-  const { user, ready,setUser } = useContext(UserContext);
+  const { user, ready,setUser,updateUserContext } = useContext(UserContext);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [display, setDisplay] = useState()
@@ -109,6 +109,7 @@ const SellerDash = ()=>  {
           const response = await axios.get(`/seller-detail/${user._id}`);
           setSeller(response.data.brand);
           setData(response.data.orders);
+          await updateUserContext();
           console.log(response.data.orders)
         } catch (error) {
           console.error(error);

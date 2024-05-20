@@ -23,7 +23,7 @@ export default function Register() {
   });
   const registerUser = async (e) => {
     e.preventDefault();
-    
+    console.log(data,phoneNo)
     const { FirstName, LastName, email, password, userType } = data;
     try {
       const { data } = await axios.post("/register", {
@@ -36,7 +36,15 @@ export default function Register() {
       });
       if (data.error) {
         if (data.error.message) {
-          toast.error(data.error.errors.email.properties.message);
+          if(
+            data.error.message.includes("email")
+          )
+          {
+            toast.error(data.error.errors.email.properties.message);
+          }
+          else{
+            toast.error(data.error.message);
+          }
         } else toast.error(data.error);
       } else {
         setData({});
