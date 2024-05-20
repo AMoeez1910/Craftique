@@ -140,7 +140,7 @@ const Bestseller = (props) => {
                   width={450}
                 />
               </div>
-              <div className="pt-3 space-y-2 h-full flex flex-col">
+              <div className="pt-3 space-y-2 flex flex-col">
                 <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
                   {product.name}
                 </h3>
