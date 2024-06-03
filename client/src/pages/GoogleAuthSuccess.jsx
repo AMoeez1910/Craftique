@@ -14,7 +14,7 @@ const GoogleAuthSuccess = () => {
                 console.log(token);
                 if (token) {
                     localStorage.setItem('token', token);
-                    await updateUserContext(); // Update user context after setting token
+                    await updateUserContext();
                     navigate('/');
                 } else {
                     navigate('/login');
