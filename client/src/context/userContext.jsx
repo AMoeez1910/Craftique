@@ -10,7 +10,7 @@ export function UserContextProvider({children}) {
   const fetchUserData = async () => {
     try {
       const token = localStorage.getItem("token");
-      if(token){
+
         const response = await axios.get('/profile',
         {
           headers: {
@@ -20,8 +20,7 @@ export function UserContextProvider({children}) {
       );
       setUser(response.data);
       setReady(true);
-    } 
-      }
+    }
       catch (error) {
         console.error("Error fetching user data:", error);
       }  
