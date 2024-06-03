@@ -1,16 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/userContext';
 
 const GoogleAuthSuccess = () => {
     const navigate = useNavigate();
-
+    const {setUser}=useContext(UserContext)
     useEffect(() => {
         const handleAuth = async () => {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const token = urlParams.get('token');
+                console.log(token)
                 if (token) {
                     localStorage.setItem('token', token);
+                    setUser(token)
                     navigate('/');
                 } else {
                     navigate('/login');
