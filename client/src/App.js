@@ -24,6 +24,7 @@ import { SellerRegistration } from "./pages/SellerRegistration.jsx";
 import AddProduct from "./pages/AddProduct";
 import ProductInfo from "./pages/ProductInfo.jsx";
 import SellerCatalog from "./pages/SellerCatalog.jsx";
+import GoogleAuthSuccess from "./pages/GoogleAuthSuccess.jsx";
 axios.defaults.baseURL = `https://funoonserver.vercel.app`;
 axios.defaults.withCredentials = true;
 
@@ -82,6 +83,7 @@ function App() {
         path="/seller-register"
         element={<SellerRegistration/>}
       />
+      <Route path="/google/auth/success" component={GoogleAuthSuccess} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route
         path="/orders/:id"
