@@ -197,14 +197,8 @@ const loginUser = async (req, res) => {
                 console.error('Error signing JWT:', err);
                 return res.status(500).json({ error: 'Internal Server Error' });
             }
-            res.cookie('token', token, {
-                path: '/',
-                httpOnly: true,
-                secure: true,  // Ensure this is true for HTTPS
-                sameSite: 'None',  // Required for cross-site cookie sharing
-                maxAge: 24 * 60 * 60 * 1000  // 1 day
-            });
-            res.json({ success: 'Successfully Login', user: userDoc });
+            
+            res.json({ success: 'Successfully Login',token, user: userDoc });
         });
     } catch (error) {
         console.error('Error in loginUser: ', error);
@@ -213,7 +207,7 @@ const loginUser = async (req, res) => {
 };
 
 const getProfile= async (req,res)=>{
-    const {token} = req.cookies;
+    const {token} = req.headers.authorization.split(' ')[1]
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userData) => {
       if (err) throw err;

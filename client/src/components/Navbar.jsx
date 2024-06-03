@@ -45,6 +45,7 @@ export default function NavBar({ links }) {
   const { user, setUser } = useContext(UserContext);
   const [cart] = useContext(CartContext);
   const logout = () => {
+    localStorage.removeItem('token')
     axios
       .get("/logout")
       .then((res) => {

@@ -32,6 +32,7 @@ export default function Login() {
         toast.error(response.data.error);
       } else {
         setUser(response.data.user);
+        localStorage.setItem("token", response.data.token);
         toast.success("Welcome Back");
         navigate("/");
       }
