@@ -207,7 +207,7 @@ const loginUser = async (req, res) => {
 };
 
 const getProfile= async (req,res)=>{
-    const {token} = req.headers.authorization.split(' ')[1]
+    const token = req.headers.authorization.split(' ')[1];
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userData) => {
       if (err) throw err;

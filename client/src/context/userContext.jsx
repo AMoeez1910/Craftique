@@ -9,7 +9,7 @@ export function UserContextProvider({children}) {
 
   const fetchUserData = async () => {
     try {
-      const token = localStorage
+      const token = localStorage.getItem("token");
       const response = await axios.get('/profile',
         {
           headers: {
