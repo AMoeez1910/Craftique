@@ -4,16 +4,17 @@ import { UserContext } from '../context/userContext';
 
 const GoogleAuthSuccess = () => {
     const navigate = useNavigate();
-    const {setUser}=useContext(UserContext)
+    const { setUser, updateUserContext } = useContext(UserContext);
+
     useEffect(() => {
         const handleAuth = async () => {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const token = urlParams.get('token');
-                console.log(token)
+                console.log(token);
                 if (token) {
                     localStorage.setItem('token', token);
-                    setUser(token)
+                    await updateUserContext(); // Update user context after setting token
                     navigate('/');
                 } else {
                     navigate('/login');
@@ -25,7 +26,7 @@ const GoogleAuthSuccess = () => {
         };
 
         handleAuth();
-    }, [navigate]);
+    }, [navigate, updateUserContext]);
 
     return (
         <div className="flex h-screen w-full items-center justify-center">
