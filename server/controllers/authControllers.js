@@ -224,7 +224,7 @@ const getProfile= async (req,res)=>{
   }
 }
 const logOut =(req,res) =>{
-    res.clearCookie('token', { sameSite: 'None', secure: true });
+    res.cookie('token', '').json({success:'Logged Out'});
     res.clearCookie('connect.sid', { sameSite: 'None', secure: true })
     return res.json({Status:"Success"})
 }
