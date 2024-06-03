@@ -48,9 +48,9 @@ export default function NavBar({ links }) {
     axios
       .get("/logout")
       .then((res) => {
-        if (res.data && res.data.Status === "Success") {
+        if (res.data) {
           setUser(null);
-          toast.success("Successfully logged out");
+          toast.success(res.data.success);
           navigate("/");
         }
       })

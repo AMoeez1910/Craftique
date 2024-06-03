@@ -244,7 +244,7 @@ const getProfile= async (req,res)=>{
 }
 const logOut =(req,res) =>{
     // issue here
-    res.clearCookie('token',{path:'/'});
+    res.cookie('token', '').json({success:"Logged Out"});
     res.clearCookie('connect.sid',{path:'/'})
     return res.json({Status:"Success"})
 }
