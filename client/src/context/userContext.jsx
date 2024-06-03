@@ -10,7 +10,10 @@ export function UserContextProvider({children}) {
   const fetchUserData = async () => {
     try {
       const token = localStorage.getItem("token");
-
+      if (!token) {
+            setReady(true); // Set ready to true even if there's no token
+            return;
+          }
         const response = await axios.get('/profile',
         {
           headers: {
